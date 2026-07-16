@@ -157,7 +157,7 @@ function rajzolVarolista(lista) {
 
   document.querySelectorAll(".varo-tetel .megsem").forEach((g) => {
     g.addEventListener("click", async () => {
-      const valasz = await fetch("/api/link-torles", {
+      const valasz = await fetch("api/link-torles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: g.dataset.url })
@@ -173,7 +173,7 @@ async function linkBekuldes() {
   if (!url) return;
   if (!/^https?:\/\//i.test(url)) { toast("⚠️ Ez nem tűnik linknek"); return; }
   try {
-    const valasz = await fetch("/api/link", {
+    const valasz = await fetch("api/link", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url })
@@ -191,20 +191,32 @@ $("#link-gomb").addEventListener("click", linkBekuldes);
 $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") linkBekuldes(); });
 
 // ---------- frissítés-figyelő: új recept és várólista ----------
+// GitHub Pages-en (vagy bármilyen sima statikus tárhelyen) nincs
+// link-API — ilyenkor a beillesztő sávot elrejtjük, a többi működik.
 let utolsoReceptekSzoveg = null;
+let vanLinkApi = true;
 
 async function frissitesFigyelo() {
+  if (vanLinkApi) {
+    try {
+      const valasz = await fetch("api/linkek");
+      if (!valasz.ok) throw new Error();
+      rajzolVarolista(await valasz.json());
+    } catch {
+      vanLinkApi = false;
+      document.querySelector(".link-sav").classList.add("hidden");
+      $("#varolista").innerHTML = "";
+    }
+  }
   try {
-    const [linkValasz, receptValasz] = await Promise.all([fetch("/api/linkek"), fetch("/recipes.js")]);
-    rajzolVarolista(await linkValasz.json());
-    const szoveg = await receptValasz.text();
+    const szoveg = await (await fetch("recipes.js?t=" + Date.now())).text();
     if (utolsoReceptekSzoveg !== null && szoveg !== utolsoReceptekSzoveg) {
       new Function(szoveg)(); // window.RECIPES frissítése
       rajzolReceptek();
       toast("🎉 Új recept érkezett a gyűjteménybe!");
     }
     utolsoReceptekSzoveg = szoveg;
-  } catch { /* a szerver épp nem fut — csendben kihagyjuk */ }
+  } catch { /* offline vagy nem elérhető — csendben kihagyjuk */ }
 }
 
 frissitesFigyelo();
