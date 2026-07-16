@@ -77,5 +77,102 @@ window.RECIPES = [
     ],
     megjegyzes: "Minta recept — az első TikTok videód receptje ide kerül majd.",
     hozzaadva: "2026-07-16"
+  },
+  {
+    id: "big-mac-tesztasalata-2026-07-16",
+    nev: "Big Mac tésztasaláta",
+    forras: "https://vm.tiktok.com/ZNRowVgjy/",
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 45,
+    hozzavalok: [
+      { nev: "száraz tészta", mennyiseg: 100, egyseg: "g" },
+      { nev: "darált marhahús (só, bors, fokhagymapor)", mennyiseg: 250, egyseg: "g" },
+      { nev: "cheddar sajt (kockázva vagy reszelve)", mennyiseg: 30, egyseg: "g" },
+      { nev: "natúr joghurt", mennyiseg: 100, egyseg: "g" },
+      { nev: "majonéz", mennyiseg: 15, egyseg: "g" },
+      { nev: "mustár", mennyiseg: 1, egyseg: "tk" },
+      { nev: "ketchup (elhagyható)", mennyiseg: 1, egyseg: "tk" },
+      { nev: "csemegeuborka leve", mennyiseg: 2, egyseg: "tk" },
+      { nev: "csemegeuborka (apróra vágva)", mennyiseg: 3, egyseg: "db" },
+      { nev: "koktélparadicsom", mennyiseg: 5, egyseg: "db" },
+      { nev: "vöröshagyma (finomra vágva)", mennyiseg: 40, egyseg: "g" },
+      { nev: "jégsaláta (csíkokra vágva)", mennyiseg: 70, egyseg: "g" },
+      { nev: "hagymapor, fokhagymapor, pirospaprika, só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Főzd meg a tésztát, majd hűtsd le.",
+      "Pirítsd meg a darált húst, és ezt is hagyd kihűlni.",
+      "Keverd össze a joghurtot, majonézt, mustárt, ketchupot, uborkalevet és a fűszereket.",
+      "Add hozzá az uborkát, hagymát és a sajtot.",
+      "Forgasd össze a tésztával, a hússal és a zöldségekkel.",
+      "Tedd hűtőbe 30 percre, hogy összeérjenek az ízek."
+    ],
+    megjegyzes: "Magas fehérjetartalmú; 5%-os zsírtartalmú hússal a teljes adag kb. 1050 kcal. Teljes recept: citrompor.hu",
+    hozzaadva: "2026-07-16"
+  },
+  {
+    id: "serteshus-burgonyaval-2026-07-16",
+    nev: "Sertéshús burgonyával és zöldségekkel",
+    forras: "https://vm.tiktok.com/ZNRowHyxD/",
+    kategoria: "vacsora",
+    adag: 2,
+    ido_perc: 40,
+    hozzavalok: [
+      { nev: "sertéshús (a páchoz)", mennyiseg: 350, egyseg: "g" },
+      { nev: "burgonya", mennyiseg: 2, egyseg: "db" },
+      { nev: "sárgarépa", mennyiseg: 0.25, egyseg: "db" },
+      { nev: "kaliforniai paprika", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "vöröshagyma", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagyma", mennyiseg: 1, egyseg: "gerezd" },
+      { nev: "növényi olaj (bő olajos sütéshez)", mennyiseg: 0.8, egyseg: "l" },
+      { nev: "só (pác)", mennyiseg: 0.5, egyseg: "tk" },
+      { nev: "bor (pác)", mennyiseg: 2, egyseg: "tk" },
+      { nev: "világos szójaszósz (pác)", mennyiseg: 2, egyseg: "tk" },
+      { nev: "kukoricakeményítő (pác)", mennyiseg: 1, egyseg: "tk" },
+      { nev: "növényi olaj (pác)", mennyiseg: 3, egyseg: "tk" },
+      { nev: "víz (szósz)", mennyiseg: 150, egyseg: "ml" },
+      { nev: "világos szójaszósz (szósz)", mennyiseg: 2, egyseg: "tk" },
+      { nev: "sötét szójaszósz (szósz)", mennyiseg: 1, egyseg: "tk" },
+      { nev: "só (szósz)", mennyiseg: 0.5, egyseg: "tk" },
+      { nev: "cukor (szósz)", mennyiseg: 1, egyseg: "tk" },
+      { nev: "kukoricakeményítő (sűrítéshez)", mennyiseg: 2, egyseg: "tk" },
+      { nev: "hideg víz (sűrítéshez)", mennyiseg: 50, egyseg: "ml" }
+    ],
+    lepesek: [
+      "A csíkokra vágott sertéshúst keverd össze a pác hozzávalóival (só, bor, világos szójaszósz, keményítő, olaj), és hagyd állni, míg a többit előkészíted.",
+      "A burgonyát vágd hasábokra, és bő olajban süsd aranybarnára, majd csepegtesd le.",
+      "Kevés olajon pirítsd meg a felszeletelt hagymát, fokhagymát, répát és paprikát.",
+      "Add hozzá a bepácolt húst, és nagy lángon süsd készre.",
+      "Öntsd fel a szósszal (víz, szójaszószok, só, cukor), forrald össze.",
+      "A keményítőt keverd el a hideg vízzel, ezzel sűrítsd be a szószt, végül forgasd bele a sült burgonyát."
+    ],
+    megjegyzes: "Kínai jellegű wokos étel — a pontos mozdulatok a videóban (2 perces, érdemes megnézni).",
+    hozzaadva: "2026-07-16"
+  },
+  {
+    id: "dietas-langos-2026-07-16",
+    nev: "Diétás lángos (légkeveréses)",
+    forras: "https://vm.tiktok.com/ZNRow4x1a/",
+    kategoria: "egyéb",
+    adag: 6,
+    ido_perc: 25,
+    hozzavalok: [
+      { nev: "zsírszegény túró (vagy quark)", mennyiseg: 500, egyseg: "g" },
+      { nev: "tojás (közepes)", mennyiseg: 4, egyseg: "db" },
+      { nev: "zabliszt", mennyiseg: 100, egyseg: "g" },
+      { nev: "só", mennyiseg: 1, egyseg: "kk" },
+      { nev: "sütőpor", mennyiseg: 0.5, egyseg: "csomag" },
+      { nev: "fokhagymakrém (a tetejére)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "olívaolaj (a tetejére)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A túrót, tojásokat, zablisztet, sót és sütőport keverd csomómentes tésztává.",
+      "Formázz belőle kb. 10-11 cm átmérőjű lángosokat.",
+      "Légkeveréses sütőben 180 fokon 17 perc alatt süsd készre.",
+      "Tálaláskor kend meg fokhagymakrémmel, és csepegtess rá olívaolajat."
+    ],
+    megjegyzes: "Makrók 1 db-ban: 190 kcal, 8,9 g szénhidrát, 13,8 g fehérje, 10,8 g zsír.",
+    hozzaadva: "2026-07-16"
   }
 ];
