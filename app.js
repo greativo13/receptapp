@@ -16,8 +16,11 @@ const store = {
       return ny ? JSON.parse(ny) : alap;
     } catch { return alap; }
   },
-  set(kulcs, ertek) {
+  // minden felhasználói módosítás automatikusan szinkron-feltöltést indít;
+  // a távoli állapot alkalmazásakor szinkronizal=false, hogy ne legyen visszacsatolás
+  set(kulcs, ertek, szinkronizal = true) {
     localStorage.setItem("receptapp." + kulcs, JSON.stringify(ertek));
+    if (szinkronizal) valtozott();
   }
 };
 
@@ -200,6 +203,57 @@ async function linkBekuldes() {
 $("#link-gomb").addEventListener("click", linkBekuldes);
 $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") linkBekuldes(); });
 
+// ---------- eszközök közti szinkron (étrend, pipák, saját receptek) ----------
+// Az állapot a Google hídon tárolódik; a frissebb módosítás nyer.
+let allapotModositva = store.get("modositva", 0);
+let feltoltesIdozito = null;
+
+function valtozott() {
+  allapotModositva = Date.now();
+  store.set("modositva", allapotModositva, false);
+  if (!KULSO_VAROLISTA_URL) return;
+  clearTimeout(feltoltesIdozito);
+  feltoltesIdozito = setTimeout(feltoltAllapot, 1500);
+}
+
+async function feltoltAllapot() {
+  try {
+    await fetch(KULSO_VAROLISTA_URL, {
+      method: "POST",
+      body: JSON.stringify({ sajatReceptek, feluliras, rejtettek, etrend, pipak, modositva: allapotModositva })
+    });
+  } catch { /* offline — a következő módosításnál újra próbáljuk */ }
+}
+
+function alkalmazTavoliAllapot(a) {
+  sajatReceptek = a.sajatReceptek || [];
+  feluliras = a.feluliras || {};
+  rejtettek = a.rejtettek || [];
+  etrend = a.etrend || {};
+  pipak = a.pipak || {};
+  allapotModositva = a.modositva;
+  store.set("custom", sajatReceptek, false);
+  store.set("overrides", feluliras, false);
+  store.set("hidden", rejtettek, false);
+  store.set("plan", etrend, false);
+  store.set("checked", pipak, false);
+  store.set("modositva", allapotModositva, false);
+  rajzolReceptek();
+  if (!$("#view-etrend").classList.contains("hidden")) rajzolEtrend();
+  if (!$("#view-bevasarlas").classList.contains("hidden")) rajzolBevasarlas();
+  toast("🔄 Frissítve egy másik eszközödről");
+}
+
+async function szinkronEllenorzes() {
+  if (!KULSO_VAROLISTA_URL) return;
+  try {
+    const valasz = await fetch(KULSO_VAROLISTA_URL + "?allapot=get");
+    const a = await valasz.json();
+    if (a && a.modositva && a.modositva > allapotModositva) alkalmazTavoliAllapot(a);
+    else if (allapotModositva && (!a || !a.modositva || a.modositva < allapotModositva)) feltoltAllapot();
+  } catch { /* átmeneti hiba — kihagyjuk */ }
+}
+
 // ---------- frissítés-figyelő: új recept és várólista ----------
 // GitHub Pages-en (vagy bármilyen sima statikus tárhelyen) nincs
 // link-API — ilyenkor a beillesztő sávot elrejtjük, a többi működik.
@@ -227,6 +281,7 @@ async function frissitesFigyelo() {
       if (valasz.ok) rajzolVarolista(await valasz.json(), true);
     } catch { /* átmeneti hiba — kihagyjuk */ }
   }
+  if (KULSO_VAROLISTA_URL && tikk % 4 === 2) szinkronEllenorzes();
   try {
     const szoveg = await (await fetch("recipes.js?t=" + Date.now())).text();
     if (utolsoReceptekSzoveg !== null && szoveg !== utolsoReceptekSzoveg) {
@@ -550,3 +605,16 @@ $("#import-input").addEventListener("change", (e) => {
 
 // ---------- indulás ----------
 rajzolReceptek();
+
+// szinkron indítása: ha van már helyi adat, de még sosem szinkronizált,
+// kapjon időbélyeget, hogy felkerüljön a hídra
+if (KULSO_VAROLISTA_URL) {
+  const vanHelyiAdat = sajatReceptek.length || rejtettek.length ||
+    Object.keys(feluliras).length || Object.keys(etrend).length || Object.keys(pipak).length;
+  if (!allapotModositva && vanHelyiAdat) {
+    allapotModositva = Date.now();
+    store.set("modositva", allapotModositva, false);
+    feltoltAllapot();
+  }
+  szinkronEllenorzes();
+}
