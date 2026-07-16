@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receptjeim 🍳</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>🍳 Receptjeim</h1>
+    <nav class="tabs">
+      <button class="tab active" data-view="receptek">📖 Receptek</button>
+      <button class="tab" data-view="etrend">📅 Étrend</button>
+      <button class="tab" data-view="bevasarlas">🛒 Bevásárlólista</button>
+    </nav>
+  </header>
+
+  <!-- ================= RECEPTEK ================= -->
+  <main id="view-receptek" class="view">
+    <div class="link-sav">
+      <input type="url" id="link-input" placeholder="🎬 Illeszd be a TikTok / Instagram / Facebook videó linkjét…">
+      <button id="link-gomb" class="primary">Hozzáadás</button>
+    </div>
+    <div id="varolista"></div>
+    <div class="toolbar">
+      <input type="search" id="kereso" placeholder="Keresés név vagy hozzávaló alapján…">
+      <select id="kategoria-szuro">
+        <option value="">Minden kategória</option>
+        <option value="reggeli">Reggeli</option>
+        <option value="ebéd">Ebéd</option>
+        <option value="vacsora">Vacsora</option>
+        <option value="desszert">Desszert</option>
+        <option value="egyéb">Egyéb</option>
+      </select>
+      <button id="uj-recept-gomb" class="primary">+ Új recept</button>
+    </div>
+    <div id="recept-lista" class="kartya-racs"></div>
+    <p id="ures-uzenet" class="ures hidden">Nincs találat. 🙁</p>
+  </main>
+
+  <!-- ================= ÉTREND ================= -->
+  <main id="view-etrend" class="view hidden">
+    <div class="toolbar het-valto">
+      <button id="elozo-het">← Előző hét</button>
+      <strong id="het-cimke"></strong>
+      <button id="kovetkezo-het">Következő hét →</button>
+    </div>
+    <div class="tabla-gorgeto">
+      <table id="etrend-tabla">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="tipp">Kattints egy cellára, és válassz receptet. Újra kattintva cserélheted vagy törölheted.</p>
+  </main>
+
+  <!-- ================= BEVÁSÁRLÓLISTA ================= -->
+  <main id="view-bevasarlas" class="view hidden">
+    <div class="toolbar het-valto">
+      <button id="bev-elozo-het">← Előző hét</button>
+      <strong id="bev-het-cimke"></strong>
+      <button id="bev-kovetkezo-het">Következő hét →</button>
+    </div>
+    <div id="bevasarlo-lista"></div>
+    <p id="bev-ures" class="ures hidden">Erre a hétre még nincs beosztott recept — állítsd össze az Étrend fülön! 📅</p>
+  </main>
+
+  <footer class="lablec">
+    <button id="export-gomb">⬇️ Mentés fájlba</button>
+    <label class="import-cimke">
+      ⬆️ Visszatöltés
+      <input type="file" id="import-input" accept=".json" hidden>
+    </label>
+  </footer>
+
+  <!-- ============ RECEPT RÉSZLETEK (modal) ============ -->
+  <dialog id="recept-modal">
+    <div class="modal-fej">
+      <h2 id="modal-nev"></h2>
+      <button class="bezaro" data-close="recept-modal">✕</button>
+    </div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <h3>Hozzávalók</h3>
+    <ul id="modal-hozzavalok"></ul>
+    <h3>Elkészítés</h3>
+    <ol id="modal-lepesek"></ol>
+    <p id="modal-megjegyzes" class="megjegyzes"></p>
+    <p id="modal-forras"></p>
+    <div class="modal-gombok">
+      <button id="modal-szerkeszt">✏️ Szerkesztés</button>
+      <button id="modal-torol" class="veszelyes">🗑️ Törlés</button>
+    </div>
+  </dialog>
+
+  <!-- ============ RECEPT SZERKESZTŐ (modal) ============ -->
+  <dialog id="szerkeszto-modal">
+    <div class="modal-fej">
+      <h2 id="szerkeszto-cim">Új recept</h2>
+      <button class="bezaro" data-close="szerkeszto-modal">✕</button>
+    </div>
+    <form id="recept-form">
+      <label>Név <input name="nev" required></label>
+      <div class="form-sor">
+        <label>Kategória
+          <select name="kategoria">
+            <option value="reggeli">Reggeli</option>
+            <option value="ebéd">Ebéd</option>
+            <option value="vacsora">Vacsora</option>
+            <option value="desszert">Desszert</option>
+            <option value="egyéb">Egyéb</option>
+          </select>
+        </label>
+        <label>Adag <input name="adag" type="number" min="1" value="2"></label>
+        <label>Idő (perc) <input name="ido_perc" type="number" min="1" value="30"></label>
+      </div>
+      <label>Hozzávalók <small>(soronként egy: mennyiség egység név — pl. „500 g burgonya”)</small>
+        <textarea name="hozzavalok" rows="6" required></textarea>
+      </label>
+      <label>Elkészítés lépései <small>(soronként egy lépés)</small>
+        <textarea name="lepesek" rows="6" required></textarea>
+      </label>
+      <label>Megjegyzés <input name="megjegyzes"></label>
+      <label>Forrás link (TikTok stb.) <input name="forras" type="url" placeholder="https://…"></label>
+      <div class="modal-gombok">
+        <button type="submit" class="primary">💾 Mentés</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============ RECEPTVÁLASZTÓ (modal) ============ -->
+  <dialog id="valaszto-modal">
+    <div class="modal-fej">
+      <h2 id="valaszto-cim">Válassz receptet</h2>
+      <button class="bezaro" data-close="valaszto-modal">✕</button>
+    </div>
+    <input type="search" id="valaszto-kereso" placeholder="Keresés…">
+    <div id="valaszto-lista" class="valaszto-lista"></div>
+    <div class="modal-gombok">
+      <button id="cella-torles" class="veszelyes hidden">🗑️ Cella ürítése</button>
+    </div>
+  </dialog>
+
+  <script src="recipes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
