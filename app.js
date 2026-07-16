@@ -141,7 +141,7 @@ $("#kategoria-szuro").addEventListener("change", rajzolReceptek);
 // ---------- videó-link beillesztés és várólista ----------
 // Ha az app statikus tárhelyen fut (pl. GitHub Pages), a linkek egy
 // Google Apps Script várólistába kerülnek — ezt az URL-t Claude tölti ki.
-const KULSO_VAROLISTA_URL = "";
+const KULSO_VAROLISTA_URL = "https://script.google.com/macros/s/AKfycbyFCPuEMVSOJlYwdecTIHVT9_Xs6M7AyXBP-RFJ9uhnfA-58AnauG-2RZvzEGMkD1i9/exec";
 
 function toast(uzenet) {
   const t = document.createElement("div");
