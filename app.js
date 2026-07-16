@@ -139,6 +139,10 @@ $("#kereso").addEventListener("input", rajzolReceptek);
 $("#kategoria-szuro").addEventListener("change", rajzolReceptek);
 
 // ---------- videó-link beillesztés és várólista ----------
+// Ha az app statikus tárhelyen fut (pl. GitHub Pages), a linkek egy
+// Google Apps Script várólistába kerülnek — ezt az URL-t Claude tölti ki.
+const KULSO_VAROLISTA_URL = "";
+
 function toast(uzenet) {
   const t = document.createElement("div");
   t.className = "toast";
@@ -147,12 +151,12 @@ function toast(uzenet) {
   setTimeout(() => t.remove(), 4000);
 }
 
-function rajzolVarolista(lista) {
+function rajzolVarolista(lista, kulso) {
   $("#varolista").innerHTML = lista.map((t) => `
     <div class="varo-tetel">
       <span>⏳ Feldolgozásra vár:</span>
       <span class="url">${esc(t.url)}</span>
-      <button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>
+      ${kulso ? "" : `<button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>`}
     </div>`).join("");
 
   document.querySelectorAll(".varo-tetel .megsem").forEach((g) => {
@@ -173,13 +177,19 @@ async function linkBekuldes() {
   if (!url) return;
   if (!/^https?:\/\//i.test(url)) { toast("⚠️ Ez nem tűnik linknek"); return; }
   try {
-    const valasz = await fetch("api/link", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url })
-    });
-    if (!valasz.ok) throw new Error();
-    rajzolVarolista(await valasz.json());
+    if (vanLinkApi) {
+      const valasz = await fetch("api/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+      });
+      if (!valasz.ok) throw new Error();
+      rajzolVarolista(await valasz.json());
+    } else {
+      const valasz = await fetch(KULSO_VAROLISTA_URL + "?uj=" + encodeURIComponent(url));
+      if (!valasz.ok) throw new Error();
+      rajzolVarolista(await valasz.json(), true);
+    }
     mezo.value = "";
     toast("🎬 Link a várólistán — hamarosan recept lesz belőle!");
   } catch {
@@ -195,8 +205,10 @@ $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") lin
 // link-API — ilyenkor a beillesztő sávot elrejtjük, a többi működik.
 let utolsoReceptekSzoveg = null;
 let vanLinkApi = true;
+let tikk = 0;
 
 async function frissitesFigyelo() {
+  tikk++;
   if (vanLinkApi) {
     try {
       const valasz = await fetch("api/linkek");
@@ -204,9 +216,16 @@ async function frissitesFigyelo() {
       rajzolVarolista(await valasz.json());
     } catch {
       vanLinkApi = false;
-      document.querySelector(".link-sav").classList.add("hidden");
       $("#varolista").innerHTML = "";
+      // külső várólista híján a beillesztő sávnak nincs értelme szerver nélkül
+      if (!KULSO_VAROLISTA_URL) document.querySelector(".link-sav").classList.add("hidden");
     }
+  } else if (KULSO_VAROLISTA_URL && tikk % 4 === 1) {
+    // a külső várólistát ritkábban kérdezzük (kb. félpercenként)
+    try {
+      const valasz = await fetch(KULSO_VAROLISTA_URL);
+      if (valasz.ok) rajzolVarolista(await valasz.json(), true);
+    } catch { /* átmeneti hiba — kihagyjuk */ }
   }
   try {
     const szoveg = await (await fetch("recipes.js?t=" + Date.now())).text();
