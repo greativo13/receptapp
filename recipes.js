@@ -330,5 +330,110 @@ window.RECIPES = [
     megjegyzes: "Gluténmentes. A videó leírásából, szó szerint követhető lépésekkel — az öntetet és a salátát kóstolás szerint adagold.",
     tapertek: { kcal: 630, feherje: 33, zsir: 30, szenhidrat: 54, cukor: 7 },
     hozzaadva: "2026-07-17"
+  },
+  {
+    id: "fit-zabmuffin-2026-07-17",
+    nev: "Fit zabmuffin",
+    forras: "https://vm.tiktok.com/ZN811MuSr/",
+    kategoria: "reggeli",
+    adag: 6,
+    ido_perc: 30,
+    hozzavalok: [
+      { nev: "zabpehelyliszt", mennyiseg: 80, egyseg: "g" },
+      { nev: "fehérjepor (vaníliás vagy csokis)", mennyiseg: 30, egyseg: "g" },
+      { nev: "sütőpor", mennyiseg: 1, egyseg: "tk" },
+      { nev: "görög joghurt", mennyiseg: 100, egyseg: "g" },
+      { nev: "növényi tej", mennyiseg: 50, egyseg: "ml" },
+      { nev: "tojás", mennyiseg: 2, egyseg: "db" },
+      { nev: "édesítőszer", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Melegítsd elő a sütőt 180 fokra.",
+      "Keverd össze a száraz hozzávalókat: zabpehelyliszt, fehérjepor, sütőpor.",
+      "Add hozzá a görög joghurtot, a növényi tejet, a tojásokat és az édesítőt, majd keverd simára.",
+      "Oszd el a tésztát 6 db muffin formában.",
+      "Süsd 180 fokon 20-25 percig."
+    ],
+    megjegyzes: "Fitness-barát, magas fehérjetartalmú zabmuffin (6 db). A fehérjepor íze ízlés szerint választható. A tápérték becslés (a videó nem adott meg makrókat).",
+    tapertek: { kcal: 112, feherje: 10, zsir: 4, szenhidrat: 10, cukor: 1 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "fitt-karamellas-desszert-2026-07-17",
+    nev: "Fitt karamellás desszert",
+    forras: "https://vm.tiktok.com/ZN811PYHA/",
+    kategoria: "desszert",
+    adag: 1,
+    ido_perc: 10,
+    hozzavalok: [
+      { nev: "quark (túró)", mennyiseg: 250, egyseg: "g" },
+      { nev: "karamellás protein puding", mennyiseg: 100, egyseg: "g" },
+      { nev: "vaníliás fehérjepor", mennyiseg: 20, egyseg: "g" },
+      { nev: "cukormentes étcsokoládé", mennyiseg: 2, egyseg: "kocka" },
+      { nev: "mogyoró (összetörve)", mennyiseg: 5, egyseg: "g" }
+    ],
+    lepesek: [
+      "A quarkot elkeverjük a fehérjeporral.",
+      "A krém felét egy tálba tesszük.",
+      "Rákerül a karamellás protein puding, majd a krém másik fele.",
+      "A tetejére simítjuk a két kocka cukormentes étcsokit.",
+      "Rászórjuk az összetört mogyorót.",
+      "Hűtőbe tesszük 10 percre."
+    ],
+    megjegyzes: "A videó fizetett partnerkapcsolat (Lätt Home Magyarország terméke szerepel benne — karamellás protein puding, vaníliás fehérjepor). A kcal és fehérje érték a videó leírásából származik (453 kcal | 58 g fehérje), a többi makró becsült.",
+    tapertek: { kcal: 453, feherje: 58, zsir: 11, szenhidrat: 22, cukor: 14 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "fehrjedus-bananakenyer-2026-07-17",
+    nev: "Fehérjedús banánkenyér (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81187bK/",
+    kategoria: "egyéb",
+    adag: null,
+    ido_perc: null,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ Nem sikerült automatikusan kinyerni a receptet — nyisd meg a videót a linkről és egészítsd ki kézzel. A hashtagek alapján magas fehérjetartalmú banánkenyér (#bananabread #highprotein); a kommentek 180 fokot és kb. 1 óra sütési időt említenek, egy komment szerint 4 adagra osztva kb. 236 kcal / 19 g fehérje adagonként — ezek nem megbízhatóan pontosíthatók a videó megtekintése nélkül.",
+    tapertek: null,
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "ismeretlen-recept-1-2026-07-17",
+    nev: "Ismeretlen recept (\"Jó bonyolult volt\")",
+    forras: "https://vm.tiktok.com/ZN8118t9g/",
+    kategoria: "egyéb",
+    adag: null,
+    ido_perc: null,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ Nem sikerült automatikusan kinyerni a receptet — nyisd meg a videót a linkről és egészítsd ki kézzel. A videó leírása és a kommentek nem tartalmaztak hozzávaló- vagy elkészítési listát.",
+    tapertek: null,
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "ismeretlen-recept-2-2026-07-17",
+    nev: "Ismeretlen recept (\"2 adagra osztottam az egészet\")",
+    forras: "https://vm.tiktok.com/ZN811RE7G/",
+    kategoria: "egyéb",
+    adag: 2,
+    ido_perc: null,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ Nem sikerült automatikusan kinyerni a receptet — nyisd meg a videót a linkről és egészítsd ki kézzel. A videó leírása és a kommentek nem tartalmaztak hozzávaló- vagy elkészítési listát.",
+    tapertek: null,
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "bananos-kakaos-rud-2026-07-17",
+    nev: "Banános-kakaós rúd (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN811NwHb/",
+    kategoria: "egyéb",
+    adag: null,
+    ido_perc: null,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ Nem sikerült automatikusan kinyerni a receptet — nyisd meg a videót a linkről és egészítsd ki kézzel. A kommentekből annyi derül ki, hogy kb. 400 g skyr/túró (görögjoghurttal is helyettesíthető), tojás, kakaópor, banán és édesítő van benne, de a pontos arányok és a sütési mód nem derül ki szövegből.",
+    tapertek: null,
+    hozzaadva: "2026-07-17"
   }
 ];
