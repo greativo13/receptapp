@@ -405,12 +405,13 @@ $("#modal-masol").addEventListener("click", async () => {
   if (!r.tapertek) { toast("⚠️ Ehhez a recepthez nincs tápérték megadva"); return; }
   const t = r.tapertek;
   const sz = (x) => Math.round((x || 0) * modalAdag);
+  // a sorrend a YAZIO beviteli mezőit követi (energia, zsír, szénhidrát, cukor, fehérje)
   const szoveg = `${r.nev} — ${modalAdag} adag
-Kalória: ${sz(t.kcal)} kcal
-Fehérje: ${sz(t.feherje)} g
+Energia: ${sz(t.kcal)} kcal
 Zsír: ${sz(t.zsir)} g
 Szénhidrát: ${sz(t.szenhidrat)} g
-ebből cukor: ${sz(t.cukor)} g`;
+ebből cukor: ${sz(t.cukor)} g
+Fehérje: ${sz(t.feherje)} g`;
   try {
     await navigator.clipboard.writeText(szoveg);
     toast("📋 Makrók a vágólapon — beírhatod a YAZIO-ba");
