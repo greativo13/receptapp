@@ -125,7 +125,6 @@ function rajzolReceptek() {
       <h3>${esc(r.nev)}</h3>
       <div class="meta">
         <span>⏱️ ${esc(r.ido_perc)} perc</span>
-        <span>👤 ${esc(r.adag)} adag</span>
         ${r.tapertek ? `<span>🔥 ${esc(r.tapertek.kcal)} kcal</span>` : ""}
       </div>
       ${r.forras ? `<div class="tiktok-jel">🎬 TikTok videóból</div>` : ""}
@@ -654,6 +653,12 @@ $("#cella-torles").addEventListener("click", () => {
 let bevNapSzuro = null;  // null = egész hét, 0-6 = adott nap
 let bevEtelSzuro = null; // null = minden étel, egyébként receptId
 
+// összecsukható szűrő-panel
+$("#szuro-fejlec").addEventListener("click", () => {
+  $("#szuro-tartalom").classList.toggle("hidden");
+  $("#szuro-nyil").classList.toggle("nyitva");
+});
+
 // átlagos darabsúlyok a mértékegység-egységesítéshez (db → gramm)
 // a lista elejétől keresünk, ezért a pontosabb kulcsszavak vannak elöl
 const ATLAG_SULY = [
@@ -726,6 +731,11 @@ function rajzolBevasarlas() {
       rajzolBevasarlas();
     });
   });
+
+  // a fejléc mindig mutatja, mi az aktív szűrés — összecsukva is
+  $("#szuro-osszegzes").textContent =
+    (bevNapSzuro === null ? "Egész hét" : NAPOK[bevNapSzuro]) + " · " +
+    (bevEtelSzuro === null ? "Minden étel" : (receptById(bevEtelSzuro)?.nev || "Minden étel"));
 
   // csoportok: egy étel = egy blokk, alatta a hozzávalói
   const csoportok = Object.entries(darabszam)

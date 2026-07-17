@@ -75,13 +75,20 @@
       <button id="bev-kovetkezo-het">Következő hét →</button>
     </div>
     <div class="szuro-panel">
-      <div class="szuro-sor">
-        <span class="szuro-cimke">📅 Nap</span>
-        <div id="nap-szuro" class="szuro-gombok"></div>
-      </div>
-      <div class="szuro-sor" id="etel-szuro-sor">
-        <span class="szuro-cimke">🍽️ Étel</span>
-        <div id="etel-szuro" class="szuro-gombok"></div>
+      <button type="button" id="szuro-fejlec" class="szuro-fejlec">
+        <span>🔍 Szűrés:</span>
+        <strong id="szuro-osszegzes">Egész hét · Minden étel</strong>
+        <span class="szuro-nyil" id="szuro-nyil">▾</span>
+      </button>
+      <div id="szuro-tartalom" class="hidden">
+        <div class="szuro-sor">
+          <span class="szuro-cimke">📅 Nap</span>
+          <div id="nap-szuro" class="szuro-gombok"></div>
+        </div>
+        <div class="szuro-sor" id="etel-szuro-sor">
+          <span class="szuro-cimke">🍽️ Étel</span>
+          <div id="etel-szuro" class="szuro-gombok"></div>
+        </div>
       </div>
     </div>
     <div id="bevasarlo-lista"></div>

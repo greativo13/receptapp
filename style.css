@@ -256,7 +256,7 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   background: var(--felulet);
   border: 1px solid var(--keret);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 8px 14px;
   margin: 0 auto 16px;
   max-width: 720px;
   display: flex;
@@ -264,6 +264,22 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   gap: 10px;
   box-shadow: var(--arnyek);
 }
+.szuro-fejlec {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 6px 0;
+  text-align: left;
+  width: 100%;
+  font-size: 0.95rem;
+}
+.szuro-fejlec strong { color: var(--kiemelo); flex: 1; }
+.szuro-nyil { color: var(--halvany); transition: transform 0.15s ease; }
+.szuro-nyil.nyitva { transform: rotate(180deg); }
+#szuro-tartalom { display: flex; flex-direction: column; gap: 10px; padding-bottom: 4px; }
+#szuro-tartalom.hidden { display: none; }
 .szuro-sor { display: flex; align-items: flex-start; gap: 10px; }
 .szuro-cimke {
   font-size: 0.82rem;
