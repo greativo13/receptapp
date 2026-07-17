@@ -599,6 +599,7 @@ function rajzolBevasarlas() {
   if (bevEtelSzuro !== null && !darabszam[bevEtelSzuro]) bevEtelSzuro = null;
   const idoszakReceptjei = Object.keys(darabszam).map(receptById).filter(Boolean)
     .sort((a, b) => a.nev.localeCompare(b.nev, "hu"));
+  $("#etel-szuro-sor").classList.toggle("hidden", idoszakReceptjei.length < 2);
   $("#etel-szuro").innerHTML = idoszakReceptjei.length < 2 ? "" :
     `<button class="szuro-gomb ${bevEtelSzuro === null ? "aktiv" : ""}" data-id="">Minden étel</button>` +
     idoszakReceptjei.map((r) =>

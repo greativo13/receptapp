@@ -69,8 +69,16 @@
       <strong id="bev-het-cimke"></strong>
       <button id="bev-kovetkezo-het">Következő hét →</button>
     </div>
-    <div id="nap-szuro" class="nap-szuro"></div>
-    <div id="etel-szuro" class="nap-szuro etel-szuro"></div>
+    <div class="szuro-panel">
+      <div class="szuro-sor">
+        <span class="szuro-cimke">📅 Nap</span>
+        <div id="nap-szuro" class="szuro-gombok"></div>
+      </div>
+      <div class="szuro-sor" id="etel-szuro-sor">
+        <span class="szuro-cimke">🍽️ Étel</span>
+        <div id="etel-szuro" class="szuro-gombok"></div>
+      </div>
+    </div>
     <div id="bevasarlo-lista"></div>
     <p id="bev-ures" class="ures hidden">Erre a hétre még nincs beosztott recept — állítsd össze az Étrend fülön! 📅</p>
   </main>

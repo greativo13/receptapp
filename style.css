@@ -234,23 +234,36 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 #etrend-tabla tfoot td small { color: var(--halvany); }
 #etrend-tabla tfoot td:first-child { font-weight: 600; white-space: nowrap; }
 
-/* ---------- bevásárlólista nap-szűrő ---------- */
-.nap-szuro {
+/* ---------- bevásárlólista szűrő-panel ---------- */
+.szuro-panel {
+  background: var(--felulet);
+  border: 1px solid var(--keret);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 auto 16px;
+  max-width: 720px;
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--arnyek);
 }
-.szuro-gomb { padding: 6px 12px; border-radius: 20px; font-size: 0.88rem; }
+.szuro-sor { display: flex; align-items: flex-start; gap: 10px; }
+.szuro-cimke {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--halvany);
+  white-space: nowrap;
+  padding-top: 6px;
+  min-width: 52px;
+}
+.szuro-gombok { display: flex; gap: 6px; flex-wrap: wrap; }
+.szuro-gomb { padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
 .szuro-gomb.aktiv {
   background: var(--kiemelo);
   color: #fff;
   border-color: var(--kiemelo);
   font-weight: 600;
 }
-.etel-szuro { margin-top: -8px; }
-.etel-szuro .szuro-gomb { font-size: 0.82rem; padding: 5px 10px; }
 
 /* ---------- bevásárlólista ---------- */
 #bevasarlo-lista { max-width: 560px; margin: 0 auto; }
