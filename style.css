@@ -159,6 +159,23 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
+.frissito-sav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px;
+  background: var(--kiemelo-halvany);
+  border-top: 2px solid var(--kiemelo);
+  z-index: 60;
+  font-weight: 600;
+  animation: toast-be 0.25s ease;
+}
+
 /* ---------- receptkártyák ---------- */
 .kartya-racs {
   display: grid;

@@ -311,6 +311,32 @@ async function szinkronEllenorzes() {
   } catch { /* átmeneti hiba — kihagyjuk */ }
 }
 
+// ---------- app-önfrissítő ----------
+// A kezdőképernyős app-nézetben nincs lehúzva-frissítés, és a telefon
+// erősen gyorsítótáraz — ezért az app maga figyeli a verzio.txt-t,
+// és új verziónál frissítő sávot mutat.
+let appVerzioAlap = null;
+
+async function appVerzioEllenorzes() {
+  try {
+    const valasz = await fetch("verzio.txt?t=" + Date.now());
+    if (!valasz.ok) return;
+    const verzio = (await valasz.text()).trim();
+    if (appVerzioAlap === null) { appVerzioAlap = verzio; return; }
+    if (verzio !== appVerzioAlap) mutatFrissitoSav();
+  } catch { /* offline — kihagyjuk */ }
+}
+
+function mutatFrissitoSav() {
+  if (document.getElementById("frissito-sav")) return;
+  const sav = document.createElement("div");
+  sav.id = "frissito-sav";
+  sav.className = "frissito-sav";
+  sav.innerHTML = `<span>🔄 Új verzió érhető el!</span><button id="frissito-gomb" class="primary">Frissítés</button>`;
+  document.body.appendChild(sav);
+  document.getElementById("frissito-gomb").addEventListener("click", () => location.reload());
+}
+
 // ---------- frissítés-figyelő: új recept és várólista ----------
 // GitHub Pages-en (vagy bármilyen sima statikus tárhelyen) nincs
 // link-API — ilyenkor a beillesztő sávot elrejtjük, a többi működik.
@@ -345,6 +371,7 @@ async function frissitesFigyelo() {
     } catch { /* átmeneti hiba — kihagyjuk */ }
   }
   if (KULSO_VAROLISTA_URL && tikk % 4 === 2) szinkronEllenorzes();
+  if (tikk % 4 === 3) appVerzioEllenorzes();
   try {
     const szoveg = await (await fetch("recipes.js?t=" + Date.now())).text();
     if (utolsoReceptekSzoveg !== null && szoveg !== utolsoReceptekSzoveg) {
