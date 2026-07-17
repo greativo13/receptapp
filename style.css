@@ -97,7 +97,7 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   border-radius: 12px;
   padding: 12px;
 }
-.link-sav input[type="url"] { flex: 1; border: none; background: transparent; font-size: 1rem; }
+.link-sav input[type="url"] { flex: 1; min-width: 0; border: none; background: transparent; font-size: 1rem; }
 .link-sav input[type="url"]:focus { outline: none; }
 .kep-gomb {
   display: flex;
@@ -365,4 +365,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
   .topbar h1 { font-size: 1.2rem; }
   .tab { padding: 8px 10px; font-size: 0.9rem; }
   .form-sor { flex-direction: column; gap: 0; }
+  .link-sav { padding: 8px; gap: 6px; }
+  .kep-gomb { padding: 8px 10px; }
+  .link-sav .primary { padding: 8px 10px; }
 }
