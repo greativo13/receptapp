@@ -107,10 +107,14 @@ document.querySelectorAll("[data-close]").forEach((g) => {
 // ============================================================
 // RECEPTEK NÉZET
 // ============================================================
+const KATEGORIA_SORREND = ["reggeli", "ebéd", "vacsora", "desszert", "egyéb"];
+const KATEGORIA_IKON = { "reggeli": "🌅", "ebéd": "☀️", "vacsora": "🌙", "desszert": "🍰", "egyéb": "🍴" };
+
 function rajzolReceptek() {
   const kereses = $("#kereso").value.trim().toLowerCase();
   const kategoria = $("#kategoria-szuro").value;
   const lista = $("#recept-lista");
+  const csukott = store.get("csukottKategoriak", []);
 
   const talalatok = osszesRecept().filter((r) => {
     if (kategoria && r.kategoria !== kategoria) return false;
@@ -119,7 +123,7 @@ function rajzolReceptek() {
     return szoveg.includes(kereses);
   });
 
-  lista.innerHTML = talalatok.map((r) => `
+  const kartyaHtml = (r) => `
     <div class="kartya" data-id="${esc(r.id)}">
       <span class="cimke">${esc(r.kategoria)}</span>
       <h3>${esc(r.nev)}</h3>
@@ -128,10 +132,37 @@ function rajzolReceptek() {
         ${r.tapertek ? `<span>🔥 ${esc(r.tapertek.kcal)} kcal</span>` : ""}
       </div>
       ${r.forras ? `<div class="tiktok-jel">🎬 TikTok videóból</div>` : ""}
-    </div>
-  `).join("");
+    </div>`;
+
+  // kategóriánkénti, összecsukható csoportok (keresésnél mindet kinyitjuk)
+  const csoportok = KATEGORIA_SORREND.map((k) => ({
+    k,
+    receptek: talalatok.filter((r) => (KATEGORIA_SORREND.includes(r.kategoria) ? r.kategoria : "egyéb") === k)
+  })).filter((cs) => cs.receptek.length);
+
+  lista.innerHTML = csoportok.map((cs) => {
+    const zart = !kereses && csukott.includes(cs.k);
+    return `
+      <div class="recept-csoport">
+        <button type="button" class="csoport-fejlec" data-kategoria="${esc(cs.k)}">
+          <span>${KATEGORIA_IKON[cs.k]} ${esc(cs.k)}</span>
+          <span class="darab">${cs.receptek.length}</span>
+          <span class="szuro-nyil ${zart ? "" : "nyitva"}">▾</span>
+        </button>
+        <div class="kartya-racs ${zart ? "hidden" : ""}">${cs.receptek.map(kartyaHtml).join("")}</div>
+      </div>`;
+  }).join("");
 
   $("#ures-uzenet").classList.toggle("hidden", talalatok.length > 0);
+
+  lista.querySelectorAll(".csoport-fejlec").forEach((fejlec) => {
+    fejlec.addEventListener("click", () => {
+      const k = fejlec.dataset.kategoria;
+      const uj = csukott.includes(k) ? csukott.filter((x) => x !== k) : csukott.concat(k);
+      store.set("csukottKategoriak", uj, false); // felület-beállítás, nem szinkronizáljuk
+      rajzolReceptek();
+    });
+  });
 
   lista.querySelectorAll(".kartya").forEach((k) => {
     k.addEventListener("click", () => nyitReszletek(k.dataset.id));

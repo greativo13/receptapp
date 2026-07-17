@@ -177,6 +177,31 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 }
 
 /* ---------- receptkártyák ---------- */
+.recept-csoport { margin-bottom: 14px; }
+.csoport-fejlec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--felulet);
+  border: 1px solid var(--keret);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+.csoport-fejlec:hover { border-color: var(--kiemelo); }
+.csoport-fejlec .darab {
+  background: var(--kiemelo-halvany);
+  color: var(--kiemelo);
+  border-radius: 14px;
+  padding: 1px 10px;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
 .kartya-racs {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
