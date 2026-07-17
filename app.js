@@ -361,6 +361,16 @@ function rajzolModalHozzavalok(r) {
     const m = h.mennyiseg == null ? h : { ...h, mennyiseg: Math.round(h.mennyiseg * szorzo * 100) / 100 };
     return `<li><strong>${esc(mennyisegSzoveg(m))}</strong> ${esc(m.nev)}</li>`;
   }).join("");
+
+  // a tápérték is a kiválasztott adagszámot követi
+  const t = r.tapertek;
+  $("#modal-tapertek").innerHTML = t ? `
+    <span class="tap-cimke">🔥 ${esc(Math.round(t.kcal * modalAdag))} kcal</span>
+    <span class="tap-cimke">Fehérje ${esc(Math.round(t.feherje * modalAdag))} g</span>
+    <span class="tap-cimke">Zsír ${esc(Math.round(t.zsir * modalAdag))} g</span>
+    <span class="tap-cimke">Szénhidrát ${esc(Math.round(t.szenhidrat * modalAdag))} g</span>
+    <span class="tap-cimke">ebből cukor ${esc(Math.round(t.cukor * modalAdag))} g</span>
+    <span class="tap-info">${modalAdag} adagra vonatkozó, becsült értékek</span>` : "";
 }
 
 function nyitReszletek(id) {
@@ -373,16 +383,7 @@ function nyitReszletek(id) {
   $("#modal-meta").innerHTML = `
     <span class="cimke">${esc(r.kategoria)}</span>
     <span>⏱️ ${esc(r.ido_perc)} perc</span>
-    <span>👤 ${esc(r.adag)} adag</span>`;
-
-  const t = r.tapertek;
-  $("#modal-tapertek").innerHTML = t ? `
-    <span class="tap-cimke">🔥 ${esc(t.kcal)} kcal</span>
-    <span class="tap-cimke">Fehérje ${esc(t.feherje)} g</span>
-    <span class="tap-cimke">Zsír ${esc(t.zsir)} g</span>
-    <span class="tap-cimke">Szénhidrát ${esc(t.szenhidrat)} g</span>
-    <span class="tap-cimke">ebből cukor ${esc(t.cukor)} g</span>
-    <span class="tap-info">1 adagra vonatkozó, becsült értékek</span>` : "";
+    <span>👤 eredetileg ${esc(r.adag)} adag</span>`;
 
   rajzolModalHozzavalok(r);
   $("#modal-lepesek").innerHTML = (r.lepesek || []).map((l) => `<li>${esc(l)}</li>`).join("");
