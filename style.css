@@ -97,8 +97,20 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   border-radius: 12px;
   padding: 12px;
 }
-.link-sav input { flex: 1; border: none; background: transparent; font-size: 1rem; }
-.link-sav input:focus { outline: none; }
+.link-sav input[type="url"] { flex: 1; border: none; background: transparent; font-size: 1rem; }
+.link-sav input[type="url"]:focus { outline: none; }
+.kep-gomb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--keret);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  background: var(--felulet);
+}
+.kep-gomb:hover { border-color: var(--kiemelo); }
 
 #varolista { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .varo-tetel {

@@ -155,12 +155,18 @@ function toast(uzenet) {
   setTimeout(() => t.remove(), 4000);
 }
 
-function rajzolVarolista(lista, kulso) {
-  $("#varolista").innerHTML = lista.map((t) => `
+let helyiVarolista = [];  // a gépen futó szerver várólistája
+let kulsoVarolista = [];  // a Google-hídon lévő várólista (weboldalról küldött linkek, képek)
+
+function rajzolVarolista() {
+  const elemek = helyiVarolista.map((t) => ({ ...t, kulso: false }))
+    .concat(kulsoVarolista.map((t) => ({ ...t, kulso: true })));
+
+  $("#varolista").innerHTML = elemek.map((t) => `
     <div class="varo-tetel">
       <span>⏳ Feldolgozásra vár:</span>
-      <span class="url">${esc(t.url)}</span>
-      ${kulso ? "" : `<button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>`}
+      <span class="url">${t.url.startsWith("kep:") ? "📷 Fotóból recept" : esc(t.url)}</span>
+      ${t.kulso ? "" : `<button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>`}
     </div>`).join("");
 
   document.querySelectorAll(".varo-tetel .megsem").forEach((g) => {
@@ -170,7 +176,8 @@ function rajzolVarolista(lista, kulso) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: g.dataset.url })
       });
-      rajzolVarolista(await valasz.json());
+      helyiVarolista = await valasz.json();
+      rajzolVarolista();
     });
   });
 }
@@ -188,12 +195,13 @@ async function linkBekuldes() {
         body: JSON.stringify({ url })
       });
       if (!valasz.ok) throw new Error();
-      rajzolVarolista(await valasz.json());
+      helyiVarolista = await valasz.json();
     } else {
       const valasz = await fetch(KULSO_VAROLISTA_URL + "?uj=" + encodeURIComponent(url));
       if (!valasz.ok) throw new Error();
-      rajzolVarolista(await valasz.json(), true);
+      kulsoVarolista = await valasz.json();
     }
+    rajzolVarolista();
     mezo.value = "";
     toast("🎬 Link a várólistán — hamarosan recept lesz belőle!");
   } catch {
@@ -203,6 +211,46 @@ async function linkBekuldes() {
 
 $("#link-gomb").addEventListener("click", linkBekuldes);
 $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") linkBekuldes(); });
+
+// ---------- recept fotóból: kép feltöltése a Google hídra ----------
+function kepBase64(fajl) {
+  // méretcsökkentés, hogy a feltöltés gyors legyen (max 1600 px, JPEG)
+  return new Promise((megold, elutasit) => {
+    const kep = new Image();
+    kep.onload = () => {
+      const arany = Math.min(1, 1600 / Math.max(kep.width, kep.height));
+      const vaszon = document.createElement("canvas");
+      vaszon.width = Math.round(kep.width * arany);
+      vaszon.height = Math.round(kep.height * arany);
+      vaszon.getContext("2d").drawImage(kep, 0, 0, vaszon.width, vaszon.height);
+      URL.revokeObjectURL(kep.src);
+      megold(vaszon.toDataURL("image/jpeg", 0.82).split(",")[1]);
+    };
+    kep.onerror = elutasit;
+    kep.src = URL.createObjectURL(fajl);
+  });
+}
+
+$("#kep-input").addEventListener("change", async (e) => {
+  const fajl = e.target.files[0];
+  e.target.value = "";
+  if (!fajl) return;
+  toast("📷 Kép feltöltése…");
+  try {
+    const adat = await kepBase64(fajl);
+    const valasz = await fetch(KULSO_VAROLISTA_URL, {
+      method: "POST",
+      body: JSON.stringify({ kepFeltoltes: true, adat, mime: "image/jpeg" })
+    });
+    const lista = await valasz.json();
+    if (!Array.isArray(lista)) throw new Error();
+    kulsoVarolista = lista;
+    rajzolVarolista();
+    toast("📷 Kép a várólistán — hamarosan recept lesz belőle!");
+  } catch {
+    toast("⚠️ Nem sikerült feltölteni a képet");
+  }
+});
 
 // ---------- eszközök közti szinkron (étrend, pipák, saját receptek) ----------
 // Az állapot a Google hídon tárolódik; a frissebb módosítás nyer.
@@ -268,18 +316,24 @@ async function frissitesFigyelo() {
     try {
       const valasz = await fetch("api/linkek");
       if (!valasz.ok) throw new Error();
-      rajzolVarolista(await valasz.json());
+      helyiVarolista = await valasz.json();
+      rajzolVarolista();
     } catch {
       vanLinkApi = false;
-      $("#varolista").innerHTML = "";
+      helyiVarolista = [];
+      rajzolVarolista();
       // külső várólista híján a beillesztő sávnak nincs értelme szerver nélkül
       if (!KULSO_VAROLISTA_URL) document.querySelector(".link-sav").classList.add("hidden");
     }
-  } else if (KULSO_VAROLISTA_URL && tikk % 4 === 1) {
-    // a külső várólistát ritkábban kérdezzük (kb. félpercenként)
+  }
+  if (KULSO_VAROLISTA_URL && tikk % 4 === 1) {
+    // a Google-hídon lévő várólistát ritkábban kérdezzük (kb. félpercenként)
     try {
       const valasz = await fetch(KULSO_VAROLISTA_URL);
-      if (valasz.ok) rajzolVarolista(await valasz.json(), true);
+      if (valasz.ok) {
+        const lista = await valasz.json();
+        if (Array.isArray(lista)) { kulsoVarolista = lista; rajzolVarolista(); }
+      }
     } catch { /* átmeneti hiba — kihagyjuk */ }
   }
   if (KULSO_VAROLISTA_URL && tikk % 4 === 2) szinkronEllenorzes();
@@ -313,7 +367,7 @@ function nyitReszletek(id) {
   const r = receptById(id);
   if (!r) return;
   nyitottReceptId = id;
-  modalAdag = r.adag || 1;
+  modalAdag = 1; // alapból 1 adagra mutatjuk a mennyiségeket
 
   $("#modal-nev").textContent = r.nev;
   $("#modal-meta").innerHTML = `
