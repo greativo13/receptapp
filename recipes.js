@@ -467,5 +467,168 @@ window.RECIPES = [
     megjegyzes: "1 adag = 1 fajita. A videó nem ad pontos mennyiségeket, ezek becsültek — igazítsd magadhoz.",
     tapertek: { kcal: 510, feherje: 36, zsir: 24, szenhidrat: 36, cukor: 5 },
     hozzaadva: "2026-07-17"
+  },
+  {
+    id: "sonkas-tojasmuffin-2026-07-17",
+    nev: "Sonkás-zöldséges tojásmuffin",
+    forras: null,
+    kategoria: "reggeli",
+    adag: 3,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "tojás", mennyiseg: 6, egyseg: "db" },
+      { nev: "sovány sonka (kockázva)", mennyiseg: 100, egyseg: "g" },
+      { nev: "light reszelt sajt", mennyiseg: 50, egyseg: "g" },
+      { nev: "kaliforniai paprika (apróra vágva)", mennyiseg: 1, egyseg: "db" },
+      { nev: "friss spenót (aprítva)", mennyiseg: 50, egyseg: "g" },
+      { nev: "só, bors, snidling", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A tojásokat verd fel, sózd, borsozd.",
+      "Keverd hozzá a kockázott sonkát, a paprikát, a spenótot és a sajt felét.",
+      "Oszd el 6 muffinformába (szilikon vagy papírkapszlis), szórd meg a maradék sajttal.",
+      "180 fokon 18-20 perc alatt süsd meg, míg a tetejük aranyszínű.",
+      "Melegen és hidegen is finom — hűtőben 3 napig eláll, tökéletes vidd-magaddal reggeli."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. 1 adag = 2 muffin. Bármilyen zöldséggel variálható.",
+    tapertek: { kcal: 250, feherje: 24, zsir: 15, szenhidrat: 4, cukor: 2 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "egytepsis-citromos-csirke-2026-07-17",
+    nev: "Egytepsis citromos-fokhagymás csirke",
+    forras: null,
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 40,
+    hozzavalok: [
+      { nev: "csirkemell (nagyobb kockákra vágva)", mennyiseg: 400, egyseg: "g" },
+      { nev: "brokkoli (rózsáira szedve)", mennyiseg: 300, egyseg: "g" },
+      { nev: "cukkini (félkarikákra vágva)", mennyiseg: 1, egyseg: "db" },
+      { nev: "kaliforniai paprika (csíkokra vágva)", mennyiseg: 1, egyseg: "db" },
+      { nev: "olívaolaj", mennyiseg: 1, egyseg: "ek" },
+      { nev: "citrom (lé + karikák)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagyma (zúzva)", mennyiseg: 3, egyseg: "gerezd" },
+      { nev: "oregánó, pirospaprika, só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A csirkét és a zöldségeket terítsd egy nagy tepsire.",
+      "Locsold meg az olajjal és a citrom levével, add hozzá a zúzott fokhagymát és a fűszereket, forgasd össze.",
+      "Tedd a tetejére a citromkarikákat.",
+      "200 fokon 25-30 perc alatt süsd készre, félidőben átforgatva.",
+      "Magában is teljes ebéd, de mehet mellé rizs vagy bulgur, ha több szénhidrát kell."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Egy tepsi, minimális mosogatás. Fagyasztott brokkolival is működik.",
+    tapertek: { kcal: 365, feherje: 50, zsir: 10, szenhidrat: 20, cukor: 8 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "joghurtos-tonhalas-teszta-2026-07-17",
+    nev: "Citromos-joghurtos tonhalas tészta",
+    forras: null,
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 25,
+    hozzavalok: [
+      { nev: "teljes kiőrlésű tészta", mennyiseg: 140, egyseg: "g" },
+      { nev: "tonhalkonzerv saját lében (lecsöpögtetve)", mennyiseg: 200, egyseg: "g" },
+      { nev: "görög joghurt", mennyiseg: 100, egyseg: "g" },
+      { nev: "mustár", mennyiseg: 1, egyseg: "tk" },
+      { nev: "citrom leve", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "lilahagyma (finomra vágva)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "csemegeuborka (kockázva)", mennyiseg: 2, egyseg: "db" },
+      { nev: "petrezselyem, só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Főzd ki a tésztát sós vízben, majd szűrd le (egy bögrényi főzővizet tegyél félre).",
+      "Keverd össze a joghurtot a mustárral, citromlével, sóval, borssal.",
+      "Forgasd össze a meleg tésztát a szósszal, a tonhallal, a lilahagymával és az uborkával — ha sűrű, lazítsd a félretett főzővízzel.",
+      "Szórd meg petrezselyemmel. Melegen és hidegen (tésztasalátaként) is nagyon jó."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. 10 perc aktív munka; másnap ebédnek hidegen is viheted.",
+    tapertek: { kcal: 400, feherje: 39, zsir: 3, szenhidrat: 53, cukor: 5 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "gyros-tal-tzatzikivel-2026-07-17",
+    nev: "Gyros-tál tzatzikivel",
+    forras: null,
+    kategoria: "vacsora",
+    adag: 2,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "csirkemell (csíkokra vágva)", mennyiseg: 400, egyseg: "g" },
+      { nev: "gyros fűszerkeverék", mennyiseg: 1, egyseg: "ek" },
+      { nev: "olívaolaj", mennyiseg: 1, egyseg: "tk" },
+      { nev: "görög joghurt (light)", mennyiseg: 200, egyseg: "g" },
+      { nev: "kígyóuborka", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagyma (zúzva)", mennyiseg: 2, egyseg: "gerezd" },
+      { nev: "paradicsom", mennyiseg: 2, egyseg: "db" },
+      { nev: "lilahagyma", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "jégsaláta", mennyiseg: 100, egyseg: "g" },
+      { nev: "só, bors, kapor (a tzatzikihez)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A csirkecsíkokat forgasd össze a gyros fűszerrel és az olajjal — ha van időd, pihentesd fél órát.",
+      "A tzatzikihez az uborka felét reszeld le, sózd, majd nyomkodd ki alaposan; keverd a joghurthoz a fokhagymával, kaporral, sóval, borssal.",
+      "A csirkét forró serpenyőben süsd készre, kis adagokban, hogy piruljon.",
+      "Tálald: saláta-alap, rá a paradicsom, uborka, lilahagyma, a sült csirke, tetejére a tzatziki.",
+      "Ha több szénhidrát kell: fél pita adagonként (+80 kcal)."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Az igazi gyros-élmény sült krumpli nélkül is.",
+    tapertek: { kcal: 345, feherje: 57, zsir: 8, szenhidrat: 13, cukor: 8 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "airfryer-csirkefalatok-2026-07-17",
+    nev: "Ropogós csirkefalatok airfryerből",
+    forras: null,
+    kategoria: "vacsora",
+    adag: 2,
+    ido_perc: 30,
+    hozzavalok: [
+      { nev: "csirkemell (falatnyi kockákra vágva)", mennyiseg: 400, egyseg: "g" },
+      { nev: "zabpehely (késes aprítóban lisztté darálva)", mennyiseg: 50, egyseg: "g" },
+      { nev: "tojás", mennyiseg: 1, egyseg: "db" },
+      { nev: "fűszerpaprika", mennyiseg: 1, egyseg: "tk" },
+      { nev: "fokhagymapor", mennyiseg: 1, egyseg: "tk" },
+      { nev: "só, bors", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "olajspray", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A darált zabpelyhet keverd össze a fűszerekkel.",
+      "A csirkefalatokat mártsd a felvert tojásba, majd forgasd a fűszeres zabpehely-morzsába.",
+      "Rendezd az airfryer kosarába egy rétegben, fújd le olajsprayvel.",
+      "190 fokon 12-14 perc alatt süsd ropogósra, félidőben rázd át.",
+      "Mártogatósnak: görög joghurt + mustár + pici méz keveréke."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. A rántott hús egészséges kistestvére — sütőben 200 fokon 20 perc alatt is elkészül.",
+    tapertek: { kcal: 360, feherje: 53, zsir: 10, szenhidrat: 16, cukor: 1 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "csokis-protein-kremdesszert-2026-07-17",
+    nev: "Csokis protein-krémdesszert",
+    forras: null,
+    kategoria: "desszert",
+    adag: 2,
+    ido_perc: 10,
+    hozzavalok: [
+      { nev: "skyr (natúr)", mennyiseg: 250, egyseg: "g" },
+      { nev: "csokis fehérjepor", mennyiseg: 25, egyseg: "g" },
+      { nev: "cukrozatlan kakaópor", mennyiseg: 10, egyseg: "g" },
+      { nev: "banán (érett)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "étcsoki forgács (a tetejére)", mennyiseg: 5, egyseg: "g" },
+      { nev: "édesítő", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A banánt villával törd pépesre.",
+      "Keverd simára a skyrrel, a fehérjeporral, a kakaóporral és az édesítővel.",
+      "Oszd két pohárba, szórd meg az étcsoki forgáccsal.",
+      "Tedd hűtőbe 15 percre — sűrű, mousse-szerű csokikrémet kapsz."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Esti nassolásra tervezve: több benne a fehérje, mint egy csirkemellben, de desszertnek érzed.",
+    tapertek: { kcal: 180, feherje: 25, zsir: 3, szenhidrat: 15, cukor: 9 },
+    hozzaadva: "2026-07-17"
   }
 ];
