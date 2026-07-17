@@ -435,5 +435,37 @@ window.RECIPES = [
     megjegyzes: "⚠️ Nem sikerült automatikusan kinyerni a receptet — nyisd meg a videót a linkről és egészítsd ki kézzel. A kommentekből annyi derül ki, hogy kb. 400 g skyr/túró (görögjoghurttal is helyettesíthető), tojás, kakaópor, banán és édesítő van benne, de a pontos arányok és a sütési mód nem derül ki szövegből.",
     tapertek: null,
     hozzaadva: "2026-07-17"
+  },
+  {
+    id: "csirkes-fajita-2026-07-17",
+    nev: "Csirkés fajita",
+    forras: "https://www.facebook.com/share/r/1CnWE6YQvN/?mibextid=wwXIfr",
+    kategoria: "vacsora",
+    adag: 4,
+    ido_perc: 30,
+    hozzavalok: [
+      { nev: "csirkemell (csíkokra vágva)", mennyiseg: 400, egyseg: "g" },
+      { nev: "kaliforniai paprika (csíkokra vágva)", mennyiseg: 2, egyseg: "db" },
+      { nev: "vöröshagyma (szeletelve)", mennyiseg: 1, egyseg: "db" },
+      { nev: "növényi olaj", mennyiseg: 1, egyseg: "ek" },
+      { nev: "fokhagymapor, hagymapor, pirospaprika, chili, római kömény, só, bors", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "tortilla lap", mennyiseg: 4, egyseg: "db" },
+      { nev: "reszelt sajt", mennyiseg: 100, egyseg: "g" },
+      { nev: "görög joghurt (a szószhoz)", mennyiseg: 100, egyseg: "g" },
+      { nev: "majonéz (a szószhoz)", mennyiseg: 30, egyseg: "g" },
+      { nev: "koriander (a szószhoz)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "lime leve (a szószhoz)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagymapor, só, bors (a szószhoz)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A csirkét, a paprikát és a hagymát terítsd tepsire, locsold meg olajjal, és fűszerezd (fokhagymapor, hagymapor, pirospaprika, chili, római kömény, só, bors), majd forgasd össze.",
+      "Süsd 200 fokon 15 percig.",
+      "Tégy egy tortillát száraz serpenyőbe, szórd meg sajttal, és hagyd megolvadni.",
+      "Kanalazz rá a sült töltelékből, hajtsd félbe, és pirítsd még egy percig.",
+      "A szószhoz keverd össze a görög joghurtot, majonézt, fokhagymaport, koriandert, lime-levet, sót és borsot — ezzel tálald."
+    ],
+    megjegyzes: "1 adag = 1 fajita. A videó nem ad pontos mennyiségeket, ezek becsültek — igazítsd magadhoz.",
+    tapertek: { kcal: 510, feherje: 36, zsir: 24, szenhidrat: 36, cukor: 5 },
+    hozzaadva: "2026-07-17"
   }
 ];
