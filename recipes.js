@@ -24,6 +24,7 @@ window.RECIPES = [
       "Tálaláskor a maradék banánnal, mézzel és fahéjjal megszórjuk."
     ],
     megjegyzes: "Növényi tejjel is működik. Este beáztatva overnight oats is lehet belőle.",
+    tapertek: { kcal: 413, feherje: 14, zsir: 9, szenhidrat: 66, cukor: 30 },
     hozzaadva: "2026-07-16"
   },
   {
@@ -52,6 +53,7 @@ window.RECIPES = [
       "A tésztát a szósszal összeforgatjuk, parmezánnal tálaljuk."
     ],
     megjegyzes: "A szósz fagyasztható, érdemes duplát főzni.",
+    tapertek: { kcal: 790, feherje: 41, zsir: 29, szenhidrat: 81, cukor: 10 },
     hozzaadva: "2026-07-16"
   },
   {
@@ -76,6 +78,7 @@ window.RECIPES = [
       "180 fokos sütőben 30-35 perc alatt összesütjük."
     ],
     megjegyzes: "Minta recept — az első TikTok videód receptje ide kerül majd.",
+    tapertek: { kcal: 750, feherje: 27, zsir: 50, szenhidrat: 47, cukor: 5 },
     hozzaadva: "2026-07-16"
   },
   {
@@ -109,6 +112,7 @@ window.RECIPES = [
       "Tedd hűtőbe 30 percre, hogy összeérjenek az ízek."
     ],
     megjegyzes: "Magas fehérjetartalmú; 5%-os zsírtartalmú hússal a teljes adag kb. 1050 kcal. Teljes recept: citrompor.hu",
+    tapertek: { kcal: 525, feherje: 37, zsir: 20, szenhidrat: 43, cukor: 5 },
     hozzaadva: "2026-07-16"
   },
   {
@@ -147,7 +151,8 @@ window.RECIPES = [
       "Öntsd fel a szósszal (víz, szójaszószok, só, cukor), forrald össze.",
       "A keményítőt keverd el a hideg vízzel, ezzel sűrítsd be a szószt, végül forgasd bele a sült burgonyát."
     ],
-    megjegyzes: "Kínai jellegű wokos étel — a pontos mozdulatok a videóban (2 perces, érdemes megnézni).",
+    megjegyzes: "Kínai jellegű wokos étel — a pontos mozdulatok a videóban (2 perces, érdemes megnézni). A tápérték becslés, a bő olajos sütés miatt bizonytalanabb.",
+    tapertek: { kcal: 660, feherje: 39, zsir: 37, szenhidrat: 45, cukor: 5 },
     hozzaadva: "2026-07-16"
   },
   {
@@ -172,7 +177,8 @@ window.RECIPES = [
       "Légkeveréses sütőben 180 fokon 17 perc alatt süsd készre.",
       "Tálaláskor kend meg fokhagymakrémmel, és csepegtess rá olívaolajat."
     ],
-    megjegyzes: "Makrók 1 db-ban: 190 kcal, 8,9 g szénhidrát, 13,8 g fehérje, 10,8 g zsír.",
+    megjegyzes: "Makrók 1 db-ban a videó szerint: 190 kcal, 8,9 g szénhidrát, 13,8 g fehérje, 10,8 g zsír. 1 adag = 1 db lángos.",
+    tapertek: { kcal: 190, feherje: 14, zsir: 11, szenhidrat: 9, cukor: 3 },
     hozzaadva: "2026-07-16"
   }
 ];

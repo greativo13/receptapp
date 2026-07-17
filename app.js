@@ -126,6 +126,7 @@ function rajzolReceptek() {
       <div class="meta">
         <span>⏱️ ${esc(r.ido_perc)} perc</span>
         <span>👤 ${esc(r.adag)} adag</span>
+        ${r.tapertek ? `<span>🔥 ${esc(r.tapertek.kcal)} kcal</span>` : ""}
       </div>
       ${r.forras ? `<div class="tiktok-jel">🎬 TikTok videóból</div>` : ""}
     </div>
@@ -297,18 +298,39 @@ frissitesFigyelo();
 setInterval(frissitesFigyelo, 8000);
 
 // ---------- részletnézet ----------
+let modalAdag = 1; // az éppen nézett recept választott adagszáma
+
+function rajzolModalHozzavalok(r) {
+  const szorzo = modalAdag / (r.adag || 1);
+  $("#adag-szam").textContent = modalAdag + " adag";
+  $("#modal-hozzavalok").innerHTML = (r.hozzavalok || []).map((h) => {
+    const m = h.mennyiseg == null ? h : { ...h, mennyiseg: Math.round(h.mennyiseg * szorzo * 100) / 100 };
+    return `<li><strong>${esc(mennyisegSzoveg(m))}</strong> ${esc(m.nev)}</li>`;
+  }).join("");
+}
+
 function nyitReszletek(id) {
   const r = receptById(id);
   if (!r) return;
   nyitottReceptId = id;
+  modalAdag = r.adag || 1;
 
   $("#modal-nev").textContent = r.nev;
   $("#modal-meta").innerHTML = `
     <span class="cimke">${esc(r.kategoria)}</span>
     <span>⏱️ ${esc(r.ido_perc)} perc</span>
     <span>👤 ${esc(r.adag)} adag</span>`;
-  $("#modal-hozzavalok").innerHTML = (r.hozzavalok || [])
-    .map((h) => `<li><strong>${esc(mennyisegSzoveg(h))}</strong> ${esc(h.nev)}</li>`).join("");
+
+  const t = r.tapertek;
+  $("#modal-tapertek").innerHTML = t ? `
+    <span class="tap-cimke">🔥 ${esc(t.kcal)} kcal</span>
+    <span class="tap-cimke">Fehérje ${esc(t.feherje)} g</span>
+    <span class="tap-cimke">Zsír ${esc(t.zsir)} g</span>
+    <span class="tap-cimke">Szénhidrát ${esc(t.szenhidrat)} g</span>
+    <span class="tap-cimke">ebből cukor ${esc(t.cukor)} g</span>
+    <span class="tap-info">1 adagra vonatkozó, becsült értékek</span>` : "";
+
+  rajzolModalHozzavalok(r);
   $("#modal-lepesek").innerHTML = (r.lepesek || []).map((l) => `<li>${esc(l)}</li>`).join("");
 
   const megj = $("#modal-megjegyzes");
@@ -321,6 +343,15 @@ function nyitReszletek(id) {
 
   $("#recept-modal").showModal();
 }
+
+$("#adag-minusz").addEventListener("click", () => {
+  const r = receptById(nyitottReceptId);
+  if (r && modalAdag > 1) { modalAdag--; rajzolModalHozzavalok(r); }
+});
+$("#adag-plusz").addEventListener("click", () => {
+  const r = receptById(nyitottReceptId);
+  if (r && modalAdag < 50) { modalAdag++; rajzolModalHozzavalok(r); }
+});
 
 $("#modal-torol").addEventListener("click", () => {
   const r = receptById(nyitottReceptId);
@@ -378,6 +409,11 @@ function nyitSzerkeszto(id) {
     form.lepesek.value = (r.lepesek || []).join("\n");
     form.megjegyzes.value = r.megjegyzes || "";
     form.forras.value = r.forras || "";
+    if (r.tapertek) {
+      ["kcal", "feherje", "zsir", "szenhidrat", "cukor"].forEach((k) => {
+        if (r.tapertek[k] != null) form[k].value = r.tapertek[k];
+      });
+    }
   }
   $("#szerkeszto-modal").showModal();
 }
@@ -399,6 +435,13 @@ $("#recept-form").addEventListener("submit", (e) => {
     megjegyzes: form.megjegyzes.value.trim(),
     hozzaadva: regiId ? (receptById(regiId)?.hozzaadva || datumKulcs(new Date())) : datumKulcs(new Date())
   };
+
+  const tap = {};
+  ["kcal", "feherje", "zsir", "szenhidrat", "cukor"].forEach((k) => {
+    const ertek = form[k].value.trim();
+    if (ertek !== "" && !isNaN(parseFloat(ertek))) tap[k] = parseFloat(ertek);
+  });
+  if (Object.keys(tap).length) recept.tapertek = tap;
 
   if (regiId && (window.RECIPES || []).some((r) => r.id === regiId)) {
     feluliras[regiId] = recept;            // fájlbeli recept módosítása felülírásként
@@ -445,6 +488,25 @@ function rajzolEtrend() {
     }).join("");
     return `<tr><td class="nap-nev">${ETKEZES_IKON[etkezes]} ${etkezes}</td>${cellak}</tr>`;
   }).join("");
+
+  // alsó sor: napi kalória- és makró-összesítés (étkezésenként 1 adaggal számolva)
+  $("#etrend-tabla tfoot").innerHTML = "<tr><td>Σ napi</td>" + NAPOK.map((_, i) => {
+    const o = { kcal: 0, feherje: 0, zsir: 0, szenhidrat: 0, cukor: 0 };
+    let van = false;
+    ETKEZESEK.forEach((etkezes) => {
+      const id = hetiTerv[i]?.[etkezes];
+      const r = id ? receptById(id) : null;
+      if (r?.tapertek) {
+        van = true;
+        Object.keys(o).forEach((k) => { o[k] += r.tapertek[k] || 0; });
+      }
+    });
+    const tartalom = van
+      ? `🔥 <strong>${Math.round(o.kcal)}</strong> kcal<br>
+         <small>F ${Math.round(o.feherje)} · Zs ${Math.round(o.zsir)} · CH ${Math.round(o.szenhidrat)} · C ${Math.round(o.cukor)} g</small>`
+      : `<small>–</small>`;
+    return `<td class="${maNapok[i] ? "ma" : ""}">${tartalom}</td>`;
+  }).join("") + "</tr>";
 
   tbody.querySelectorAll(".etkezes-cella").forEach((cella) => {
     cella.addEventListener("click", () => nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes));
@@ -504,15 +566,31 @@ $("#cella-torles").addEventListener("click", () => {
 // ============================================================
 // BEVÁSÁRLÓLISTA
 // ============================================================
+let bevNapSzuro = null; // null = egész hét, 0-6 = adott nap
+
 function rajzolBevasarlas() {
   $("#bev-het-cimke").textContent = hetCimke(hetOffset);
   const hetKulcs = datumKulcs(hetKezdete(hetOffset));
   const hetiTerv = etrend[hetKulcs] || {};
   const hetiPipak = pipak[hetKulcs] || {};
 
-  // hányszor szerepel egy recept a héten
+  // nap-szűrő gombok
+  $("#nap-szuro").innerHTML =
+    `<button class="szuro-gomb ${bevNapSzuro === null ? "aktiv" : ""}" data-nap="">Egész hét</button>` +
+    NAPOK.map((nap, i) =>
+      `<button class="szuro-gomb ${bevNapSzuro === i ? "aktiv" : ""}" data-nap="${i}">${nap}</button>`
+    ).join("");
+  $("#nap-szuro").querySelectorAll(".szuro-gomb").forEach((g) => {
+    g.addEventListener("click", () => {
+      bevNapSzuro = g.dataset.nap === "" ? null : +g.dataset.nap;
+      rajzolBevasarlas();
+    });
+  });
+
+  // hányszor szerepel egy recept a kiválasztott időszakban
   const darabszam = {};
-  Object.values(hetiTerv).forEach((napTerv) => {
+  Object.entries(hetiTerv).forEach(([napIndex, napTerv]) => {
+    if (bevNapSzuro !== null && +napIndex !== bevNapSzuro) return;
     Object.values(napTerv).forEach((id) => { darabszam[id] = (darabszam[id] || 0) + 1; });
   });
 

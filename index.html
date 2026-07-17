@@ -56,6 +56,7 @@
       <table id="etrend-tabla">
         <thead></thead>
         <tbody></tbody>
+        <tfoot></tfoot>
       </table>
     </div>
     <p class="tipp">Kattints egy cellára, és válassz receptet. Újra kattintva cserélheted vagy törölheted.</p>
@@ -68,6 +69,7 @@
       <strong id="bev-het-cimke"></strong>
       <button id="bev-kovetkezo-het">Következő hét →</button>
     </div>
+    <div id="nap-szuro" class="nap-szuro"></div>
     <div id="bevasarlo-lista"></div>
     <p id="bev-ures" class="ures hidden">Erre a hétre még nincs beosztott recept — állítsd össze az Étrend fülön! 📅</p>
   </main>
@@ -87,7 +89,15 @@
       <button class="bezaro" data-close="recept-modal">✕</button>
     </div>
     <div class="modal-meta" id="modal-meta"></div>
-    <h3>Hozzávalók</h3>
+    <div id="modal-tapertek" class="tapertek-sor"></div>
+    <div class="hozzavalo-fej">
+      <h3>Hozzávalók</h3>
+      <div class="adag-allito">
+        <button id="adag-minusz" title="Kevesebb adag">−</button>
+        <strong id="adag-szam"></strong>
+        <button id="adag-plusz" title="Több adag">+</button>
+      </div>
+    </div>
     <ul id="modal-hozzavalok"></ul>
     <h3>Elkészítés</h3>
     <ol id="modal-lepesek"></ol>
@@ -126,6 +136,14 @@
       <label>Elkészítés lépései <small>(soronként egy lépés)</small>
         <textarea name="lepesek" rows="6" required></textarea>
       </label>
+      <label>Tápérték 1 adagra <small>(opcionális)</small></label>
+      <div class="form-sor">
+        <label>Kcal <input name="kcal" type="number" min="0" step="1"></label>
+        <label>Fehérje (g) <input name="feherje" type="number" min="0" step="0.1"></label>
+        <label>Zsír (g) <input name="zsir" type="number" min="0" step="0.1"></label>
+        <label>Szénhidrát (g) <input name="szenhidrat" type="number" min="0" step="0.1"></label>
+        <label>Cukor (g) <input name="cukor" type="number" min="0" step="0.1"></label>
+      </div>
       <label>Megjegyzés <input name="megjegyzes"></label>
       <label>Forrás link (TikTok stb.) <input name="forras" type="url" placeholder="https://…"></label>
       <div class="modal-gombok">
