@@ -19,6 +19,7 @@
       <button class="tab active" data-view="receptek">📖 Receptek</button>
       <button class="tab" data-view="etrend">📅 Étrend</button>
       <button class="tab" data-view="bevasarlas">🛒 Bevásárlólista</button>
+      <button class="tab beallitas-tab hidden" id="beallitas-gomb" title="Beállítások">⚙️</button>
     </nav>
   </header>
 
@@ -179,7 +180,47 @@
     </div>
   </dialog>
 
+  <!-- ============ BEÁLLÍTÁSOK (modal, publikus mód) ============ -->
+  <dialog id="beallitas-modal">
+    <div class="modal-fej">
+      <h2>⚙️ Beállítások</h2>
+      <button class="bezaro" data-close="beallitas-modal">✕</button>
+    </div>
+    <p>Az automatikus recept-felismeréshez saját, <strong>ingyenes</strong> Google Gemini kulcs kell:</p>
+    <ol class="utmutato">
+      <li>Nyisd meg: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></li>
+      <li>Jelentkezz be a Google-fiókoddal, és nyomd meg a <strong>„Create API key”</strong> gombot</li>
+      <li>Másold ide a kapott kulcsot:</li>
+    </ol>
+    <input type="password" id="gemini-kulcs-input" placeholder="AIza…" autocomplete="off">
+    <p class="tipp">A kulcs csak ebben a böngészőben tárolódik, és kizárólag a Google felé megy ki. Kulcs nélkül is használhatod az appot — ilyenkor a videó szövegét kézzel rendezed receptté.</p>
+    <div class="modal-gombok">
+      <button id="gemini-kulcs-torles" class="veszelyes">Kulcs törlése</button>
+      <button id="gemini-kulcs-mentes" class="primary">💾 Mentés</button>
+    </div>
+  </dialog>
+
+  <!-- ============ ÜDVÖZLŐ (modal, publikus mód, első nyitás) ============ -->
+  <dialog id="udvozlo-modal">
+    <div class="modal-fej">
+      <h2>🍳 Üdv a Receptjeim appban!</h2>
+      <button class="bezaro" data-close="udvozlo-modal">✕</button>
+    </div>
+    <p>Így működik:</p>
+    <ol class="utmutato">
+      <li><strong>🎬 Bedobsz egy TikTok recept-linket</strong> (vagy 📷 lefotózol egy receptet) — és recept lesz belőle hozzávalókkal, lépésekkel, tápértékkel.</li>
+      <li><strong>📅 Étrendet tervezel</strong> a heti rácsban a mentett receptjeidből.</li>
+      <li><strong>🛒 Bevásárlólistát</strong> kapsz belőle automatikusan, összesített mennyiségekkel.</li>
+    </ol>
+    <p class="tipp">Minden adatod ebben a böngészőben marad. Az automata felismeréshez érdemes beállítani egy ingyenes Gemini-kulcsot a ⚙️ Beállításokban — de nélküle is minden működik.</p>
+    <div class="modal-gombok">
+      <button id="udvozlo-ok" class="primary">Kezdjük! 🚀</button>
+    </div>
+  </dialog>
+
+  <script src="config.js"></script>
   <script src="recipes.js"></script>
+  <script src="kinyero.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

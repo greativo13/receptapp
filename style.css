@@ -64,6 +64,11 @@ body {
 }
 .tab:hover { background: var(--kiemelo-halvany); }
 .tab.active { color: var(--kiemelo); border-bottom-color: var(--kiemelo); font-weight: 600; }
+.beallitas-tab { margin-left: auto; }
+
+.utmutato li { margin-bottom: 8px; }
+.utmutato a { color: var(--kiemelo); }
+#gemini-kulcs-input { width: 100%; }
 
 /* ---------- általános ---------- */
 .view { flex: 1; padding: 20px; max-width: 1000px; margin: 0 auto; width: 100%; }

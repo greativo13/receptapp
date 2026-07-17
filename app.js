@@ -143,9 +143,12 @@ $("#kereso").addEventListener("input", rajzolReceptek);
 $("#kategoria-szuro").addEventListener("change", rajzolReceptek);
 
 // ---------- videó-link beillesztés és várólista ----------
-// Ha az app statikus tárhelyen fut (pl. GitHub Pages), a linkek egy
-// Google Apps Script várólistába kerülnek — ezt az URL-t Claude tölti ki.
-const KULSO_VAROLISTA_URL = "https://script.google.com/macros/s/AKfycbyFCPuEMVSOJlYwdecTIHVT9_Xs6M7AyXBP-RFJ9uhnfA-58AnauG-2RZvzEGMkD1i9/exec";
+// A működési módot a config.js dönti el:
+//  - személyes mód: a linkek a Google Apps Script hídra mennek (Claude dolgozza fel)
+//  - publikus mód: a böngésző dolgozza fel őket (kinyero.js, saját Gemini-kulccsal)
+const KONFIG = window.KONFIG || {};
+const KULSO_VAROLISTA_URL = KONFIG.hidUrl || "";
+const PUBLIKUS = !!KONFIG.publikusMod;
 
 function toast(uzenet) {
   const t = document.createElement("div");
@@ -187,6 +190,11 @@ async function linkBekuldes() {
   const url = mezo.value.trim();
   if (!url) return;
   if (!/^https?:\/\//i.test(url)) { toast("⚠️ Ez nem tűnik linknek"); return; }
+  if (PUBLIKUS) {
+    mezo.value = "";
+    publikusLinkFeldolgozas(url);
+    return;
+  }
   try {
     if (vanLinkApi) {
       const valasz = await fetch("api/link", {
@@ -235,6 +243,7 @@ $("#kep-input").addEventListener("change", async (e) => {
   const fajl = e.target.files[0];
   e.target.value = "";
   if (!fajl) return;
+  if (PUBLIKUS) { publikusKepFeldolgozas(fajl); return; }
   toast("📷 Kép feltöltése…");
   try {
     const adat = await kepBase64(fajl);
@@ -322,8 +331,8 @@ async function frissitesFigyelo() {
       vanLinkApi = false;
       helyiVarolista = [];
       rajzolVarolista();
-      // külső várólista híján a beillesztő sávnak nincs értelme szerver nélkül
-      if (!KULSO_VAROLISTA_URL) document.querySelector(".link-sav").classList.add("hidden");
+      // beillesztő sáv csak akkor tűnik el, ha se híd, se publikus feldolgozó nincs
+      if (!KULSO_VAROLISTA_URL && !PUBLIKUS) document.querySelector(".link-sav").classList.add("hidden");
     }
   }
   if (KULSO_VAROLISTA_URL && tikk % 4 === 1) {
@@ -832,6 +841,35 @@ $("#import-input").addEventListener("change", (e) => {
   olvaso.readAsText(fajl);
   e.target.value = "";
 });
+
+// ---------- publikus mód: beállítások és üdvözlő ----------
+if (PUBLIKUS) {
+  $("#beallitas-gomb").classList.remove("hidden");
+
+  $("#beallitas-gomb").addEventListener("click", () => {
+    $("#gemini-kulcs-input").value = localStorage.getItem("receptapp.gemini_kulcs") || "";
+    $("#beallitas-modal").showModal();
+  });
+  $("#gemini-kulcs-mentes").addEventListener("click", () => {
+    const kulcs = $("#gemini-kulcs-input").value.trim();
+    if (kulcs) localStorage.setItem("receptapp.gemini_kulcs", kulcs);
+    $("#beallitas-modal").close();
+    toast(kulcs ? "✅ Kulcs elmentve — mostantól automata a felismerés" : "ℹ️ Nincs kulcs — kézi módban dolgozunk");
+  });
+  $("#gemini-kulcs-torles").addEventListener("click", () => {
+    localStorage.removeItem("receptapp.gemini_kulcs");
+    $("#gemini-kulcs-input").value = "";
+    $("#beallitas-modal").close();
+    toast("🗑️ Kulcs törölve");
+  });
+
+  if (!store.get("udvozolve", false)) {
+    $("#udvozlo-modal").showModal();
+    const udvozloVege = () => { store.set("udvozolve", true, false); $("#udvozlo-modal").close(); };
+    $("#udvozlo-ok").addEventListener("click", udvozloVege);
+    $("#udvozlo-modal").addEventListener("close", () => store.set("udvozolve", true, false));
+  }
+}
 
 // ---------- indulás ----------
 rajzolReceptek();
