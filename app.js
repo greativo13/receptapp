@@ -131,7 +131,7 @@ function rajzolReceptek() {
         <span>⏱️ ${esc(r.ido_perc)} perc</span>
         ${r.tapertek ? `<span>🔥 ${esc(r.tapertek.kcal)} kcal</span>` : ""}
       </div>
-      ${r.forras ? `<div class="tiktok-jel">🎬 TikTok videóból</div>` : ""}
+      ${r.forras ? `<div class="tiktok-jel">🎬 ${/facebook/i.test(r.forras) ? "Facebook" : /instagram/i.test(r.forras) ? "Instagram" : "TikTok"} videóból</div>` : ""}
     </div>`;
 
   // kategóriánkénti, összecsukható csoportok (keresésnél mindet kinyitjuk)
