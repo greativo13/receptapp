@@ -382,8 +382,7 @@ function nyitReszletek(id) {
   $("#modal-nev").textContent = r.nev;
   $("#modal-meta").innerHTML = `
     <span class="cimke">${esc(r.kategoria)}</span>
-    <span>⏱️ ${esc(r.ido_perc)} perc</span>
-    <span>👤 eredetileg ${esc(r.adag)} adag</span>`;
+    <span>⏱️ ${esc(r.ido_perc)} perc</span>`;
 
   rajzolModalHozzavalok(r);
   $("#modal-lepesek").innerHTML = (r.lepesek || []).map((l) => `<li>${esc(l)}</li>`).join("");
@@ -398,6 +397,27 @@ function nyitReszletek(id) {
 
   $("#recept-modal").showModal();
 }
+
+// a kiválasztott adagszámra számolt makrók vágólapra — pl. YAZIO-ba beíráshoz
+$("#modal-masol").addEventListener("click", async () => {
+  const r = receptById(nyitottReceptId);
+  if (!r) return;
+  if (!r.tapertek) { toast("⚠️ Ehhez a recepthez nincs tápérték megadva"); return; }
+  const t = r.tapertek;
+  const sz = (x) => Math.round((x || 0) * modalAdag);
+  const szoveg = `${r.nev} — ${modalAdag} adag
+Kalória: ${sz(t.kcal)} kcal
+Fehérje: ${sz(t.feherje)} g
+Zsír: ${sz(t.zsir)} g
+Szénhidrát: ${sz(t.szenhidrat)} g
+ebből cukor: ${sz(t.cukor)} g`;
+  try {
+    await navigator.clipboard.writeText(szoveg);
+    toast("📋 Makrók a vágólapon — beírhatod a YAZIO-ba");
+  } catch {
+    toast("⚠️ Nem sikerült a vágólapra másolni");
+  }
+});
 
 $("#adag-minusz").addEventListener("click", () => {
   const r = receptById(nyitottReceptId);
