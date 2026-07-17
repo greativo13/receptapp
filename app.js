@@ -566,7 +566,8 @@ $("#cella-torles").addEventListener("click", () => {
 // ============================================================
 // BEVÁSÁRLÓLISTA
 // ============================================================
-let bevNapSzuro = null; // null = egész hét, 0-6 = adott nap
+let bevNapSzuro = null;  // null = egész hét, 0-6 = adott nap
+let bevEtelSzuro = null; // null = minden étel, egyébként receptId
 
 function rajzolBevasarlas() {
   $("#bev-het-cimke").textContent = hetCimke(hetOffset);
@@ -594,15 +595,33 @@ function rajzolBevasarlas() {
     Object.values(napTerv).forEach((id) => { darabszam[id] = (darabszam[id] || 0) + 1; });
   });
 
+  // étel-szűrő gombok az időszakban szereplő receptekből
+  if (bevEtelSzuro !== null && !darabszam[bevEtelSzuro]) bevEtelSzuro = null;
+  const idoszakReceptjei = Object.keys(darabszam).map(receptById).filter(Boolean)
+    .sort((a, b) => a.nev.localeCompare(b.nev, "hu"));
+  $("#etel-szuro").innerHTML = idoszakReceptjei.length < 2 ? "" :
+    `<button class="szuro-gomb ${bevEtelSzuro === null ? "aktiv" : ""}" data-id="">Minden étel</button>` +
+    idoszakReceptjei.map((r) =>
+      `<button class="szuro-gomb ${bevEtelSzuro === r.id ? "aktiv" : ""}" data-id="${esc(r.id)}">${esc(r.nev)}</button>`
+    ).join("");
+  $("#etel-szuro").querySelectorAll(".szuro-gomb").forEach((g) => {
+    g.addEventListener("click", () => {
+      bevEtelSzuro = g.dataset.id === "" ? null : g.dataset.id;
+      rajzolBevasarlas();
+    });
+  });
+
   // hozzávalók összesítése: kulcs = név (kisbetűs) + egység
   const osszesito = {};
   Object.entries(darabszam).forEach(([id, db]) => {
+    if (bevEtelSzuro !== null && id !== bevEtelSzuro) return;
     const r = receptById(id);
     if (!r) return;
     (r.hozzavalok || []).forEach((h) => {
       const kulcs = h.nev.toLowerCase().trim() + "|" + (h.egyseg || "");
-      if (!osszesito[kulcs]) osszesito[kulcs] = { nev: h.nev, egyseg: h.egyseg || "", osszeg: 0, szamszeru: h.mennyiseg != null };
+      if (!osszesito[kulcs]) osszesito[kulcs] = { nev: h.nev, egyseg: h.egyseg || "", osszeg: 0, szamszeru: h.mennyiseg != null, receptek: [] };
       if (h.mennyiseg != null) osszesito[kulcs].osszeg += h.mennyiseg * db;
+      if (!osszesito[kulcs].receptek.includes(r.nev)) osszesito[kulcs].receptek.push(r.nev);
     });
   });
 
@@ -613,10 +632,14 @@ function rajzolBevasarlas() {
   lista.innerHTML = tetelek.map(([kulcs, t]) => {
     const pipa = !!hetiPipak[kulcs];
     const menny = t.szamszeru ? `${+t.osszeg.toFixed(2)} ${t.egyseg}` : t.egyseg;
+    const tobbhoz = t.receptek.length > 1;
     return `
-      <label class="bev-tetel ${pipa ? "kipipalva" : ""}">
+      <label class="bev-tetel ${pipa ? "kipipalva" : ""} ${tobbhoz ? "tobb-etel" : ""}">
         <input type="checkbox" data-kulcs="${esc(kulcs)}" ${pipa ? "checked" : ""}>
-        <span>${esc(t.nev)}</span>
+        <span class="tetel-torzs">
+          <span class="nev">${esc(t.nev)}</span>
+          <small class="honnan">🍽️ ${esc(t.receptek.join(" · "))}${tobbhoz ? ` — ${t.receptek.length} ételhez` : ""}</small>
+        </span>
         <span class="mennyiseg">${esc(menny)}</span>
       </label>`;
   }).join("");
