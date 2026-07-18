@@ -735,5 +735,129 @@ window.RECIPES = [
     megjegyzes: "Claude fitnesz-receptje. Almás pite-élmény zabból — reggelinek is elmegy, hidegen is finom.",
     tapertek: { kcal: 300, feherje: 21, zsir: 8, szenhidrat: 40, cukor: 13 },
     hozzaadva: "2026-07-17"
+  },
+  {
+    id: "fitt-maxi-king-2026-07-18",
+    nev: "Fitt Maxi King",
+    forras: "https://vm.tiktok.com/ZN81NV4cD/",
+    kategoria: "desszert",
+    adag: 2,
+    ido_perc: 15,
+    hozzavalok: [
+      { nev: "zsírszegény túró (quark)", mennyiseg: 250, egyseg: "g" },
+      { nev: "high protein vaníliás puding", mennyiseg: 200, egyseg: "g" },
+      { nev: "high protein karamellás puding", mennyiseg: 200, egyseg: "g" },
+      { nev: "vanília aroma", mennyiseg: 1, egyseg: "tk" },
+      { nev: "folyékony édesítő (elhagyható)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "holland kakaópor", mennyiseg: 2, egyseg: "ek" },
+      { nev: "tej", mennyiseg: 4, egyseg: "ek" },
+      { nev: "pörkölt sós mogyoró (összetörve)", mennyiseg: 10, egyseg: "g" }
+    ],
+    lepesek: [
+      "A túrót keverd simára a vaníliás pudinggal, a vanília aromával és az édesítővel.",
+      "Rétegezz: a túrókrém fele, rá a karamellás puding, majd a krém másik fele.",
+      "A kakaóport keverd el a tejjel sűrű csokiréteggé, és simítsd a tetejére.",
+      "Szórd meg az összetört sós mogyoróval, és hűtsd legalább fél órát."
+    ],
+    megjegyzes: "A videó szerint a teljes adag 640 kcal. Ha roppanós tetőt szeretnél, a kakaó+tej helyett olvassz rá ét- vagy tejcsokit.",
+    tapertek: { kcal: 320, feherje: 35, zsir: 5, szenhidrat: 21, cukor: 10 },
+    hozzaadva: "2026-07-18"
+  },
+  {
+    id: "hawaii-csirke-burgonyaval-2026-07-18",
+    nev: "Hawaii csirke sajtos burgonyaágyon",
+    forras: "https://vm.tiktok.com/ZN812B9dX/",
+    kategoria: "vacsora",
+    adag: 4,
+    ido_perc: 60,
+    hozzavalok: [
+      { nev: "burgonya (nagy, vékonyra szeletelve)", mennyiseg: 3, egyseg: "db" },
+      { nev: "olaj", mennyiseg: 1, egyseg: "ek" },
+      { nev: "só, bors, szárított petrezselyem", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "fokhagymapor", mennyiseg: 1, egyseg: "tk" },
+      { nev: "csirkemell", mennyiseg: 650, egyseg: "g" },
+      { nev: "vöröshagyma (karikákra)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "majonéz", mennyiseg: 4, egyseg: "ek" },
+      { nev: "ananászdarabok (jól lecsöpögtetve)", mennyiseg: 200, egyseg: "g" },
+      { nev: "cheddar sajt (reszelt)", mennyiseg: 150, egyseg: "g" }
+    ],
+    lepesek: [
+      "A burgonyaszeleteket forgasd össze az olajjal, sóval, borssal és fokhagymaporral, majd rendezd őket egymást fedve egy kivajazott tepsi aljára.",
+      "A csirkemelleket klopfold vékonyra, fűszerezd sóval, borssal, petrezselyemmel, és fektesd a burgonyarétegre.",
+      "Kenj a csirkére vékony réteg majonézt, szórd rá a hagymakarikákat, majd egyenletesen az ananászdarabokat.",
+      "Fóliával lefedve süsd 190 fokon 30 percig, míg a burgonya megpuhul.",
+      "Vedd le a fóliát, szórd meg a sajttal, és süsd fedetlenül még 10-15 percig, míg a teteje aranybarna."
+    ],
+    megjegyzes: "Angol nyelvű videóból fordítva (anakitchendiary).",
+    tapertek: { kcal: 610, feherje: 48, zsir: 32, szenhidrat: 34, cukor: 7 },
+    hozzaadva: "2026-07-18"
+  },
+  {
+    id: "rizspapiros-protein-doner-2026-07-18",
+    nev: "Rizspapíros protein-döner",
+    forras: "https://vm.tiktok.com/ZN812Vchc/",
+    kategoria: "ebéd",
+    adag: 3,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "rizspapír lap", mennyiseg: 6, egyseg: "db" },
+      { nev: "tojás", mennyiseg: 2, egyseg: "db" },
+      { nev: "tej", mennyiseg: 50, egyseg: "ml" },
+      { nev: "mandulaliszt", mennyiseg: 2, egyseg: "ek" },
+      { nev: "szezámmag (a szóráshoz)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "csirkemell (csíkokra vágva)", mennyiseg: 250, egyseg: "g" },
+      { nev: "döner/gyros fűszerkeverék, só, bors", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "saláta, paradicsom, lilakáposzta, lilahagyma (csíkokra)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "skyr vagy light görög joghurt (a szószhoz)", mennyiseg: 150, egyseg: "g" },
+      { nev: "fokhagyma (zúzva, a szószhoz)", mennyiseg: 1, egyseg: "gerezd" },
+      { nev: "friss kapor, citromlé, só, bors (a szószhoz)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A fűszerezett csirkecsíkokat serpenyőben süsd aranybarnára.",
+      "A zöldségeket vágd vékony csíkokra/szeletekre.",
+      "A szószhoz keverd össze a skyrt a fokhagymával, kaporral, citromlével, sóval, borssal.",
+      "A tojást verd fel a tejjel. Két rizspapír-lapot márts a keverékbe, közéjük szórj kevés mandulalisztet, a széleiket nyomd össze, a tetejét szórd meg szezámmal.",
+      "Airfryerben 180 fokon kb. 8 perc alatt süsd a lapokat aranybarnára, ropogósra.",
+      "A kész lepényeket óvatosan vágd fel, és töltsd meg a csirkével, a zöldségekkel és a fokhagymás szósszal."
+    ],
+    megjegyzes: "Német nyelvű videóból fordítva (deryaxburak). 1 adag = 1 töltött lepény.",
+    tapertek: { kcal: 295, feherje: 30, zsir: 8, szenhidrat: 22, cukor: 4 },
+    hozzaadva: "2026-07-18"
+  },
+  {
+    id: "raffaello-zabkasa-2026-07-18",
+    nev: "Raffaello zabkása (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81NtVSF/",
+    kategoria: "reggeli",
+    adag: 1,
+    ido_perc: 10,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ A recept csak a videóban látható — nyisd meg a linkről és egészítsd ki kézzel, vagy kérd a chatben: 'nézd végig a videót'. A hashtagek alapján kókuszos (Raffaello-ízű) zabkása.",
+    hozzaadva: "2026-07-18"
+  },
+  {
+    id: "bounty-desszert-2026-07-18",
+    nev: "Bounty ízvilágú desszert (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81Nm2EE/",
+    kategoria: "desszert",
+    adag: 1,
+    ido_perc: 15,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ A recept csak a videóban látható — nyisd meg a linkről és egészítsd ki kézzel, vagy kérd a chatben: 'nézd végig a videót'. A leírás szerint 1 adag: 248 kcal és 20 g fehérje.",
+    hozzaadva: "2026-07-18"
+  },
+  {
+    id: "rakoczi-turos-dietas-2026-07-18",
+    nev: "Diétás Rákóczi túrós (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81Nf7BE/",
+    kategoria: "desszert",
+    adag: 1,
+    ido_perc: 45,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ A recept csak a videóban látható — nyisd meg a linkről és egészítsd ki kézzel, vagy kérd a chatben: 'nézd végig a videót'. Tipp a videóból: pár óra hűtőben pihentetéssel az igazi.",
+    hozzaadva: "2026-07-18"
   }
 ];
