@@ -109,6 +109,7 @@
       <h2 id="modal-nev"></h2>
       <button class="bezaro" data-close="recept-modal">✕</button>
     </div>
+    <img id="modal-kep" class="modal-kep hidden" alt="">
     <div class="modal-meta" id="modal-meta"></div>
     <div id="modal-tapertek" class="tapertek-sor"></div>
     <div class="hozzavalo-fej">
@@ -168,6 +169,14 @@
       </div>
       <label>Megjegyzés <input name="megjegyzes"></label>
       <label>Forrás link (TikTok stb.) <input name="forras" type="url" placeholder="https://…"></label>
+      <div class="form-kep-blokk">
+        <span class="mezo-cim">Kép <small>(opcionális)</small></span>
+        <div class="kep-valaszto">
+          <img id="form-kep-elonezet" class="form-kep-elonezet hidden" alt="">
+          <label class="kep-gomb">📷 Kép választása<input type="file" id="form-kep-input" accept="image/*" hidden></label>
+          <button type="button" id="form-kep-torles" class="veszelyes hidden">✕ Kép törlése</button>
+        </div>
+      </div>
       <div class="modal-gombok">
         <button type="submit" class="primary">💾 Mentés</button>
       </div>

@@ -217,6 +217,26 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   transition: transform 0.1s ease;
 }
 .kartya:hover { transform: translateY(-2px); border-color: var(--kiemelo); }
+.kartya-kep {
+  width: calc(100% + 32px);
+  margin: -14px -16px 10px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+}
+.modal-kep {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.form-kep-blokk { margin-bottom: 12px; }
+.form-kep-blokk .mezo-cim { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 4px; }
+.form-kep-blokk .mezo-cim small { font-weight: 400; color: var(--halvany); }
+.kep-valaszto { display: flex; align-items: center; gap: 10px; }
+.form-kep-elonezet { width: 72px; height: 54px; object-fit: cover; border-radius: 8px; border: 1px solid var(--keret); }
 .kartya h3 { margin: 0 0 6px; font-size: 1.05rem; }
 .kartya .meta { color: var(--halvany); font-size: 0.85rem; display: flex; gap: 10px; flex-wrap: wrap; }
 .cimke {

@@ -110,6 +110,18 @@ document.querySelectorAll("[data-close]").forEach((g) => {
 const KATEGORIA_SORREND = ["reggeli", "ebéd", "vacsora", "desszert", "egyéb"];
 const KATEGORIA_IKON = { "reggeli": "🌅", "ebéd": "☀️", "vacsora": "🌙", "desszert": "🍰", "egyéb": "🍴" };
 
+// recept-képek: a recept saját `kep` mezője (feltöltött fotó), vagy a
+// kepek/<id>.jpg automatikus borítókép; ami egyszer 404-et adott, azt
+// nem próbáljuk újra
+const hianyzoKepek = new Set();
+window.kepHiba = (elem, id) => { hianyzoKepek.add(id); elem.remove(); };
+
+function receptKepSrc(r) {
+  if (r.kep) return r.kep;
+  if (hianyzoKepek.has(r.id)) return null;
+  return "kepek/" + r.id + ".jpg";
+}
+
 function rajzolReceptek() {
   const kereses = $("#kereso").value.trim().toLowerCase();
   const kategoria = $("#kategoria-szuro").value;
@@ -125,6 +137,7 @@ function rajzolReceptek() {
 
   const kartyaHtml = (r) => `
     <div class="kartya" data-id="${esc(r.id)}">
+      ${receptKepSrc(r) ? `<img class="kartya-kep" src="${esc(receptKepSrc(r))}" alt="" onerror="kepHiba(this, '${esc(r.id)}')">` : ""}
       <span class="cimke">${esc(r.kategoria)}</span>
       <h3>${esc(r.nev)}</h3>
       <div class="meta">
@@ -251,12 +264,12 @@ $("#link-gomb").addEventListener("click", linkBekuldes);
 $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") linkBekuldes(); });
 
 // ---------- recept fotóból: kép feltöltése a Google hídra ----------
-function kepBase64(fajl) {
-  // méretcsökkentés, hogy a feltöltés gyors legyen (max 1600 px, JPEG)
+function kepBase64(fajl, max = 1600) {
+  // méretcsökkentés, hogy a feltöltés/tárolás kicsi maradjon (JPEG)
   return new Promise((megold, elutasit) => {
     const kep = new Image();
     kep.onload = () => {
-      const arany = Math.min(1, 1600 / Math.max(kep.width, kep.height));
+      const arany = Math.min(1, max / Math.max(kep.width, kep.height));
       const vaszon = document.createElement("canvas");
       vaszon.width = Math.round(kep.width * arany);
       vaszon.height = Math.round(kep.height * arany);
@@ -365,7 +378,10 @@ function mutatFrissitoSav() {
   sav.className = "frissito-sav";
   sav.innerHTML = `<span>🔄 Új verzió érhető el!</span><button id="frissito-gomb" class="primary">Frissítés</button>`;
   document.body.appendChild(sav);
-  document.getElementById("frissito-gomb").addEventListener("click", () => location.reload());
+  // cache-kerülő újratöltés, hogy a telefon tényleg a friss verziót kapja
+  document.getElementById("frissito-gomb").addEventListener("click", () => {
+    location.href = location.pathname + "?frissites=" + Date.now();
+  });
 }
 
 // ---------- frissítés-figyelő: új recept és várólista ----------
@@ -444,6 +460,14 @@ function nyitReszletek(id) {
   if (!r) return;
   nyitottReceptId = id;
   modalAdag = 1; // alapból 1 adagra mutatjuk a mennyiségeket
+
+  const modalKep = $("#modal-kep");
+  const kepSrc = receptKepSrc(r);
+  modalKep.classList.toggle("hidden", !kepSrc);
+  if (kepSrc) {
+    modalKep.onerror = () => { hianyzoKepek.add(r.id); modalKep.classList.add("hidden"); };
+    modalKep.src = kepSrc;
+  }
 
   $("#modal-nev").textContent = r.nev;
   $("#modal-meta").innerHTML = `
@@ -534,11 +558,35 @@ $("#modal-szerkeszt").addEventListener("click", () => {
   nyitSzerkeszto(nyitottReceptId);
 });
 
+// az űrlaphoz választott kép (dataURL) — mentéskor a recept `kep` mezőjébe kerül
+let formKep = null;
+
+function formKepFrissit() {
+  const elonezet = $("#form-kep-elonezet");
+  elonezet.classList.toggle("hidden", !formKep);
+  if (formKep) elonezet.src = formKep;
+  $("#form-kep-torles").classList.toggle("hidden", !formKep);
+}
+
+$("#form-kep-input").addEventListener("change", async (e) => {
+  const fajl = e.target.files[0];
+  e.target.value = "";
+  if (!fajl) return;
+  try {
+    formKep = "data:image/jpeg;base64," + (await kepBase64(fajl, 480));
+    formKepFrissit();
+  } catch { toast("⚠️ Nem sikerült beolvasni a képet"); }
+});
+
+$("#form-kep-torles").addEventListener("click", () => { formKep = null; formKepFrissit(); });
+
 function nyitSzerkeszto(id) {
   const form = $("#recept-form");
   form.reset();
   form.dataset.szerkesztettId = id || "";
   $("#szerkeszto-cim").textContent = id ? "Recept szerkesztése" : "Új recept";
+  formKep = id ? (receptById(id)?.kep || null) : null;
+  formKepFrissit();
 
   if (id) {
     const r = receptById(id);
@@ -584,6 +632,7 @@ $("#recept-form").addEventListener("submit", (e) => {
     if (ertek !== "" && !isNaN(parseFloat(ertek))) tap[k] = parseFloat(ertek);
   });
   if (Object.keys(tap).length) recept.tapertek = tap;
+  if (formKep) recept.kep = formKep;
 
   if (regiId && (window.RECIPES || []).some((r) => r.id === regiId)) {
     feluliras[regiId] = recept;            // fájlbeli recept módosítása felülírásként
