@@ -503,7 +503,7 @@ window.RECIPES = [
     ido_perc: 40,
     hozzavalok: [
       { nev: "csirkemell (nagyobb kockákra vágva)", mennyiseg: 400, egyseg: "g" },
-      { nev: "brokkoli (rózsáira szedve)", mennyiseg: 300, egyseg: "g" },
+      { nev: "zöldbab", mennyiseg: 300, egyseg: "g" },
       { nev: "cukkini (félkarikákra vágva)", mennyiseg: 1, egyseg: "db" },
       { nev: "kaliforniai paprika (csíkokra vágva)", mennyiseg: 1, egyseg: "db" },
       { nev: "olívaolaj", mennyiseg: 1, egyseg: "ek" },
@@ -518,35 +518,8 @@ window.RECIPES = [
       "200 fokon 25-30 perc alatt süsd készre, félidőben átforgatva.",
       "Magában is teljes ebéd, de mehet mellé rizs vagy bulgur, ha több szénhidrát kell."
     ],
-    megjegyzes: "Claude fitnesz-receptje. Egy tepsi, minimális mosogatás. Fagyasztott brokkolival is működik.",
+    megjegyzes: "Claude fitnesz-receptje. Egy tepsi, minimális mosogatás. Fagyasztott zöldbabbal is működik.",
     tapertek: { kcal: 365, feherje: 50, zsir: 10, szenhidrat: 20, cukor: 8 },
-    hozzaadva: "2026-07-17"
-  },
-  {
-    id: "joghurtos-tonhalas-teszta-2026-07-17",
-    nev: "Citromos-joghurtos tonhalas tészta",
-    forras: null,
-    kategoria: "ebéd",
-    adag: 2,
-    ido_perc: 25,
-    hozzavalok: [
-      { nev: "teljes kiőrlésű tészta", mennyiseg: 140, egyseg: "g" },
-      { nev: "tonhalkonzerv saját lében (lecsöpögtetve)", mennyiseg: 200, egyseg: "g" },
-      { nev: "görög joghurt", mennyiseg: 100, egyseg: "g" },
-      { nev: "mustár", mennyiseg: 1, egyseg: "tk" },
-      { nev: "citrom leve", mennyiseg: 0.5, egyseg: "db" },
-      { nev: "lilahagyma (finomra vágva)", mennyiseg: 0.5, egyseg: "db" },
-      { nev: "csemegeuborka (kockázva)", mennyiseg: 2, egyseg: "db" },
-      { nev: "petrezselyem, só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
-    ],
-    lepesek: [
-      "Főzd ki a tésztát sós vízben, majd szűrd le (egy bögrényi főzővizet tegyél félre).",
-      "Keverd össze a joghurtot a mustárral, citromlével, sóval, borssal.",
-      "Forgasd össze a meleg tésztát a szósszal, a tonhallal, a lilahagymával és az uborkával — ha sűrű, lazítsd a félretett főzővízzel.",
-      "Szórd meg petrezselyemmel. Melegen és hidegen (tésztasalátaként) is nagyon jó."
-    ],
-    megjegyzes: "Claude fitnesz-receptje. 10 perc aktív munka; másnap ebédnek hidegen is viheted.",
-    tapertek: { kcal: 400, feherje: 39, zsir: 3, szenhidrat: 53, cukor: 5 },
     hozzaadva: "2026-07-17"
   },
   {
@@ -629,6 +602,138 @@ window.RECIPES = [
     ],
     megjegyzes: "Claude fitnesz-receptje. Esti nassolásra tervezve: több benne a fehérje, mint egy csirkemellben, de desszertnek érzed.",
     tapertek: { kcal: 180, feherje: 25, zsir: 3, szenhidrat: 15, cukor: 9 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "epres-turo-bowl-2026-07-17",
+    nev: "Epres túrókrém-bowl",
+    forras: null,
+    kategoria: "reggeli",
+    adag: 1,
+    ido_perc: 5,
+    hozzavalok: [
+      { nev: "félzsíros túró", mennyiseg: 200, egyseg: "g" },
+      { nev: "görög joghurt", mennyiseg: 100, egyseg: "g" },
+      { nev: "méz", mennyiseg: 1, egyseg: "tk" },
+      { nev: "eper (friss vagy fagyasztott)", mennyiseg: 150, egyseg: "g" },
+      { nev: "mandulaforgács", mennyiseg: 10, egyseg: "g" },
+      { nev: "vanília aroma", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A túrót keverd krémesre a joghurttal, mézzel és a vaníliával (botmixerrel extra selymes).",
+      "Halmozd tálba, tedd rá a felkockázott epret.",
+      "Szórd meg a mandulaforgáccsal."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Bármilyen idénygyümölccsel működik — barackkal, áfonyával, málnával is.",
+    tapertek: { kcal: 340, feherje: 35, zsir: 13, szenhidrat: 33, cukor: 20 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "azsiai-csirkes-sult-rizs-2026-07-17",
+    nev: "Ázsiai csirkés sült rizs",
+    forras: null,
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 30,
+    hozzavalok: [
+      { nev: "rizs (száraz)", mennyiseg: 140, egyseg: "g" },
+      { nev: "csirkemell (kockázva)", mennyiseg: 300, egyseg: "g" },
+      { nev: "tojás", mennyiseg: 2, egyseg: "db" },
+      { nev: "zöldborsó-sárgarépa mix (fagyasztott)", mennyiseg: 200, egyseg: "g" },
+      { nev: "szójaszósz", mennyiseg: 2, egyseg: "ek" },
+      { nev: "szezámolaj", mennyiseg: 1, egyseg: "tk" },
+      { nev: "fokhagyma (zúzva)", mennyiseg: 2, egyseg: "gerezd" },
+      { nev: "újhagyma (a tetejére)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Főzd meg a rizst előre — a legjobb, ha előző napi, hűtött rizst használsz.",
+      "Wokban vagy nagy serpenyőben süsd készre a csirkekockákat, majd told félre.",
+      "Told félre a csirkét, engedd rá a felvert tojásokat, és kevergetve süsd rántottásra.",
+      "Add hozzá a fokhagymát és a borsó-répa mixet, pirítsd 2-3 percig.",
+      "Jöhet a rizs és a szójaszósz — nagy lángon, folyamatosan kevergetve pirítsd össze, végül csepegtesd rá a szezámolajat és szórd meg újhagymával."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Az elvitelesnél finomabb, fele annyi kalóriából — edzésnapra való szénhidráttal.",
+    tapertek: { kcal: 575, feherje: 49, zsir: 13, szenhidrat: 66, cukor: 4 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "toltott-cukkinicsonakok-2026-07-17",
+    nev: "Töltött cukkinicsónakok",
+    forras: null,
+    kategoria: "vacsora",
+    adag: 2,
+    ido_perc: 45,
+    hozzavalok: [
+      { nev: "cukkini (nagyobb)", mennyiseg: 2, egyseg: "db" },
+      { nev: "darált csirke- vagy pulykamell", mennyiseg: 300, egyseg: "g" },
+      { nev: "paradicsompassata", mennyiseg: 200, egyseg: "g" },
+      { nev: "light mozzarella (reszelt)", mennyiseg: 60, egyseg: "g" },
+      { nev: "vöröshagyma (apróra vágva)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagyma (zúzva)", mennyiseg: 2, egyseg: "gerezd" },
+      { nev: "olívaolaj", mennyiseg: 1, egyseg: "tk" },
+      { nev: "oregánó, bazsalikom, só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A cukkiniket vágd hosszában félbe, és kanállal vájd ki a közepüket (a kivájt részt aprítsd fel, megy a töltelékbe).",
+      "Az olajon futtasd meg a hagymát és fokhagymát, add hozzá a darált húst, és pirítsd fehéredésig.",
+      "Öntsd fel a passatával, add hozzá a felaprított cukkinibelsőt és a fűszereket, majd forrald be sűrűre.",
+      "Töltsd a csónakokba, szórd meg a mozzarellával.",
+      "200 fokon 20-25 perc alatt süsd készre, míg a sajt megpirul."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Olyan, mint egy lasagne — tészta és bűntudat nélkül.",
+    tapertek: { kcal: 330, feherje: 41, zsir: 9, szenhidrat: 17, cukor: 11 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "csirkes-tortilla-pizza-2026-07-17",
+    nev: "Csirkés tortilla-pizza",
+    forras: null,
+    kategoria: "vacsora",
+    adag: 2,
+    ido_perc: 15,
+    hozzavalok: [
+      { nev: "teljes kiőrlésű tortilla lap", mennyiseg: 2, egyseg: "db" },
+      { nev: "paradicsompassata", mennyiseg: 100, egyseg: "g" },
+      { nev: "csirkemellsonka", mennyiseg: 100, egyseg: "g" },
+      { nev: "light mozzarella (reszelt)", mennyiseg: 100, egyseg: "g" },
+      { nev: "kaliforniai paprika (csíkokra)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "oregánó, fokhagymapor, chilipehely", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A tortillákat kend meg a fűszerezett passatával.",
+      "Pakold rá a csirkemellsonkát, a paprikát és a mozzarellát.",
+      "200 fokos sütőben (vagy airfryerben) 8-10 perc alatt süsd ropogósra.",
+      "Szórd meg oregánóval, vágd cikkekre — 1 adag = 1 pizza."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. A pizzavágy 15 perces, magas fehérjéjű válasza — a feltét szabadon variálható.",
+    tapertek: { kcal: 355, feherje: 27, zsir: 10, szenhidrat: 36, cukor: 5 },
+    hozzaadva: "2026-07-17"
+  },
+  {
+    id: "almas-fahejas-sult-zab-2026-07-17",
+    nev: "Almás-fahéjas sült zabkása",
+    forras: null,
+    kategoria: "desszert",
+    adag: 2,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "zabpehely", mennyiseg: 80, egyseg: "g" },
+      { nev: "alma (nagyobb, kockázva)", mennyiseg: 1, egyseg: "db" },
+      { nev: "tojás", mennyiseg: 1, egyseg: "db" },
+      { nev: "görög joghurt", mennyiseg: 100, egyseg: "g" },
+      { nev: "vaníliás fehérjepor", mennyiseg: 20, egyseg: "g" },
+      { nev: "sütőpor", mennyiseg: 0.5, egyseg: "tk" },
+      { nev: "fahéj", mennyiseg: 1, egyseg: "tk" },
+      { nev: "édesítő", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Keverd össze a zabpelyhet a fehérjeporral, sütőporral, fahéjjal és az édesítővel.",
+      "Add hozzá a tojást, a joghurtot és az alma kétharmadát, keverd össze.",
+      "Simítsd kis sütőtálba, a tetejére nyomkodd a maradék almát, és szórd meg még egy kis fahéjjal.",
+      "180 fokon 25 perc alatt süsd készre — melegen, egy kanál joghurttal a tetején az igazi."
+    ],
+    megjegyzes: "Claude fitnesz-receptje. Almás pite-élmény zabból — reggelinek is elmegy, hidegen is finom.",
+    tapertek: { kcal: 300, feherje: 21, zsir: 8, szenhidrat: 40, cukor: 13 },
     hozzaadva: "2026-07-17"
   }
 ];
