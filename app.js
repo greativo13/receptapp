@@ -29,6 +29,7 @@ let feluliras = store.get("overrides", {});   // fájlbeli recept szerkesztett v
 let rejtettek = store.get("hidden", []);      // "törölt" fájlbeli receptek id-jai
 let etrend = store.get("plan", {});           // { hetKulcs: { napIndex: { étkezés: receptId } } }
 let pipak = store.get("checked", {});         // { hetKulcs: { tetelKulcs: true } }
+let keszlet = store.get("pantry", []);        // kamra: [{ id, nev, marka, vonalkod, tapertek100g }]
 
 let hetOffset = 0;            // 0 = aktuális hét
 let nyitottReceptId = null;   // részletnézetben lévő recept
@@ -96,6 +97,7 @@ document.querySelectorAll(".tab").forEach((gomb) => {
     $("#view-" + gomb.dataset.view).classList.remove("hidden");
     if (gomb.dataset.view === "etrend") rajzolEtrend();
     if (gomb.dataset.view === "bevasarlas") rajzolBevasarlas();
+    if (gomb.dataset.view === "kamra") rajzolKamra();
   });
 });
 
@@ -321,7 +323,7 @@ async function feltoltAllapot() {
   try {
     await fetch(KULSO_VAROLISTA_URL, {
       method: "POST",
-      body: JSON.stringify({ sajatReceptek, feluliras, rejtettek, etrend, pipak, modositva: allapotModositva })
+      body: JSON.stringify({ sajatReceptek, feluliras, rejtettek, etrend, pipak, keszlet, modositva: allapotModositva })
     });
   } catch { /* offline — a következő módosításnál újra próbáljuk */ }
 }
@@ -332,16 +334,19 @@ function alkalmazTavoliAllapot(a) {
   rejtettek = a.rejtettek || [];
   etrend = a.etrend || {};
   pipak = a.pipak || {};
+  keszlet = a.keszlet || [];
   allapotModositva = a.modositva;
   store.set("custom", sajatReceptek, false);
   store.set("overrides", feluliras, false);
   store.set("hidden", rejtettek, false);
   store.set("plan", etrend, false);
   store.set("checked", pipak, false);
+  store.set("pantry", keszlet, false);
   store.set("modositva", allapotModositva, false);
   rajzolReceptek();
   if (!$("#view-etrend").classList.contains("hidden")) rajzolEtrend();
   if (!$("#view-bevasarlas").classList.contains("hidden")) rajzolBevasarlas();
+  if (!$("#view-kamra").classList.contains("hidden")) rajzolKamra();
   toast("🔄 Frissítve egy másik eszközödről");
 }
 
@@ -754,6 +759,20 @@ $("#generator-form").addEventListener("submit", (e) => {
     "vacsora": jeloltek(["vacsora", "ebéd"])
   };
 
+  // "abból főzz, ami itthon van": receptenként kiszámoljuk, a fő
+  // hozzávalók mekkora hányada van meg a kamrában
+  const itthonrol = form.itthonrol.checked && keszlet.length > 0;
+  if (form.itthonrol.checked && !keszlet.length) toast("ℹ️ A kamrád üres — e nélkül generálok");
+  const fedettseg = {};
+  if (itthonrol) {
+    tapertekesek.forEach((r) => {
+      const fo = (r.hozzavalok || []).filter((h) => h.mennyiseg != null);
+      if (!fo.length) { fedettseg[r.id] = 1; return; }
+      const megvan = fo.filter((h) => keszlet.some((k) => szoEgyezes(k.nev, h.nev))).length;
+      fedettseg[r.id] = megvan / fo.length;
+    });
+  }
+
   // blokkonként (ahány naponta változik) véletlen mintavételes keresés
   const hasznalt = new Set();
   const blokkok = [];
@@ -774,10 +793,13 @@ $("#generator-form").addEventListener("submit", (e) => {
       const idk = Object.values(menu).map((r) => r.id);
       const napiDupla = idk.length - new Set(idk).size;
       // pontozás: kalória-eltérés + fehérje-hiány (súlyozva) + változatosság
+      let hianyzo = 0;
+      if (itthonrol) Object.values(menu).forEach((r) => { hianyzo += 1 - (fedettseg[r.id] ?? 0); });
       const pont = Math.abs(kcal - celKcal)
         + Math.max(0, celFeherje - feherje) * 8
         + ismetles * 120
-        + napiDupla * 500;
+        + napiDupla * 500
+        + hianyzo * 700;
       if (pont < legjobbPont) { legjobbPont = pont; legjobb = menu; }
     }
     Object.values(legjobb).forEach((r) => hasznalt.add(r.id));
@@ -1009,13 +1031,121 @@ $("#bev-elozo-het").addEventListener("click", () => { hetOffset--; rajzolBevasar
 $("#bev-kovetkezo-het").addEventListener("click", () => { hetOffset++; rajzolBevasarlas(); });
 
 // ============================================================
+// KAMRA (készlet) — vonalkóddal vagy kézzel felvitt élelmiszerek
+// ============================================================
+function rajzolKamra() {
+  const lista = $("#kamra-lista");
+  $("#kamra-ures").classList.toggle("hidden", keszlet.length > 0);
+  lista.innerHTML = keszlet.map((t) => `
+    <div class="bev-tetel kamra-tetel">
+      <span class="tetel-torzs">
+        <span class="nev">${esc(t.nev)}</span>
+        ${t.marka || t.tapertek100g ? `<small class="honnan">${esc(t.marka || "")}${t.marka && t.tapertek100g ? " · " : ""}${t.tapertek100g ? `🔥 ${esc(t.tapertek100g.kcal)} kcal/100g` : ""}</small>` : ""}
+      </span>
+      <button class="megsem" data-id="${esc(t.id)}" title="Törlés">✕</button>
+    </div>`).join("");
+
+  lista.querySelectorAll(".megsem").forEach((g) => {
+    g.addEventListener("click", () => {
+      keszlet = keszlet.filter((t) => t.id !== g.dataset.id);
+      store.set("pantry", keszlet);
+      rajzolKamra();
+    });
+  });
+}
+
+function kamraTetel(adatok) {
+  keszlet.push({ id: "k" + Date.now() + Math.random().toString(36).slice(2, 6), ...adatok });
+  store.set("pantry", keszlet);
+  rajzolKamra();
+}
+
+async function vonalkodFeldolgozas(kod) {
+  toast("🔍 Termék keresése…");
+  try {
+    const valasz = await fetch("https://world.openfoodfacts.org/api/v2/product/" + encodeURIComponent(kod) + ".json");
+    if (!valasz.ok) throw new Error();
+    const adat = await valasz.json();
+    if (adat.status !== 1 || !adat.product) throw new Error();
+    const p = adat.product;
+    const n = p.nutriments || {};
+    kamraTetel({
+      nev: p.product_name_hu || p.product_name || "Ismeretlen termék",
+      marka: p.brands || "",
+      vonalkod: kod,
+      tapertek100g: n["energy-kcal_100g"] ? {
+        kcal: Math.round(n["energy-kcal_100g"]),
+        feherje: Math.round(n.proteins_100g || 0),
+        zsir: Math.round(n.fat_100g || 0),
+        szenhidrat: Math.round(n.carbohydrates_100g || 0),
+        cukor: Math.round(n.sugars_100g || 0)
+      } : null
+    });
+    toast(`🧊 Hozzáadva: ${p.product_name_hu || p.product_name}`);
+  } catch {
+    toast("⚠️ Ezt a vonalkódot nem ismeri az adatbázis — írd be a termék nevét kézzel");
+    $("#kamra-input").focus();
+  }
+}
+
+function kamraBevitel() {
+  const mezo = $("#kamra-input");
+  const ertek = mezo.value.trim();
+  if (!ertek) return;
+  mezo.value = "";
+  if (/^\d{8,14}$/.test(ertek)) { vonalkodFeldolgozas(ertek); return; }
+  kamraTetel({ nev: ertek, marka: "", vonalkod: null, tapertek100g: null });
+}
+
+$("#kamra-hozzaad").addEventListener("click", kamraBevitel);
+$("#kamra-input").addEventListener("keydown", (e) => { if (e.key === "Enter") kamraBevitel(); });
+
+// kamerás vonalkód-olvasó (ZXing)
+let kodOlvaso = null;
+
+function zarVonalkodOlvaso() {
+  if (kodOlvaso) { try { kodOlvaso.reset(); } catch { /* már leállt */ } kodOlvaso = null; }
+  const modal = $("#vonalkod-modal");
+  if (modal.open) modal.close();
+}
+
+$("#vonalkod-gomb").addEventListener("click", async () => {
+  if (!window.ZXing) { toast("⚠️ A vonalkód-olvasó modul nem töltődött be"); return; }
+  $("#vonalkod-modal").showModal();
+  try {
+    kodOlvaso = new ZXing.BrowserMultiFormatReader();
+    const talalat = await kodOlvaso.decodeOnceFromConstraints(
+      { video: { facingMode: "environment" } },
+      "vonalkod-video"
+    );
+    zarVonalkodOlvaso();
+    if (talalat) vonalkodFeldolgozas(talalat.getText());
+  } catch (hiba) {
+    zarVonalkodOlvaso();
+    if (hiba && hiba.name === "NotAllowedError") toast("⚠️ Engedélyezd a kamerát a beolvasáshoz");
+    else if (hiba && hiba.name !== "NotFoundException") toast("⚠️ Nem sikerült elindítani a kamerát — írd be a számot kézzel");
+  }
+});
+
+$("#vonalkod-bezar").addEventListener("click", zarVonalkodOlvaso);
+$("#vonalkod-modal").addEventListener("close", zarVonalkodOlvaso);
+
+// egyszerű szó-egyezés a kamra-tétel és a recept-hozzávaló között
+function szoEgyezes(a, b) {
+  const tisztit = (sz) => sz.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-záéíóöőúüű ]/g, " ");
+  const szavak = (sz) => tisztit(sz).split(/\s+/).filter((w) => w.length >= 4);
+  const aSzavak = szavak(a), bSzavak = szavak(b);
+  return aSzavak.some((x) => bSzavak.some((y) => x.includes(y) || y.includes(x)));
+}
+
+// ============================================================
 // EXPORT / IMPORT
 // ============================================================
 $("#export-gomb").addEventListener("click", () => {
   const adat = {
     verzio: 1,
     exportalva: new Date().toISOString(),
-    sajatReceptek, feluliras, rejtettek, etrend, pipak
+    sajatReceptek, feluliras, rejtettek, etrend, pipak, keszlet
   };
   const blob = new Blob([JSON.stringify(adat, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -1039,11 +1169,13 @@ $("#import-input").addEventListener("change", (e) => {
       rejtettek = adat.rejtettek || [];
       etrend = adat.etrend || {};
       pipak = adat.pipak || {};
+      keszlet = adat.keszlet || [];
       store.set("custom", sajatReceptek);
       store.set("overrides", feluliras);
       store.set("hidden", rejtettek);
       store.set("plan", etrend);
       store.set("checked", pipak);
+      store.set("pantry", keszlet);
       rajzolReceptek(); rajzolEtrend(); rajzolBevasarlas();
       alert("Sikeres visszatöltés! ✅");
     } catch (hiba) {
@@ -1094,7 +1226,7 @@ rajzolReceptek();
 // szinkron indítása: ha van már helyi adat, de még sosem szinkronizált,
 // kapjon időbélyeget, hogy felkerüljön a hídra
 if (KULSO_VAROLISTA_URL) {
-  const vanHelyiAdat = sajatReceptek.length || rejtettek.length ||
+  const vanHelyiAdat = sajatReceptek.length || rejtettek.length || keszlet.length ||
     Object.keys(feluliras).length || Object.keys(etrend).length || Object.keys(pipak).length;
   if (!allapotModositva && vanHelyiAdat) {
     allapotModositva = Date.now();

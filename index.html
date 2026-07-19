@@ -19,6 +19,7 @@
       <button class="tab active" data-view="receptek">📖 Receptek</button>
       <button class="tab" data-view="etrend">📅 Étrend</button>
       <button class="tab" data-view="bevasarlas">🛒 Bevásárlólista</button>
+      <button class="tab" data-view="kamra">🧊 Kamra</button>
       <button class="tab beallitas-tab" id="frissit-gomb" title="App frissítése">🔄</button>
       <button class="tab hidden" id="beallitas-gomb" title="Beállítások">⚙️</button>
     </nav>
@@ -95,6 +96,18 @@
     </div>
     <div id="bevasarlo-lista"></div>
     <p id="bev-ures" class="ures hidden">Erre a hétre még nincs beosztott recept — állítsd össze az Étrend fülön! 📅</p>
+  </main>
+
+  <!-- ================= KAMRA ================= -->
+  <main id="view-kamra" class="view hidden">
+    <div class="link-sav">
+      <input type="text" id="kamra-input" placeholder="🧊 Írd be kézzel (pl. csirkemell), vagy add meg a vonalkód számát…">
+      <label class="kep-gomb" id="vonalkod-gomb" title="Vonalkód beolvasása kamerával">📷</label>
+      <button id="kamra-hozzaad" class="primary">Hozzáadás</button>
+    </div>
+    <p class="tipp">Az étrend-generátor tud ebből dolgozni: pipáld be nála, hogy „abból főzz, ami a kamrában van”.</p>
+    <div id="kamra-lista"></div>
+    <p id="kamra-ures" class="ures hidden">A kamrád még üres — olvass be egy vonalkódot, vagy írj be valamit kézzel! 🧊</p>
   </main>
 
   <footer class="lablec">
@@ -203,6 +216,16 @@
     </div>
   </dialog>
 
+  <!-- ============ VONALKÓD-OLVASÓ (modal) ============ -->
+  <dialog id="vonalkod-modal">
+    <div class="modal-fej">
+      <h2>📷 Vonalkód beolvasása</h2>
+      <button class="bezaro" id="vonalkod-bezar">✕</button>
+    </div>
+    <video id="vonalkod-video" class="vonalkod-video" playsinline muted></video>
+    <p class="tipp">Tartsd a vonalkódot a kamera elé. Ha nem megy, írd be a számsort kézzel a Kamra mezőjébe.</p>
+  </dialog>
+
   <!-- ============ ÉTREND-GENERÁTOR (modal) ============ -->
   <dialog id="generator-modal">
     <div class="modal-fej">
@@ -221,6 +244,9 @@
         <label class="jelolo"><input type="checkbox" name="etkezes" value="ebéd" checked> ☀️ ebéd</label>
         <label class="jelolo"><input type="checkbox" name="etkezes" value="uzsonna" checked> 🍎 uzsonna</label>
         <label class="jelolo"><input type="checkbox" name="etkezes" value="vacsora" checked> 🌙 vacsora</label>
+      </div>
+      <div class="jelolo-sor">
+        <label class="jelolo"><input type="checkbox" name="itthonrol"> 🧊 Abból főzz, ami a kamrában van (előnyben)</label>
       </div>
       <label>Hány naponta változzon a menü?
         <select name="valtozas">
@@ -276,6 +302,7 @@
   </dialog>
 
   <script src="config.js"></script>
+  <script src="lib/zxing.min.js"></script>
   <script src="recipes.js"></script>
   <script src="kinyero.js"></script>
   <script src="app.js"></script>
