@@ -57,6 +57,7 @@
       <button id="elozo-het">← Előző hét</button>
       <strong id="het-cimke"></strong>
       <button id="kovetkezo-het">Következő hét →</button>
+      <button id="generator-gomb" class="primary">✨ Étrend generálása</button>
     </div>
     <div class="tabla-gorgeto">
       <table id="etrend-tabla">
@@ -121,6 +122,7 @@
         <button id="adag-plusz" title="Több adag">+</button>
       </div>
     </div>
+    <p id="modal-darab" class="darab-info hidden"></p>
     <ul id="modal-hozzavalok"></ul>
     <h3>Elkészítés</h3>
     <ol id="modal-lepesek"></ol>
@@ -160,6 +162,10 @@
       <label>Elkészítés lépései <small>(soronként egy lépés)</small>
         <textarea name="lepesek" rows="6" required></textarea>
       </label>
+      <div class="form-sor">
+        <label>Hány darab készül? <small>(opcionális)</small> <input name="darab" type="number" min="1" placeholder="pl. 6"></label>
+        <label>Minek a darabja? <input name="darab_nev" placeholder="pl. muffin"></label>
+      </div>
       <label>Tápérték 1 adagra <small>(opcionális)</small></label>
       <div class="form-sor">
         <label>Kcal <input name="kcal" type="number" min="0" step="1"></label>
@@ -195,6 +201,40 @@
     <div class="modal-gombok">
       <button id="cella-torles" class="veszelyes hidden">🗑️ Cella ürítése</button>
     </div>
+  </dialog>
+
+  <!-- ============ ÉTREND-GENERÁTOR (modal) ============ -->
+  <dialog id="generator-modal">
+    <div class="modal-fej">
+      <h2>✨ Étrend-generátor</h2>
+      <button class="bezaro" data-close="generator-modal">✕</button>
+    </div>
+    <form id="generator-form">
+      <div class="form-sor">
+        <label>Napi kalória-cél <input name="cel_kcal" type="number" min="800" max="5000" value="1800" required></label>
+        <label>Napi fehérje-cél (g) <input name="cel_feherje" type="number" min="0" max="400" value="140" required></label>
+      </div>
+      <label>Melyik étkezéseket töltse ki?</label>
+      <div class="jelolo-sor">
+        <label class="jelolo"><input type="checkbox" name="etkezes" value="reggeli" checked> 🌅 reggeli</label>
+        <label class="jelolo"><input type="checkbox" name="etkezes" value="tízórai"> 🥪 tízórai</label>
+        <label class="jelolo"><input type="checkbox" name="etkezes" value="ebéd" checked> ☀️ ebéd</label>
+        <label class="jelolo"><input type="checkbox" name="etkezes" value="uzsonna" checked> 🍎 uzsonna</label>
+        <label class="jelolo"><input type="checkbox" name="etkezes" value="vacsora" checked> 🌙 vacsora</label>
+      </div>
+      <label>Hány naponta változzon a menü?
+        <select name="valtozas">
+          <option value="1">Minden nap más</option>
+          <option value="2">Kétnaponta (meal prep)</option>
+          <option value="3">Háromnaponta (meal prep)</option>
+          <option value="7">Egész héten ugyanaz</option>
+        </select>
+      </label>
+      <p class="tipp">A tápértékkel rendelkező receptjeidből válogat, és felülírja a megjelenített hét kijelölt étkezéseit. Étkezésenként 1 adaggal számol.</p>
+      <div class="modal-gombok">
+        <button type="submit" class="primary">✨ Generálás</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- ============ BEÁLLÍTÁSOK (modal, publikus mód) ============ -->

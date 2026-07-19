@@ -232,6 +232,11 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   border-radius: 10px;
   margin-top: 10px;
 }
+.darab-info { color: var(--halvany); font-size: 0.88rem; margin: 2px 0 6px; }
+.jelolo-sor { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.jelolo { display: flex; align-items: center; gap: 6px; font-weight: 400 !important; }
+.jelolo input { accent-color: var(--kiemelo); width: 16px; height: 16px; }
+
 .form-kep-blokk { margin-bottom: 12px; }
 .form-kep-blokk .mezo-cim { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 4px; }
 .form-kep-blokk .mezo-cim small { font-weight: 400; color: var(--halvany); }
@@ -420,10 +425,11 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 .modal-gombok { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
 #modal-hozzavalok li, #modal-lepesek li { margin-bottom: 6px; }
 
-/* szerkesztő űrlap */
-#recept-form label { display: block; margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; }
-#recept-form label small { font-weight: 400; color: var(--halvany); }
-#recept-form input, #recept-form select, #recept-form textarea {
+/* szerkesztő és generátor űrlap */
+#recept-form label, #generator-form label { display: block; margin-bottom: 12px; font-weight: 600; font-size: 0.9rem; }
+#recept-form label small, #generator-form label small { font-weight: 400; color: var(--halvany); }
+#recept-form input, #recept-form select, #recept-form textarea,
+#generator-form input[type="number"], #generator-form select {
   display: block;
   width: 100%;
   margin-top: 4px;

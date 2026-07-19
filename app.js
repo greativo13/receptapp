@@ -439,6 +439,16 @@ let modalAdag = 1; // az éppen nézett recept választott adagszáma
 function rajzolModalHozzavalok(r) {
   const szorzo = modalAdag / (r.adag || 1);
   $("#adag-szam").textContent = modalAdag + " adag";
+
+  // darabszám (pl. hány muffin) — az adagszámmal együtt skálázódik
+  const darabInfo = $("#modal-darab");
+  if (r.darab) {
+    const db = Math.round((r.darab / (r.adag || 1)) * modalAdag * 10) / 10;
+    darabInfo.textContent = `≈ ${db} db ${r.darab_nev || "darab"} lesz belőle`;
+    darabInfo.classList.remove("hidden");
+  } else {
+    darabInfo.classList.add("hidden");
+  }
   $("#modal-hozzavalok").innerHTML = (r.hozzavalok || []).map((h) => {
     const m = h.mennyiseg == null ? h : { ...h, mennyiseg: Math.round(h.mennyiseg * szorzo * 100) / 100 };
     return `<li><strong>${esc(mennyisegSzoveg(m))}</strong> ${esc(m.nev)}</li>`;
@@ -599,6 +609,8 @@ function nyitSzerkeszto(id) {
     form.lepesek.value = (r.lepesek || []).join("\n");
     form.megjegyzes.value = r.megjegyzes || "";
     form.forras.value = r.forras || "";
+    if (r.darab) form.darab.value = r.darab;
+    if (r.darab_nev) form.darab_nev.value = r.darab_nev;
     if (r.tapertek) {
       ["kcal", "feherje", "zsir", "szenhidrat", "cukor"].forEach((k) => {
         if (r.tapertek[k] != null) form[k].value = r.tapertek[k];
@@ -633,6 +645,11 @@ $("#recept-form").addEventListener("submit", (e) => {
   });
   if (Object.keys(tap).length) recept.tapertek = tap;
   if (formKep) recept.kep = formKep;
+  const darabErtek = parseInt(form.darab.value, 10);
+  if (darabErtek > 0) {
+    recept.darab = darabErtek;
+    if (form.darab_nev.value.trim()) recept.darab_nev = form.darab_nev.value.trim();
+  }
 
   if (regiId && (window.RECIPES || []).some((r) => r.id === regiId)) {
     feluliras[regiId] = recept;            // fájlbeli recept módosítása felülírásként
@@ -706,6 +723,84 @@ function rajzolEtrend() {
 
 $("#elozo-het").addEventListener("click", () => { hetOffset--; rajzolEtrend(); });
 $("#kovetkezo-het").addEventListener("click", () => { hetOffset++; rajzolEtrend(); });
+
+// ---------- étrend-generátor ----------
+// Cél: a napi kalória- és fehérje-célhoz legközelebbi menük összeállítása
+// a tápértékes receptekből, választható változatossággal (meal prep mód).
+$("#generator-gomb").addEventListener("click", () => $("#generator-modal").showModal());
+
+$("#generator-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const celKcal = parseInt(form.cel_kcal.value, 10) || 1800;
+  const celFeherje = parseInt(form.cel_feherje.value, 10) || 0;
+  const valtozas = parseInt(form.valtozas.value, 10) || 1;
+  const kivalasztott = [...form.querySelectorAll('input[name="etkezes"]:checked')].map((cb) => cb.value);
+  if (!kivalasztott.length) { toast("⚠️ Válassz legalább egy étkezést"); return; }
+
+  const tapertekesek = osszesRecept().filter((r) => r.tapertek && r.tapertek.kcal);
+  if (tapertekesek.length < 3) { toast("⚠️ Kevés a tápértékes recept a generáláshoz"); return; }
+
+  // étkezésenkénti jelölt-listák (ha egy kategória üres, a teljes készletből válogatunk)
+  const jeloltek = (kategoriak) => {
+    const lista = tapertekesek.filter((r) => kategoriak.includes(r.kategoria));
+    return lista.length ? lista : tapertekesek;
+  };
+  const poolok = {
+    "reggeli": jeloltek(["reggeli"]),
+    "tízórai": jeloltek(["desszert", "reggeli"]),
+    "ebéd": jeloltek(["ebéd", "vacsora"]),
+    "uzsonna": jeloltek(["desszert", "reggeli"]),
+    "vacsora": jeloltek(["vacsora", "ebéd"])
+  };
+
+  // blokkonként (ahány naponta változik) véletlen mintavételes keresés
+  const hasznalt = new Set();
+  const blokkok = [];
+  for (let b = 0; b < Math.ceil(7 / valtozas); b++) {
+    let legjobb = null;
+    let legjobbPont = Infinity;
+    for (let proba = 0; proba < 500; proba++) {
+      const menu = {};
+      let kcal = 0, feherje = 0, ismetles = 0;
+      kivalasztott.forEach((etkezes) => {
+        const pool = poolok[etkezes];
+        const r = pool[Math.floor(Math.random() * pool.length)];
+        menu[etkezes] = r;
+        kcal += r.tapertek.kcal;
+        feherje += r.tapertek.feherje || 0;
+        if (hasznalt.has(r.id)) ismetles++;
+      });
+      const idk = Object.values(menu).map((r) => r.id);
+      const napiDupla = idk.length - new Set(idk).size;
+      // pontozás: kalória-eltérés + fehérje-hiány (súlyozva) + változatosság
+      const pont = Math.abs(kcal - celKcal)
+        + Math.max(0, celFeherje - feherje) * 8
+        + ismetles * 120
+        + napiDupla * 500;
+      if (pont < legjobbPont) { legjobbPont = pont; legjobb = menu; }
+    }
+    Object.values(legjobb).forEach((r) => hasznalt.add(r.id));
+    blokkok.push(legjobb);
+  }
+
+  // beírás a megjelenített hétbe
+  const hetKulcs = datumKulcs(hetKezdete(hetOffset));
+  etrend[hetKulcs] = etrend[hetKulcs] || {};
+  for (let nap = 0; nap < 7; nap++) {
+    const blokk = blokkok[Math.floor(nap / valtozas)];
+    etrend[hetKulcs][nap] = etrend[hetKulcs][nap] || {};
+    kivalasztott.forEach((etkezes) => { etrend[hetKulcs][nap][etkezes] = blokk[etkezes].id; });
+  }
+  store.set("plan", etrend);
+  $("#generator-modal").close();
+  rajzolEtrend();
+
+  const elsoNap = blokkok[0];
+  const napiKcal = Object.values(elsoNap).reduce((s, r) => s + r.tapertek.kcal, 0);
+  const napiFeherje = Object.values(elsoNap).reduce((s, r) => s + (r.tapertek.feherje || 0), 0);
+  toast(`✨ Kész! Az első napi menü: ${napiKcal} kcal, ${napiFeherje} g fehérje`);
+});
 
 // ---------- receptválasztó ----------
 function nyitValaszto(hetKulcs, nap, etkezes) {

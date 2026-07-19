@@ -157,6 +157,7 @@ window.RECIPES = [
   },
   {
     id: "dietas-langos-2026-07-16",
+    darab: 6, darab_nev: "lángos",
     nev: "Diétás lángos (légkeveréses)",
     forras: "https://vm.tiktok.com/ZNRow4x1a/",
     kategoria: "egyéb",
@@ -183,6 +184,7 @@ window.RECIPES = [
   },
   {
     id: "palacsinta-alaprecept-2026-07-17",
+    darab: 12, darab_nev: "palacsinta",
     nev: "Palacsinta alaprecept",
     forras: null,
     kategoria: "desszert",
@@ -333,6 +335,7 @@ window.RECIPES = [
   },
   {
     id: "fit-zabmuffin-2026-07-17",
+    darab: 6, darab_nev: "muffin",
     nev: "Fit zabmuffin",
     forras: "https://vm.tiktok.com/ZN811MuSr/",
     kategoria: "reggeli",
@@ -438,6 +441,7 @@ window.RECIPES = [
   },
   {
     id: "csirkes-fajita-2026-07-17",
+    darab: 4, darab_nev: "fajita",
     nev: "Csirkés fajita",
     forras: "https://www.facebook.com/share/r/1CnWE6YQvN/?mibextid=wwXIfr",
     kategoria: "vacsora",
@@ -470,6 +474,7 @@ window.RECIPES = [
   },
   {
     id: "sonkas-tojasmuffin-2026-07-17",
+    darab: 6, darab_nev: "muffin",
     nev: "Sonkás-zöldséges tojásmuffin",
     forras: null,
     kategoria: "reggeli",
@@ -794,6 +799,7 @@ window.RECIPES = [
   },
   {
     id: "rizspapiros-protein-doner-2026-07-18",
+    darab: 3, darab_nev: "lepény",
     nev: "Rizspapíros protein-döner",
     forras: "https://vm.tiktok.com/ZN812Vchc/",
     kategoria: "ebéd",
@@ -904,6 +910,7 @@ window.RECIPES = [
   },
   {
     id: "feherjes-palacsinta-2026-07-18",
+    darab: 6, darab_nev: "palacsinta",
     nev: "Fehérjés banános palacsinta",
     forras: null, kategoria: "reggeli", adag: 1, ido_perc: 15,
     hozzavalok: [
@@ -1230,6 +1237,7 @@ window.RECIPES = [
   },
   {
     id: "csokis-proteingolyok-2026-07-18",
+    darab: 8, darab_nev: "golyó",
     nev: "Csokis-mogyorós proteingolyók",
     forras: null, kategoria: "desszert", adag: 4, ido_perc: 15,
     hozzavalok: [
