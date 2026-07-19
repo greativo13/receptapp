@@ -959,6 +959,11 @@ $("#import-input").addEventListener("change", (e) => {
   e.target.value = "";
 });
 
+// állandó kézi frissítés-gomb a fejlécben (cache-kerülő újratöltés)
+$("#frissit-gomb").addEventListener("click", () => {
+  location.href = location.pathname + "?frissites=" + Date.now();
+});
+
 // ---------- publikus mód: beállítások és üdvözlő ----------
 if (PUBLIKUS) {
   $("#beallitas-gomb").classList.remove("hidden");
