@@ -238,7 +238,10 @@
           <option value="desszert">Desszert</option>
         </select>
       </label>
-      <p class="tipp">A kérés a várólistára kerül, és a következő feldolgozásnál Claude ír belőle egy receptet tápértékkel — nem kötelező minden alapanyagot felhasználnia.</p>
+      <label>Amit kerüljek <small>(opcionális)</small>
+        <input name="kivansag_kerulendo" placeholder="pl. hal, gomba, brokkoli">
+      </label>
+      <p class="tipp">Ha a ⚙️ Beállításokban meg van adva az ingyenes Gemini-kulcsod, a recept azonnal elkészül. Kulcs nélkül a várólistára kerül, és a következő feldolgozásnál készíti el Claude.</p>
       <div class="modal-gombok">
         <button type="submit" class="primary">🪄 Kérem a receptet</button>
       </div>

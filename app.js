@@ -282,6 +282,7 @@ async function varolistaraTesz(url) {
 $("#kivansag-gomb").addEventListener("click", () => {
   const mezo = $("#kivansag-alapanyagok");
   if (!mezo.value.trim() && keszlet.length) mezo.value = keszlet.map((t) => t.nev).join(", ");
+  $("#kivansag-form").kivansag_kerulendo.value = store.get("kerulendo", "");
   $("#kivansag-modal").showModal();
 });
 
@@ -290,12 +291,39 @@ $("#kivansag-form").addEventListener("submit", async (e) => {
   const alapanyagok = $("#kivansag-alapanyagok").value.split(/[\n,]/).map((s) => s.trim()).filter(Boolean);
   if (!alapanyagok.length) { toast("⚠️ Írj be legalább egy alapanyagot"); return; }
   const kategoria = e.target.kivansag_kategoria.value;
+  const kerulendo = e.target.kivansag_kerulendo.value.trim();
+  store.set("kerulendo", kerulendo, false); // megjegyezzük a következő kéréshez
+
+  // ha van Gemini-kulcs: azonnali generálás helyben; különben várólistára megy
+  if (geminiKulcs()) {
+    $("#kivansag-modal").close();
+    toast("🪄 Recept készítése…");
+    try {
+      const keres = GEMINI_RECEPT_UTASITAS
+        + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi alapanyagokból. Nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható."
+        + (kategoria ? " Az étkezés típusa: " + kategoria + "." : "")
+        + (kerulendo ? " SOHA ne használd ezeket: " + kerulendo + "." : "")
+        + "\n\nAlapanyagok: " + alapanyagok.join(", ");
+      const nyers = await geminiHivas([{ text: keres }]);
+      const recept = receptbolBejegyzes(nyers, null);
+      if (!recept) throw new Error("nincs recept");
+      recept.megjegyzes = (recept.megjegyzes ? recept.megjegyzes + " " : "") + "A kért alapanyagokból: " + alapanyagok.join(", ") + ".";
+      mentesEsMutatas(recept);
+    } catch {
+      toast("⚠️ Az azonnali generálás nem sikerült — a kérést a várólistára tettem");
+      const url = "https://kivansag.recept/?alapanyagok=" + encodeURIComponent(alapanyagok.join(", "))
+        + (kategoria ? "&kategoria=" + encodeURIComponent(kategoria) : "");
+      try { await varolistaraTesz(url); } catch { /* offline */ }
+    }
+    return;
+  }
+
   const url = "https://kivansag.recept/?alapanyagok=" + encodeURIComponent(alapanyagok.join(", "))
     + (kategoria ? "&kategoria=" + encodeURIComponent(kategoria) : "");
   try {
     await varolistaraTesz(url);
     $("#kivansag-modal").close();
-    toast("🪄 Receptkérés elküldve — a következő feldolgozásnál elkészül!");
+    toast("🪄 Receptkérés elküldve — a következő feldolgozásnál elkészül! (⚙️-ben kulcsot állítva azonnali lenne)");
   } catch {
     toast("⚠️ Nem sikerült elküldeni a kérést");
   }
@@ -1250,27 +1278,28 @@ $("#frissit-gomb").addEventListener("click", () => {
   location.href = location.pathname + "?frissites=" + Date.now();
 });
 
-// ---------- publikus mód: beállítások és üdvözlő ----------
+// ---------- beállítások (Gemini-kulcs) — minden módban elérhető ----------
+$("#beallitas-gomb").classList.remove("hidden");
+
+$("#beallitas-gomb").addEventListener("click", () => {
+  $("#gemini-kulcs-input").value = localStorage.getItem("receptapp.gemini_kulcs") || "";
+  $("#beallitas-modal").showModal();
+});
+$("#gemini-kulcs-mentes").addEventListener("click", () => {
+  const kulcs = $("#gemini-kulcs-input").value.trim();
+  if (kulcs) localStorage.setItem("receptapp.gemini_kulcs", kulcs);
+  $("#beallitas-modal").close();
+  toast(kulcs ? "✅ Kulcs elmentve — a receptkérés mostantól azonnali!" : "ℹ️ Nincs kulcs mentve");
+});
+$("#gemini-kulcs-torles").addEventListener("click", () => {
+  localStorage.removeItem("receptapp.gemini_kulcs");
+  $("#gemini-kulcs-input").value = "";
+  $("#beallitas-modal").close();
+  toast("🗑️ Kulcs törölve");
+});
+
+// ---------- publikus mód: üdvözlő ----------
 if (PUBLIKUS) {
-  $("#beallitas-gomb").classList.remove("hidden");
-
-  $("#beallitas-gomb").addEventListener("click", () => {
-    $("#gemini-kulcs-input").value = localStorage.getItem("receptapp.gemini_kulcs") || "";
-    $("#beallitas-modal").showModal();
-  });
-  $("#gemini-kulcs-mentes").addEventListener("click", () => {
-    const kulcs = $("#gemini-kulcs-input").value.trim();
-    if (kulcs) localStorage.setItem("receptapp.gemini_kulcs", kulcs);
-    $("#beallitas-modal").close();
-    toast(kulcs ? "✅ Kulcs elmentve — mostantól automata a felismerés" : "ℹ️ Nincs kulcs — kézi módban dolgozunk");
-  });
-  $("#gemini-kulcs-torles").addEventListener("click", () => {
-    localStorage.removeItem("receptapp.gemini_kulcs");
-    $("#gemini-kulcs-input").value = "";
-    $("#beallitas-modal").close();
-    toast("🗑️ Kulcs törölve");
-  });
-
   if (!store.get("udvozolve", false)) {
     $("#udvozlo-modal").showModal();
     const udvozloVege = () => { store.set("udvozolve", true, false); $("#udvozlo-modal").close(); };
