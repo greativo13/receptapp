@@ -1298,5 +1298,190 @@ window.RECIPES = [
     megjegyzes: "Claude fitnesz-receptje. Almás pite-hangulat — meleg-hideg kontraszttal.",
     tapertek: { kcal: 195, feherje: 11, zsir: 6, szenhidrat: 28, cukor: 20 },
     hozzaadva: "2026-07-18"
+  },
+  {
+    id: "kakaos-turomousse-2026-07-20",
+    nev: "Kakaós cottage cheese mousse",
+    forras: "https://vm.tiktok.com/ZN81hpxN9/",
+    kategoria: "desszert",
+    adag: 2,
+    ido_perc: 10,
+    hozzavalok: [
+      { nev: "cottage cheese (szemcsés túró)", mennyiseg: 250, egyseg: "g" },
+      { nev: "cukrozatlan kakaópor", mennyiseg: 2, egyseg: "ek" },
+      { nev: "chia mag", mennyiseg: 1, egyseg: "ek" },
+      { nev: "vaníliás cukor vagy édesítő (elhagyható)", mennyiseg: 1, egyseg: "ek" },
+      { nev: "étcsoki forgács és friss bogyós gyümölcs (a tetejére)", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Turmixold teljesen simára és krémesre az összes hozzávalót.",
+      "Oszd két pohárba, és hűtsd legalább 2 órát (legjobb egy éjszakán át), hogy megdermedjen.",
+      "Tálaláskor szórd meg aprított étcsokival és friss bogyós gyümölccsel."
+    ],
+    megjegyzes: "Dán videóból fordítva (tinadehnfjeld). A készítő tippje: csinálj duplát — másnap reggelinek is tökéletes.",
+    tapertek: { kcal: 190, feherje: 16, zsir: 8, szenhidrat: 12, cukor: 6 },
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "protein-mousse-2026-07-20",
+    nev: "Csokis protein mousse",
+    forras: "https://vm.tiktok.com/ZN81kJk9Q/",
+    kategoria: "desszert",
+    adag: 3,
+    ido_perc: 15,
+    hozzavalok: [
+      { nev: "high protein joghurt", mennyiseg: 660, egyseg: "g" },
+      { nev: "holland kakaópor", mennyiseg: 15, egyseg: "g" },
+      { nev: "fehérjepor", mennyiseg: 60, egyseg: "g" },
+      { nev: "étcsokoládé", mennyiseg: 80, egyseg: "g" }
+    ],
+    lepesek: [
+      "Az étcsokit olvaszd fel vízgőz felett vagy mikróban.",
+      "Keverd simára a joghurtot a kakaóporral és a fehérjeporral.",
+      "Dolgozd hozzá az olvasztott csokit, és keverd fényes krémmé.",
+      "Poharakba adagolva hűtsd legalább 1 órát."
+    ],
+    megjegyzes: "A videó szerint adagonként: 359 kcal és 43 g fehérje (petraszigetii). Az értékek a felhasznált márkáktól függően változhatnak.",
+    tapertek: { kcal: 359, feherje: 43, zsir: 12, szenhidrat: 20, cukor: 12 },
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "bounty-falatok-2026-07-20",
+    nev: "Bounty falatok cukor nélkül (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81kdVNe/",
+    kategoria: "desszert",
+    adag: 1,
+    ido_perc: 30,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ A recept csak a videóban látható — nyisd meg a linkről és egészítsd ki kézzel, vagy kérd a chatben: 'nézd végig a videót'. Hozzáadott cukor nélküli kókuszos falatok (panczeldori).",
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "pulykas-tortilla-tekercs-2026-07-20",
+    nev: "Sajtos-sülthagymás pulykás tortilla tekercs",
+    forras: "https://vm.tiktok.com/ZN81hqQWg/",
+    kategoria: "vacsora",
+    adag: 4,
+    ido_perc: 35,
+    darab: 4, darab_nev: "tekercs",
+    hozzavalok: [
+      { nev: "darált pulyka", mennyiseg: 400, egyseg: "g" },
+      { nev: "fűszerpaprika", mennyiseg: 1, egyseg: "tk" },
+      { nev: "fokhagymapor", mennyiseg: 1, egyseg: "tk" },
+      { nev: "lilahagyma (fél fej, darálva)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "kápia paprika (negyed, darálva)", mennyiseg: 0.25, egyseg: "db" },
+      { nev: "vöröshagyma (vékonyra szelve, olívaolajon pirítva)", mennyiseg: 1, egyseg: "db" },
+      { nev: "reszelt sajt", mennyiseg: 100, egyseg: "g" },
+      { nev: "tortilla lap", mennyiseg: 4, egyseg: "db" },
+      { nev: "tojás (a lekenéshez)", mennyiseg: 1, egyseg: "db" },
+      { nev: "paradicsom (a salsához)", mennyiseg: 2, egyseg: "db" },
+      { nev: "lilahagyma, petrezselyem, lime, füstölt tabasco (a salsához)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "só, bors", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A darált pulykát keverd össze a fűszerekkel és a darált lilahagyma-kápia keverékkel.",
+      "A vöröshagymát kevés olívaolajon sózva-borsozva pirítsd meg.",
+      "A tortillákra oszd el a húsos masszát, a sült hagymát és a reszelt sajtot, majd tekerd fel őket.",
+      "Kend le felvert tojással, és airfryerben 180 fokon 15 perc alatt süsd aranybarnára.",
+      "A salsához aprítsd össze a paradicsomot, lilahagymát, petrezselymet, lime-héjat és -levet, ízesítsd sóval, borssal, füstölt tabascóval."
+    ],
+    megjegyzes: "1 adag = 1 tekercs (gydorejj videójából). Kívül ropogós, belül szaftos.",
+    tapertek: { kcal: 460, feherje: 32, zsir: 20, szenhidrat: 38, cukor: 5 },
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "kremes-paprikas-csirke-2026-07-20",
+    nev: "Krémes paprikás csirke",
+    forras: "https://vm.tiktok.com/ZN81ASWwx/",
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "csirkemell", mennyiseg: 300, egyseg: "g" },
+      { nev: "zabliszt (a forgatáshoz)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "fokhagyma", mennyiseg: 4, egyseg: "gerezd" },
+      { nev: "alaplé (vagy víz + fél leveskocka)", mennyiseg: 150, egyseg: "ml" },
+      { nev: "főzőtejszín (10%)", mennyiseg: 100, egyseg: "ml" },
+      { nev: "friss petrezselyem", mennyiseg: 10, egyseg: "g" },
+      { nev: "füstölt pirospaprika", mennyiseg: 1, egyseg: "tk" },
+      { nev: "basmati rizs (száraz)", mennyiseg: 40, egyseg: "g" },
+      { nev: "zöldköret (pl. zöldbab vagy párolt cukkini)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "só, bors, olívaolaj spray", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A felkockázott csirkemellet forgasd zablisztbe, és olajsprayvel lefújt serpenyőben pirítsd elő.",
+      "Add hozzá a zúzott fokhagymát és a füstölt pirospaprikát, majd öntsd fel az alaplével.",
+      "Keverd hozzá a főzőtejszínt, és forrald be szaftos, krémes mártássá; sózd, borsozd.",
+      "Szórd meg friss petrezselyemmel, és tálald főtt basmati rizzsel + zöldkörettel."
+    ],
+    megjegyzes: "A videó szerint 1 adag: 476 kcal, CH 41 g, fehérje 38 g, zsír 17,5 g (adriorban_). Az eredetiben brokkoli a köret — zöldbabbal vagy cukkinivel ugyanolyan jó.",
+    tapertek: { kcal: 476, feherje: 38, zsir: 18, szenhidrat: 41, cukor: 5 },
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "cornflakes-csirke-2026-07-20",
+    nev: "Corn flakes bundás csirke sütőből",
+    forras: "https://vm.tiktok.com/ZN81AXYWH/",
+    kategoria: "ebéd",
+    adag: 4,
+    ido_perc: 70,
+    hozzavalok: [
+      { nev: "csirkemell", mennyiseg: 500, egyseg: "g" },
+      { nev: "corn flakes pehely", mennyiseg: 120, egyseg: "g" },
+      { nev: "tojás", mennyiseg: 1, egyseg: "db" },
+      { nev: "szója- vagy natúr joghurt", mennyiseg: 2, egyseg: "ek" },
+      { nev: "sült csirke fűszersó", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "olívaolaj (a locsoláshoz)", mennyiseg: 1, egyseg: "ek" }
+    ],
+    lepesek: [
+      "A csirkemellet vágd kb. fél cm vastag szeletekre, fűszerezd, és forgasd össze a joghurttal felvert tojással; hűtőben pácold 1 órát (elhagyható, de ajánlott).",
+      "A corn flakest darabosra daráld — jó, ha marad benne nagyobb törmelék is.",
+      "Forgasd a húst a pehelymorzsába, és fektesd sütőpapíros tepsire.",
+      "Locsold meg kevés olívaolajjal, és 180 fokra előmelegített sütőben 45-50 perc alatt süsd ropogósra."
+    ],
+    megjegyzes: "barackcsapat_edzes videójából. Frissen sülve, salátára vagy szendvicsbe is kiváló — nem tocsog az olajban.",
+    tapertek: { kcal: 300, feherje: 32, zsir: 8, szenhidrat: 26, cukor: 2 },
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "ismeretlen-video-2026-07-20",
+    nev: "Ismeretlen recept (kiegészítésre vár)",
+    forras: "https://vm.tiktok.com/ZN81Aa6ah/",
+    kategoria: "egyéb",
+    adag: 1,
+    ido_perc: null,
+    hozzavalok: [],
+    lepesek: [],
+    megjegyzes: "⚠️ Ehhez a videóhoz se leírást, se feliratot nem találtam (lehet, hogy törölték vagy képes bejegyzés) — nyisd meg a linkről, és egészítsd ki kézzel, vagy töröld, ha nem fontos.",
+    hozzaadva: "2026-07-20"
+  },
+  {
+    id: "mediterran-orzo-salata-2026-07-20",
+    nev: "Mediterrán orzo saláta csirkével",
+    forras: "https://vm.tiktok.com/ZN81AtVGq/",
+    kategoria: "ebéd",
+    adag: 4,
+    ido_perc: 30,
+    hozzavalok: [
+      { nev: "orzo tészta (vagy bármilyen apró tészta)", mennyiseg: 200, egyseg: "g" },
+      { nev: "csirkemell", mennyiseg: 500, egyseg: "g" },
+      { nev: "feta", mennyiseg: 200, egyseg: "g" },
+      { nev: "kígyóuborka", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "paradicsom", mennyiseg: 2, egyseg: "db" },
+      { nev: "lilahagyma", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "olívaolaj", mennyiseg: 2, egyseg: "ek" },
+      { nev: "citromlé", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "só, bors, pirospaprika, fokhagyma, oregánó", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Főzd ki az orzót sós vízben, szűrd le, és hagyd kicsit hűlni.",
+      "A kockázott csirkemellet fűszerezd (só, bors, pirospaprika, fokhagyma, oregánó), és süsd készre.",
+      "Kockázd fel az uborkát, paradicsomot, lilahagymát és a fetát.",
+      "Forgasd össze mindent az olívaolajjal és citromlével — langyosan és hidegen is finom."
+    ],
+    megjegyzes: "bettisdailykitchen videójából. Nyári meal prep kedvenc: hűtőben 3 napig eláll.",
+    tapertek: { kcal: 505, feherje: 42, zsir: 18, szenhidrat: 41, cukor: 3 },
+    hozzaadva: "2026-07-20"
   }
 ];
