@@ -472,7 +472,9 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 
 @media (max-width: 600px) {
   .topbar h1 { font-size: 1.2rem; }
-  .tab { padding: 8px 10px; font-size: 0.9rem; }
+  .tabs { overflow-x: auto; }
+  .tab { padding: 8px 9px; font-size: 1.1rem; }
+  .tab-szoveg { display: none; } /* mobilon csak az ikonok — így minden kifér */
   .form-sor { flex-direction: column; gap: 0; }
   .link-sav { padding: 8px; gap: 6px; }
   .kep-gomb { padding: 8px 10px; }
