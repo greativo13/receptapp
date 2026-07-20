@@ -106,6 +106,9 @@
       <button id="kamra-hozzaad" class="primary">Hozzáadás</button>
     </div>
     <p class="tipp">Az étrend-generátor tud ebből dolgozni: pipáld be nála, hogy „abból főzz, ami a kamrában van”.</p>
+    <div class="generator-sor">
+      <button id="kivansag-gomb" class="primary">🪄 Recept ezekből az alapanyagokból</button>
+    </div>
     <div id="kamra-lista"></div>
     <p id="kamra-ures" class="ures hidden">A kamrád még üres — olvass be egy vonalkódot, vagy írj be valamit kézzel! 🧊</p>
   </main>
@@ -214,6 +217,32 @@
     <div class="modal-gombok">
       <button id="cella-torles" class="veszelyes hidden">🗑️ Cella ürítése</button>
     </div>
+  </dialog>
+
+  <!-- ============ RECEPT-KÍVÁNSÁG (modal) ============ -->
+  <dialog id="kivansag-modal">
+    <div class="modal-fej">
+      <h2>🪄 Recept a megadott alapanyagokból</h2>
+      <button class="bezaro" data-close="kivansag-modal">✕</button>
+    </div>
+    <form id="kivansag-form">
+      <label>Milyen alapanyagokból főznél? <small>(vesszővel vagy soronként)</small>
+        <textarea id="kivansag-alapanyagok" rows="4" placeholder="pl. csirkemell, rizs, paprika, tejföl"></textarea>
+      </label>
+      <label>Milyen étkezésre?
+        <select name="kivansag_kategoria">
+          <option value="">Mindegy</option>
+          <option value="reggeli">Reggeli</option>
+          <option value="ebéd">Ebéd</option>
+          <option value="vacsora">Vacsora</option>
+          <option value="desszert">Desszert</option>
+        </select>
+      </label>
+      <p class="tipp">A kérés a várólistára kerül, és a következő feldolgozásnál Claude ír belőle egy receptet tápértékkel — nem kötelező minden alapanyagot felhasználnia.</p>
+      <div class="modal-gombok">
+        <button type="submit" class="primary">🪄 Kérem a receptet</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- ============ VONALKÓD-OLVASÓ (modal) ============ -->

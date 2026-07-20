@@ -206,6 +206,17 @@ function toast(uzenet) {
 let helyiVarolista = [];  // a gépen futó szerver várólistája
 let kulsoVarolista = [];  // a Google-hídon lévő várólista (weboldalról küldött linkek, képek)
 
+function varoCimke(url) {
+  if (url.startsWith("kep:")) return "📷 Fotóból recept";
+  if (url.startsWith("https://kivansag.recept/")) {
+    try {
+      const p = new URL(url);
+      return "🪄 Receptkérés: " + (p.searchParams.get("alapanyagok") || "").slice(0, 60);
+    } catch { return "🪄 Receptkérés"; }
+  }
+  return url;
+}
+
 function rajzolVarolista() {
   const elemek = helyiVarolista.map((t) => ({ ...t, kulso: false }))
     .concat(kulsoVarolista.map((t) => ({ ...t, kulso: true })));
@@ -213,7 +224,7 @@ function rajzolVarolista() {
   $("#varolista").innerHTML = elemek.map((t) => `
     <div class="varo-tetel">
       <span>⏳ Feldolgozásra vár:</span>
-      <span class="url">${t.url.startsWith("kep:") ? "📷 Fotóból recept" : esc(t.url)}</span>
+      <span class="url">${esc(varoCimke(t.url))}</span>
       ${t.kulso ? "" : `<button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>`}
     </div>`).join("");
 
@@ -241,26 +252,54 @@ async function linkBekuldes() {
     return;
   }
   try {
-    if (vanLinkApi) {
-      const valasz = await fetch("api/link", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url })
-      });
-      if (!valasz.ok) throw new Error();
-      helyiVarolista = await valasz.json();
-    } else {
-      const valasz = await fetch(KULSO_VAROLISTA_URL + "?uj=" + encodeURIComponent(url));
-      if (!valasz.ok) throw new Error();
-      kulsoVarolista = await valasz.json();
-    }
-    rajzolVarolista();
+    await varolistaraTesz(url);
     mezo.value = "";
     toast("🎬 Link a várólistán — hamarosan recept lesz belőle!");
   } catch {
     toast("⚠️ Nem sikerült elmenteni a linket");
   }
 }
+
+// közös várólistára-tevő: helyi szerverre vagy a Google hídra
+async function varolistaraTesz(url) {
+  if (vanLinkApi) {
+    const valasz = await fetch("api/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url })
+    });
+    if (!valasz.ok) throw new Error();
+    helyiVarolista = await valasz.json();
+  } else {
+    const valasz = await fetch(KULSO_VAROLISTA_URL + "?uj=" + encodeURIComponent(url));
+    if (!valasz.ok) throw new Error();
+    kulsoVarolista = await valasz.json();
+  }
+  rajzolVarolista();
+}
+
+// recept-kívánság: alapanyag-listából kér új receptet a feldolgozótól
+$("#kivansag-gomb").addEventListener("click", () => {
+  const mezo = $("#kivansag-alapanyagok");
+  if (!mezo.value.trim() && keszlet.length) mezo.value = keszlet.map((t) => t.nev).join(", ");
+  $("#kivansag-modal").showModal();
+});
+
+$("#kivansag-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const alapanyagok = $("#kivansag-alapanyagok").value.split(/[\n,]/).map((s) => s.trim()).filter(Boolean);
+  if (!alapanyagok.length) { toast("⚠️ Írj be legalább egy alapanyagot"); return; }
+  const kategoria = e.target.kivansag_kategoria.value;
+  const url = "https://kivansag.recept/?alapanyagok=" + encodeURIComponent(alapanyagok.join(", "))
+    + (kategoria ? "&kategoria=" + encodeURIComponent(kategoria) : "");
+  try {
+    await varolistaraTesz(url);
+    $("#kivansag-modal").close();
+    toast("🪄 Receptkérés elküldve — a következő feldolgozásnál elkészül!");
+  } catch {
+    toast("⚠️ Nem sikerült elküldeni a kérést");
+  }
+});
 
 $("#link-gomb").addEventListener("click", linkBekuldes);
 $("#link-input").addEventListener("keydown", (e) => { if (e.key === "Enter") linkBekuldes(); });
@@ -696,8 +735,10 @@ function rajzolEtrend() {
     const cellak = NAPOK.map((_, i) => {
       const id = hetiTerv[i]?.[etkezes];
       const r = id ? receptById(id) : null;
-      return `<td class="etkezes-cella ${r ? "" : "ures-cella"} ${maNapok[i] ? "ma" : ""}"
-                  data-nap="${i}" data-etkezes="${etkezes}">${r ? esc(r.nev) : "+"}</td>`;
+      return `<td class="etkezes-cella ${r ? "toltott" : "ures-cella"} ${maNapok[i] ? "ma" : ""}"
+                  data-nap="${i}" data-etkezes="${etkezes}" ${r ? `data-recept="${esc(r.id)}"` : ""}>
+                ${r ? `${esc(r.nev)}<button class="cella-szerk" data-nap="${i}" data-etkezes="${etkezes}" title="Csere / törlés">✎</button>` : "+"}
+              </td>`;
     }).join("");
     return `<tr><td class="nap-nev">${ETKEZES_IKON[etkezes]} ${etkezes}</td>${cellak}</tr>`;
   }).join("");
@@ -721,8 +762,18 @@ function rajzolEtrend() {
     return `<td class="${maNapok[i] ? "ma" : ""}">${tartalom}</td>`;
   }).join("") + "</tr>";
 
+  // kitöltött cella: a recept nyílik meg; üres cella vagy a ✎ ikon: a választó
   tbody.querySelectorAll(".etkezes-cella").forEach((cella) => {
-    cella.addEventListener("click", () => nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes));
+    cella.addEventListener("click", () => {
+      if (cella.dataset.recept) nyitReszletek(cella.dataset.recept);
+      else nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes);
+    });
+  });
+  tbody.querySelectorAll(".cella-szerk").forEach((gomb) => {
+    gomb.addEventListener("click", (e) => {
+      e.stopPropagation();
+      nyitValaszto(hetKulcs, +gomb.dataset.nap, gomb.dataset.etkezes);
+    });
   });
 }
 
@@ -904,6 +955,24 @@ const ATLAG_SULY = [
   ["alma", 150]
 ];
 
+// bolti termék-kategóriák a bevásárlólista csoportosításához
+// (a sorrend számít: a specifikusabb kulcsszavú csoportok vannak elöl)
+const TERMEK_CSOPORTOK = [
+  ["🧂 Alapanyag, fűszer", ["só", "bors", "fűszer", "pirospaprika", "olaj", "ecet", "méz", "cukor", "édesítő", "mustár", "majonéz", "ketchup", "szója", "kakaó", "fehérjepor", "sütőpor", "vanília", "fahéj", "curry", "oregánó", "bazsalikom", "kakukkfű", "szezám", "dió", "mogyoró", "mandula", "chili", "kömény", "majoránna", "aroma", "keményítő", "csoki", "kókusz", "granulátum", "puding", "bor "]],
+  ["🥩 Hús, felvágott", ["csirke", "pulyka", "sertés", "marha", "sonka", "kolbász", "darált", "hús", "szalámi", "bacon"]],
+  ["🥛 Tejtermék, tojás", ["tej", "sajt", "túró", "joghurt", "skyr", "tejföl", "vaj", "mozzarella", "feta", "cheddar", "parmezán", "tojás", "quark", "krémsajt"]],
+  ["🥬 Zöldség, gyümölcs", ["paradicsom", "uborka", "hagyma", "paprika", "cukkini", "burgonya", "krumpli", "saláta", "spenót", "retek", "zöldbab", "borsó", "káposzta", "padlizsán", "kukorica", "répa", "fokhagyma", "citrom", "lime", "alma", "banán", "eper", "málna", "barack", "ananász", "áfonya", "gyümölcs", "petrezselyem", "kapor", "snidling", "koriander", "gyömbér", "avokádó", "olívabogyó", "zöldség"]],
+  ["🍞 Pékáru, gabona", ["liszt", "zab", "rizs", "tészta", "kenyér", "tortilla", "pita", "keksz", "spagetti", "bulgur", "rizspapír", "granola", "müzli"]]
+];
+
+function termekKategoria(nev) {
+  const kis = nev.toLowerCase();
+  for (const [cim, kulcsszavak] of TERMEK_CSOPORTOK) {
+    if (kulcsszavak.some((k) => kis.includes(k))) return cim;
+  }
+  return "🛒 Egyéb";
+}
+
 // darabban megadott hozzávaló átszámítása grammra, ha ismerjük az átlagsúlyát
 function normalizalMennyiseg(h) {
   if (h.mennyiseg == null || h.egyseg !== "db") return { ...h, kozelito: false };
@@ -961,20 +1030,19 @@ function rajzolBevasarlas() {
     (bevNapSzuro === null ? "Egész hét" : NAPOK[bevNapSzuro]) + " · " +
     (bevEtelSzuro === null ? "Minden étel" : (receptById(bevEtelSzuro)?.nev || "Minden étel"));
 
-  // csoportok: egy étel = egy blokk, alatta a hozzávalói
-  const csoportok = Object.entries(darabszam)
+  // hozzávalók összesítése termékenként (egységesített mértékegységgel),
+  // majd bolti termék-kategóriák szerinti csoportosítás
+  const ervenyesReceptek = Object.entries(darabszam)
     .filter(([id]) => bevEtelSzuro === null || id === bevEtelSzuro)
     .map(([id, db]) => ({ r: receptById(id), db }))
-    .filter((cs) => cs.r)
-    .sort((a, b) => a.r.nev.localeCompare(b.r.nev, "hu"));
+    .filter((cs) => cs.r);
 
-  // összesítő a több ételhez is kellő hozzávalókhoz (egységesített mértékegységgel)
   const osszesito = {};
-  csoportok.forEach(({ r, db }) => {
+  ervenyesReceptek.forEach(({ r, db }) => {
     (r.hozzavalok || []).forEach((h) => {
       const n = normalizalMennyiseg(h);
       const kulcs = n.nev.toLowerCase().trim() + "|" + (n.egyseg || "");
-      if (!osszesito[kulcs]) osszesito[kulcs] = { egyseg: n.egyseg || "", osszeg: 0, szamszeru: n.mennyiseg != null, kozelito: false, receptek: [] };
+      if (!osszesito[kulcs]) osszesito[kulcs] = { nev: h.nev, egyseg: n.egyseg || "", osszeg: 0, szamszeru: n.mennyiseg != null, kozelito: false, receptek: [] };
       if (n.mennyiseg != null) osszesito[kulcs].osszeg += n.mennyiseg * db;
       osszesito[kulcs].kozelito = osszesito[kulcs].kozelito || n.kozelito;
       if (!osszesito[kulcs].receptek.includes(r.nev)) osszesito[kulcs].receptek.push(r.nev);
@@ -982,38 +1050,29 @@ function rajzolBevasarlas() {
   });
 
   const lista = $("#bevasarlo-lista");
-  $("#bev-ures").classList.toggle("hidden", csoportok.length > 0);
+  $("#bev-ures").classList.toggle("hidden", ervenyesReceptek.length > 0);
 
-  lista.innerHTML = csoportok.map(({ r, db }) => {
-    const sorok = (r.hozzavalok || []).map((h) => {
-      const n = normalizalMennyiseg(h);
-      const kulcs = n.nev.toLowerCase().trim() + "|" + (n.egyseg || "");
-      const ossz = osszesito[kulcs];
-      const tobbhoz = ossz.receptek.length > 1;
-      const pipa = !!hetiPipak[kulcs];
+  const tetelSor = ([kulcs, t]) => {
+    const tobbhoz = t.receptek.length > 1;
+    const pipa = !!hetiPipak[kulcs];
+    const menny = t.szamszeru ? `${t.kozelito ? "kb. " : ""}${+t.osszeg.toFixed(2)} ${t.egyseg}` : t.egyseg;
+    return `
+      <label class="bev-tetel ${pipa ? "kipipalva" : ""} ${tobbhoz ? "tobb-etel" : ""}">
+        <input type="checkbox" data-kulcs="${esc(kulcs)}" ${pipa ? "checked" : ""}>
+        <span class="tetel-torzs">
+          <span class="nev">${esc(t.nev)}</span>
+          <small class="honnan">🍽️ ${esc(t.receptek.join(" · "))}${tobbhoz ? ` — ${t.receptek.length} ételhez` : ""}</small>
+        </span>
+        <span class="mennyiseg">${esc(menny)}</span>
+      </label>`;
+  };
 
-      let menny;
-      if (h.mennyiseg == null) menny = h.egyseg || "";
-      else if (n.kozelito) menny = `${+(h.mennyiseg * db).toFixed(2)} db ≈ ${Math.round(n.mennyiseg * db)} g`;
-      else menny = `${+(h.mennyiseg * db).toFixed(2)} ${h.egyseg || ""}`.trim();
-
-      const osszesen = tobbhoz
-        ? (ossz.szamszeru
-            ? `${ossz.receptek.length} ételhez — összesen ${ossz.kozelito ? "kb. " : ""}${+ossz.osszeg.toFixed(2)} ${ossz.egyseg}`
-            : `${ossz.receptek.length} ételhez kell`)
-        : "";
-
-      return `
-        <label class="bev-tetel ${pipa ? "kipipalva" : ""} ${tobbhoz ? "tobb-etel" : ""}">
-          <input type="checkbox" data-kulcs="${esc(kulcs)}" ${pipa ? "checked" : ""}>
-          <span class="tetel-torzs">
-            <span class="nev">${esc(h.nev)}</span>
-            ${osszesen ? `<small class="honnan">🛒 ${esc(osszesen)}</small>` : ""}
-          </span>
-          <span class="mennyiseg">${esc(menny)}</span>
-        </label>`;
-    }).join("");
-    return `<div class="bev-csoport"><h3>🍽️ ${esc(r.nev)}${db > 1 ? ` ×${db}` : ""}</h3>${sorok}</div>`;
+  lista.innerHTML = TERMEK_CSOPORTOK.map(([cim]) => cim).concat(["🛒 Egyéb"]).map((cim) => {
+    const ide = Object.entries(osszesito)
+      .filter(([, t]) => termekKategoria(t.nev) === cim)
+      .sort((a, b) => a[1].nev.localeCompare(b[1].nev, "hu"));
+    if (!ide.length) return "";
+    return `<div class="bev-csoport"><h3>${esc(cim)}</h3>${ide.map(tetelSor).join("")}</div>`;
   }).join("");
 
   lista.querySelectorAll("input[type=checkbox]").forEach((cb) => {

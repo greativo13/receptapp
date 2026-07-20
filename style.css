@@ -284,7 +284,20 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 #etrend-tabla th { background: var(--kiemelo-halvany); color: var(--kiemelo); }
 #etrend-tabla th small { font-weight: 400; }
 #etrend-tabla td.nap-nev { font-weight: 600; white-space: nowrap; background: var(--bg); text-transform: capitalize; }
-#etrend-tabla td.etkezes-cella { cursor: pointer; min-width: 96px; height: 50px; font-size: 0.88rem; }
+#etrend-tabla td.etkezes-cella { cursor: pointer; min-width: 96px; height: 50px; font-size: 0.88rem; position: relative; }
+#etrend-tabla td.etkezes-cella.toltott { padding-right: 20px; }
+.cella-szerk {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border: none;
+  background: transparent;
+  color: var(--halvany);
+  font-size: 0.78rem;
+  padding: 3px 5px;
+  border-radius: 6px;
+}
+.cella-szerk:hover { color: var(--kiemelo); background: var(--kiemelo-halvany); }
 #etrend-tabla td.etkezes-cella:hover { background: var(--kiemelo-halvany); }
 #etrend-tabla td.etkezes-cella.ures-cella { color: var(--halvany); font-size: 1.2rem; }
 #etrend-tabla th.ma, #etrend-tabla td.ma { outline: 2px solid var(--kiemelo); outline-offset: -2px; }
