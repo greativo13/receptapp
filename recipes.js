@@ -1483,5 +1483,34 @@ window.RECIPES = [
     megjegyzes: "bettisdailykitchen videójából. Nyári meal prep kedvenc: hűtőben 3 napig eláll.",
     tapertek: { kcal: 505, feherje: 42, zsir: 18, szenhidrat: 41, cukor: 3 },
     hozzaadva: "2026-07-20"
+  },
+  {
+    id: "tejfolos-fokhagymas-csirkeragu-2026-07-20",
+    nev: "Tejfölös-fokhagymás csirkeragu rizzsel",
+    forras: null,
+    kategoria: "ebéd",
+    adag: 2,
+    ido_perc: 35,
+    hozzavalok: [
+      { nev: "csirkemell (kockázva)", mennyiseg: 400, egyseg: "g" },
+      { nev: "rizs (száraz)", mennyiseg: 140, egyseg: "g" },
+      { nev: "tejföl (20%-os)", mennyiseg: 150, egyseg: "g" },
+      { nev: "vöröshagyma (apróra vágva)", mennyiseg: 0.5, egyseg: "db" },
+      { nev: "fokhagyma (zúzva)", mennyiseg: 2, egyseg: "gerezd" },
+      { nev: "olívaolaj", mennyiseg: 1, egyseg: "tk" },
+      { nev: "finomliszt (a sűrítéshez)", mennyiseg: 1, egyseg: "tk" },
+      { nev: "pirospaprika", mennyiseg: 1, egyseg: "tk" },
+      { nev: "só, bors, petrezselyem", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "Főzd meg a rizst sós vízben.",
+      "Az olajon futtasd üvegesre a hagymát, add hozzá a fokhagymát, majd a csirkekockákat, és pirítsd fehéredésig; sózd, borsozd.",
+      "Vedd le a tűzről egy pillanatra, keverd el a pirospaprikát, majd önts alá kb. 1 dl vizet, és fedő alatt párold 10 percig.",
+      "A tejfölt keverd simára a liszttel, húzd be vele a ragut, és forrald össze 2-3 percig, míg besűrűsödik.",
+      "Szórd meg petrezselyemmel, és tálald a rizzsel."
+    ],
+    megjegyzes: "Claude receptje a kért alapanyagokból: csirkemell, rizs, tejföl. Klasszikus magyaros íz, hétköznap-barát kivitelben.",
+    tapertek: { kcal: 660, feherje: 53, zsir: 23, szenhidrat: 62, cukor: 4 },
+    hozzaadva: "2026-07-20"
   }
 ];
