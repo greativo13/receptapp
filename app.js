@@ -1291,19 +1291,31 @@ function zarVonalkodOlvaso() {
 
 $("#vonalkod-gomb").addEventListener("click", async () => {
   if (!window.ZXing) { toast("⚠️ A vonalkód-olvasó modul nem töltődött be"); return; }
+  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+    toast("⚠️ Ez a böngésző nem enged kamerát — írd be a számot kézzel"); return;
+  }
   $("#vonalkod-modal").showModal();
+  let megvolt = false;
   try {
     kodOlvaso = new ZXing.BrowserMultiFormatReader();
-    const talalat = await kodOlvaso.decodeOnceFromConstraints(
-      { video: { facingMode: "environment" } },
-      "vonalkod-video"
+    // folyamatos beolvasás: rögtön látszik az élő kép, minden képkockát vizsgál
+    await kodOlvaso.decodeFromConstraints(
+      { video: { facingMode: { ideal: "environment" } } },
+      "vonalkod-video",
+      (talalat) => {
+        if (talalat && !megvolt) {
+          megvolt = true;
+          const kod = talalat.getText();
+          zarVonalkodOlvaso();
+          vonalkodFeldolgozas(kod);
+        }
+        // találat nélküli képkockák hibája normális — nem foglalkozunk vele
+      }
     );
-    zarVonalkodOlvaso();
-    if (talalat) vonalkodFeldolgozas(talalat.getText());
   } catch (hiba) {
     zarVonalkodOlvaso();
-    if (hiba && hiba.name === "NotAllowedError") toast("⚠️ Engedélyezd a kamerát a beolvasáshoz");
-    else if (hiba && hiba.name !== "NotFoundException") toast("⚠️ Nem sikerült elindítani a kamerát — írd be a számot kézzel");
+    if (hiba && hiba.name === "NotAllowedError") toast("⚠️ Engedélyezd a kamerát a beolvasáshoz (Beállítások → Safari → Kamera)");
+    else toast("⚠️ Nem sikerült elindítani a kamerát — írd be a vonalkód számát kézzel");
   }
 });
 
