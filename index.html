@@ -25,7 +25,7 @@
       <button class="tab active" data-view="receptek">📖<span class="tab-szoveg"> Receptek</span></button>
       <button class="tab" data-view="etrend">📅<span class="tab-szoveg"> Étrend</span></button>
       <button class="tab" data-view="bevasarlas">🛒<span class="tab-szoveg"> Bevásárló</span></button>
-      <button class="tab" data-view="kamra">🧊<span class="tab-szoveg"> Kamra</span></button>
+      <button class="tab" data-view="kamra"><svg class="ful-ikon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><line x1="6" y1="9" x2="18" y2="9"/><line x1="9" y1="5.2" x2="9" y2="7"/><line x1="9" y1="11.3" x2="9" y2="14"/></svg><span class="tab-szoveg"> Kamra</span></button>
     </nav>
   </header>
 
@@ -105,7 +105,7 @@
   <!-- ================= KAMRA ================= -->
   <main id="view-kamra" class="view hidden">
     <div class="link-sav">
-      <input type="text" id="kamra-input" placeholder="🧊 Írd be kézzel (pl. csirkemell), vagy add meg a vonalkód számát…">
+      <input type="text" id="kamra-input" placeholder="🥫 Írd be kézzel (pl. csirkemell), vagy add meg a vonalkód számát…">
       <label class="kep-gomb" id="vonalkod-gomb" title="Vonalkód beolvasása kamerával">📷</label>
       <button id="kamra-hozzaad" class="primary">Hozzáadás</button>
     </div>
@@ -114,7 +114,7 @@
       <button id="kivansag-gomb" class="primary">🪄 Recept ezekből az alapanyagokból</button>
     </div>
     <div id="kamra-lista"></div>
-    <p id="kamra-ures" class="ures hidden">A kamrád még üres — olvass be egy vonalkódot, vagy írj be valamit kézzel! 🧊</p>
+    <p id="kamra-ures" class="ures hidden">A kamrád még üres — olvass be egy vonalkódot, vagy írj be valamit kézzel! 🥫</p>
   </main>
 
   <footer class="lablec">
@@ -287,7 +287,7 @@
         <label class="jelolo"><input type="checkbox" name="etkezes" value="vacsora" checked> 🌙 vacsora</label>
       </div>
       <div class="jelolo-sor">
-        <label class="jelolo"><input type="checkbox" name="itthonrol"> 🧊 Abból főzz, ami a kamrában van (előnyben)</label>
+        <label class="jelolo"><input type="checkbox" name="itthonrol"> 🥫 Abból főzz, ami a kamrában van (előnyben)</label>
       </div>
       <label>Hány naponta változzon a menü?
         <select name="valtozas">

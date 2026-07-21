@@ -83,6 +83,7 @@ body {
 .tab:hover { background: var(--kiemelo-halvany); }
 .tab.active { color: var(--kiemelo); background: var(--kiemelo-halvany); font-weight: 600; }
 .tab-szoveg { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ful-ikon { width: 1.15em; height: 1.15em; flex-shrink: 0; }
 
 .utmutato li { margin-bottom: 8px; }
 .utmutato a { color: var(--kiemelo); }

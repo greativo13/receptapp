@@ -246,18 +246,44 @@ async function linkBekuldes() {
   const url = mezo.value.trim();
   if (!url) return;
   if (!/^https?:\/\//i.test(url)) { toast("⚠️ Ez nem tűnik linknek"); return; }
-  if (PUBLIKUS) {
-    mezo.value = "";
-    publikusLinkFeldolgozas(url);
-    return;
+  mezo.value = "";
+  if (PUBLIKUS) { publikusLinkFeldolgozas(url); return; }
+
+  // személyes mód: ha van Gemini-kulcs, a TikTok leírásából azonnal próbálunk
+  // receptet készíteni (böngészőből). Ha nem jön össze, a videó a
+  // feldolgozó (Claude) várólistájára kerül.
+  if (geminiKulcs() && /tiktok\.com/i.test(url)) {
+    toast("🔍 Videó beolvasása…");
+    if (await kliensVideoRecept(url)) return;
+    toast("A leírásból nem jött ki recept — a videót a feldolgozóra bízom");
   }
+
   try {
     await varolistaraTesz(url);
-    mezo.value = "";
     toast("🎬 Link a várólistán — hamarosan recept lesz belőle!");
   } catch {
     toast("⚠️ Nem sikerült elmenteni a linket");
   }
+}
+
+// TikTok leírás → Gemini → recept-előnézet; siker esetén true
+async function kliensVideoRecept(url) {
+  let oe;
+  try { oe = await oembedLekeres(url); } catch { return false; }
+  const leiras = (oe.cim || "").trim();
+  // ha a leírás gyakorlatilag csak hashtagekből áll, nincs mit strukturálni
+  if (leiras.replace(/#\S+/g, "").trim().length < 50) return false;
+  try {
+    toast("🤖 Recept készítése…");
+    const nyers = await geminiHivas([{
+      text: GEMINI_RECEPT_UTASITAS
+        + "\n\nA következő videó-leírásból készíts receptet. Ha nincs benne elég információ egy teljes recepthez, adj vissza {\"hiba\":\"nincs recept\"}.\n\nLeírás:\n" + leiras
+    }]);
+    const recept = receptbolBejegyzes(nyers, url);
+    if (!recept) return false;
+    receptElonezet(recept);
+    return true;
+  } catch { return false; }
 }
 
 // közös várólistára-tevő: helyi szerverre vagy a Google hídra
@@ -1229,7 +1255,7 @@ async function vonalkodFeldolgozas(kod) {
         cukor: Math.round(n.sugars_100g || 0)
       } : null
     });
-    toast(`🧊 Hozzáadva: ${p.product_name_hu || p.product_name}`);
+    toast(`🥫 Hozzáadva: ${p.product_name_hu || p.product_name}`);
   } catch {
     toast("⚠️ Ezt a vonalkódot nem ismeri az adatbázis — írd be a termék nevét kézzel");
     $("#kamra-input").focus();
