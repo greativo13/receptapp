@@ -325,19 +325,20 @@ button.veszelyes { color: var(--veszely); border-color: transparent; background:
 #etrend-tabla th small { font-weight: 400; }
 #etrend-tabla td.nap-nev { font-weight: 600; white-space: nowrap; background: var(--bg); text-transform: capitalize; }
 #etrend-tabla td.etkezes-cella { cursor: pointer; min-width: 96px; height: 50px; font-size: 0.88rem; position: relative; }
-#etrend-tabla td.etkezes-cella.toltott { padding-right: 20px; }
+#etrend-tabla td.etkezes-cella.toltott { padding-right: 26px; }
 .cella-szerk {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 3px;
+  right: 3px;
   border: none;
-  background: transparent;
-  color: var(--halvany);
-  font-size: 0.78rem;
-  padding: 3px 5px;
-  border-radius: 6px;
+  background: var(--kiemelo-halvany);
+  color: var(--kiemelo);
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 8px;
 }
-.cella-szerk:hover { color: var(--kiemelo); background: var(--kiemelo-halvany); }
+.cella-szerk:hover { filter: brightness(0.95); }
 #etrend-tabla td.etkezes-cella:hover { background: var(--kiemelo-halvany); }
 #etrend-tabla td.etkezes-cella.ures-cella { color: var(--halvany); font-size: 1.2rem; }
 #etrend-tabla th.ma, #etrend-tabla td.ma { outline: 2px solid var(--kiemelo); outline-offset: -2px; }

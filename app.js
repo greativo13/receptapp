@@ -939,8 +939,10 @@ function rajzolEtrend() {
       const bej = cellaBejegyzes(hetiTerv[+cella.dataset.nap]?.[cella.dataset.etkezes]);
       const e = etelById(bej.id);
       if (kamraTetelE(e)) {
+        // kamra-tétel: a makrói toastban, és rögtön a kezelő (csere/törlés az étrendből)
         const t = cellaTapertek(bej);
-        toast(t ? `🥫 ${e.nev} (${bej.gramm || 100} g): 🔥 ${Math.round(t.kcal)} kcal · F ${Math.round(t.feherje)} · Zs ${Math.round(t.zsir)} · CH ${Math.round(t.szenhidrat)} g` : `🥫 ${e.nev}`);
+        if (t) toast(`🥫 ${e.nev} (${bej.gramm || 100} g): 🔥 ${Math.round(t.kcal)} kcal · F ${Math.round(t.feherje)} · Zs ${Math.round(t.zsir)} · CH ${Math.round(t.szenhidrat)} g`);
+        nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes);
       } else {
         nyitReszletek(bej.id);
       }
