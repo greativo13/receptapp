@@ -14,14 +14,18 @@
 </head>
 <body>
   <header class="topbar">
-    <h1>🍳 Receptjeim</h1>
+    <div class="topbar-fej">
+      <h1>🍳 Receptjeim</h1>
+      <div class="fejlec-ikonok">
+        <button class="ikon-gomb" id="frissit-gomb" title="App frissítése">🔄</button>
+        <button class="ikon-gomb hidden" id="beallitas-gomb" title="Beállítások">⚙️</button>
+      </div>
+    </div>
     <nav class="tabs">
       <button class="tab active" data-view="receptek">📖<span class="tab-szoveg"> Receptek</span></button>
       <button class="tab" data-view="etrend">📅<span class="tab-szoveg"> Étrend</span></button>
-      <button class="tab" data-view="bevasarlas">🛒<span class="tab-szoveg"> Bevásárlólista</span></button>
+      <button class="tab" data-view="bevasarlas">🛒<span class="tab-szoveg"> Bevásárló</span></button>
       <button class="tab" data-view="kamra">🧊<span class="tab-szoveg"> Kamra</span></button>
-      <button class="tab beallitas-tab" id="frissit-gomb" title="App frissítése">🔄</button>
-      <button class="tab hidden" id="beallitas-gomb" title="Beállítások">⚙️</button>
     </nav>
   </header>
 
