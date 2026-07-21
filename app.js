@@ -55,6 +55,17 @@ function receptById(id) {
   return osszesRecept().find((r) => r.id === id) || null;
 }
 
+// egy étrend-cella tartalma lehet recept VAGY kamra-tétel (élelmiszer)
+function kamraTetelE(e) { return !!(e && e.tapertek100g !== undefined); }
+function etelById(id) {
+  return receptById(id) || keszlet.find((k) => k.id === id) || null;
+}
+// az étrend-összesítéshez: recept → 1 adagra, kamra-tétel → 100 g-ra
+function etelTapertek(e) {
+  if (!e) return null;
+  return kamraTetelE(e) ? (e.tapertek100g || null) : (e.tapertek || null);
+}
+
 function mennyisegSzoveg(h) {
   if (h.mennyiseg == null) return h.egyseg || "";
   return `${h.mennyiseg} ${h.egyseg || ""}`.trim();
@@ -873,10 +884,11 @@ function rajzolEtrend() {
   tbody.innerHTML = ETKEZESEK.map((etkezes) => {
     const cellak = NAPOK.map((_, i) => {
       const id = hetiTerv[i]?.[etkezes];
-      const r = id ? receptById(id) : null;
+      const r = id ? etelById(id) : null;
+      const kamrai = kamraTetelE(r);
       return `<td class="etkezes-cella ${r ? "toltott" : "ures-cella"} ${maNapok[i] ? "ma" : ""}"
                   data-nap="${i}" data-etkezes="${etkezes}" ${r ? `data-recept="${esc(r.id)}"` : ""}>
-                ${r ? `${esc(r.nev)}<button class="cella-szerk" data-nap="${i}" data-etkezes="${etkezes}" title="Csere / törlés">✎</button>` : "+"}
+                ${r ? `${kamrai ? "🥫 " : ""}${esc(r.nev)}<button class="cella-szerk" data-nap="${i}" data-etkezes="${etkezes}" title="Csere / törlés">✎</button>` : "+"}
               </td>`;
     }).join("");
     return `<tr><td class="nap-nev">${ETKEZES_IKON[etkezes]} ${etkezes}</td>${cellak}</tr>`;
@@ -888,10 +900,10 @@ function rajzolEtrend() {
     let van = false;
     ETKEZESEK.forEach((etkezes) => {
       const id = hetiTerv[i]?.[etkezes];
-      const r = id ? receptById(id) : null;
-      if (r?.tapertek) {
+      const tap = id ? etelTapertek(etelById(id)) : null;
+      if (tap) {
         van = true;
-        Object.keys(o).forEach((k) => { o[k] += r.tapertek[k] || 0; });
+        Object.keys(o).forEach((k) => { o[k] += tap[k] || 0; });
       }
     });
     const tartalom = van
@@ -904,8 +916,15 @@ function rajzolEtrend() {
   // kitöltött cella: a recept nyílik meg; üres cella vagy a ✎ ikon: a választó
   tbody.querySelectorAll(".etkezes-cella").forEach((cella) => {
     cella.addEventListener("click", () => {
-      if (cella.dataset.recept) nyitReszletek(cella.dataset.recept);
-      else nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes);
+      const id = cella.dataset.recept;
+      if (!id) { nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes); return; }
+      const e = etelById(id);
+      if (kamraTetelE(e)) {
+        const t = e.tapertek100g;
+        toast(t ? `🥫 ${e.nev}: 🔥 ${t.kcal} kcal · F ${t.feherje} · Zs ${t.zsir} · CH ${t.szenhidrat} g /100 g` : `🥫 ${e.nev}`);
+      } else {
+        nyitReszletek(id);
+      }
     });
   });
   tbody.querySelectorAll(".cella-szerk").forEach((gomb) => {
@@ -1234,14 +1253,22 @@ $("#bev-kovetkezo-het").addEventListener("click", () => { hetOffset++; rajzolBev
 function rajzolKamra() {
   const lista = $("#kamra-lista");
   $("#kamra-ures").classList.toggle("hidden", keszlet.length > 0);
-  lista.innerHTML = keszlet.map((t) => `
+  lista.innerHTML = keszlet.map((t) => {
+    const n = t.tapertek100g;
+    const makrok = n
+      ? `🔥 ${esc(n.kcal)} kcal · F ${esc(n.feherje)} g · Zs ${esc(n.zsir)} g · CH ${esc(n.szenhidrat)} g · cukor ${esc(n.cukor)} g <span class="per100">/100 g</span>`
+      : "Nincs tápérték-adat";
+    return `
     <div class="bev-tetel kamra-tetel">
       <span class="tetel-torzs">
         <span class="nev">${esc(t.nev)}</span>
-        ${t.marka || t.tapertek100g ? `<small class="honnan">${esc(t.marka || "")}${t.marka && t.tapertek100g ? " · " : ""}${t.tapertek100g ? `🔥 ${esc(t.tapertek100g.kcal)} kcal/100g` : ""}</small>` : ""}
+        ${t.marka ? `<small class="honnan">${esc(t.marka)}</small>` : ""}
+        <small class="honnan">${makrok}</small>
       </span>
+      <button class="kamra-etrendhez" data-id="${esc(t.id)}" title="Hozzáadás az étrendhez">➕</button>
       <button class="megsem" data-id="${esc(t.id)}" title="Törlés">✕</button>
-    </div>`).join("");
+    </div>`;
+  }).join("");
 
   lista.querySelectorAll(".megsem").forEach((g) => {
     g.addEventListener("click", () => {
@@ -1250,6 +1277,35 @@ function rajzolKamra() {
       rajzolKamra();
     });
   });
+  lista.querySelectorAll(".kamra-etrendhez").forEach((g) => {
+    g.addEventListener("click", () => nyitEtrendCelvalaszto(g.dataset.id));
+  });
+}
+
+// kamra-tétel étrendbe: melyik nap + étkezés cellába kerüljön
+let etrendCelEtelId = null;
+function nyitEtrendCelvalaszto(etelId) {
+  etrendCelEtelId = etelId;
+  const etel = etelById(etelId);
+  $("#celvalaszto-cim").textContent = etel ? etel.nev : "Étrendhez";
+  const hetKulcs = datumKulcs(hetKezdete(hetOffset));
+  $("#celvalaszto-het").textContent = hetCimke(hetOffset);
+  $("#celvalaszto-racs").innerHTML = NAPOK.map((nap, i) => `
+    <div class="cel-nap">
+      <strong>${nap}</strong>
+      ${ETKEZESEK.map((etk) => `<button class="cel-cella" data-nap="${i}" data-etkezes="${etk}">${ETKEZES_IKON[etk]}</button>`).join("")}
+    </div>`).join("");
+  $("#celvalaszto-racs").querySelectorAll(".cel-cella").forEach((g) => {
+    g.addEventListener("click", () => {
+      etrend[hetKulcs] = etrend[hetKulcs] || {};
+      etrend[hetKulcs][+g.dataset.nap] = etrend[hetKulcs][+g.dataset.nap] || {};
+      etrend[hetKulcs][+g.dataset.nap][g.dataset.etkezes] = etrendCelEtelId;
+      store.set("plan", etrend);
+      $("#celvalaszto-modal").close();
+      toast("✅ Hozzáadva az étrendhez");
+    });
+  });
+  $("#celvalaszto-modal").showModal();
 }
 
 function kamraTetel(adatok) {
