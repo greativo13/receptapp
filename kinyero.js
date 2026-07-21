@@ -42,7 +42,7 @@ async function geminiHivas(reszek) {
   let valasz;
   try {
     valasz = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(kulcs),
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + encodeURIComponent(kulcs),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
