@@ -443,7 +443,11 @@ $("#kep-input").addEventListener("change", async (e) => {
   const fajl = e.target.files[0];
   e.target.value = "";
   if (!fajl) return;
-  if (PUBLIKUS) { publikusKepFeldolgozas(fajl); return; }
+  // ha van Gemini-kulcs: a fotóból azonnal recept készül (helyben), előnézettel
+  if (geminiKulcs()) { publikusKepFeldolgozas(fajl); return; }
+  // publikus módban kulcs nélkül nincs feldolgozó — jelezzük, hogy kulcs kell
+  if (PUBLIKUS) { toast("⚠️ A fotó-felismeréshez Gemini-kulcs kell (⚙️ Beállítások)"); return; }
+  // személyes mód, kulcs nélkül: a kép a feldolgozó (Claude) várólistájára kerül
   toast("📷 Kép feltöltése…");
   try {
     const adat = await kepBase64(fajl);
