@@ -50,7 +50,8 @@
         <option value="desszert">Desszert</option>
         <option value="egyéb">Egyéb</option>
       </select>
-      <button id="uj-recept-gomb" class="primary">+ Új recept</button>
+      <button id="generalj-gomb" class="primary">✨ Generálj receptet</button>
+      <button id="uj-recept-gomb">+ Kézi felvitel</button>
     </div>
     <div id="recept-lista"></div>
     <p id="ures-uzenet" class="ures hidden">Nincs találat. 🙁</p>
@@ -235,8 +236,8 @@
       <button class="bezaro" data-close="kivansag-modal">✕</button>
     </div>
     <form id="kivansag-form">
-      <label>Milyen alapanyagokból főznél? <small>(vesszővel vagy soronként)</small>
-        <textarea id="kivansag-alapanyagok" rows="4" placeholder="pl. csirkemell, rizs, paprika, tejföl"></textarea>
+      <label>Mit szeretnél? <small>(alapanyagok vagy szabad kívánság)</small>
+        <textarea id="kivansag-alapanyagok" rows="4" placeholder="pl. csirkemell, rizs, paprika, tejföl — vagy: gyors magas fehérjéjű vacsora"></textarea>
       </label>
       <label>Milyen étkezésre?
         <select name="kivansag_kategoria">

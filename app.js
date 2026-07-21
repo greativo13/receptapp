@@ -304,23 +304,29 @@ async function varolistaraTesz(url) {
   rajzolVarolista();
 }
 
-// recept-kívánság: alapanyag-listából kér új receptet a feldolgozótól
-$("#kivansag-gomb").addEventListener("click", () => {
+// recept-kívánság ablak megnyitása (előtöltéssel vagy anélkül)
+function nyitKivansag(elotoltKamrabol) {
   const mezo = $("#kivansag-alapanyagok");
-  if (!mezo.value.trim() && keszlet.length) mezo.value = keszlet.map((t) => t.nev).join(", ");
+  if (elotoltKamrabol && !mezo.value.trim() && keszlet.length) {
+    mezo.value = keszlet.map((t) => t.nev).join(", ");
+  }
   $("#kivansag-form").kivansag_kerulendo.value = store.get("kerulendo", "");
   $("#kivansag-modal").showModal();
-});
+}
+
+// a Kamra gombja a készletből tölt elő; a Receptek fül gombja üresen indul
+$("#kivansag-gomb").addEventListener("click", () => nyitKivansag(true));
+$("#generalj-gomb").addEventListener("click", () => nyitKivansag(false));
 
 // Gemini-hívás alapanyagokból + előnézet; a paramétereket megjegyezzük,
 // hogy az előnézet „Újragenerálás" gombja ugyanezzel újra tudja futtatni
 async function generalKivansagbol(alapanyagok, kategoria, kerulendo) {
   toast("🪄 Recept készítése…");
   const keres = GEMINI_RECEPT_UTASITAS
-    + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi alapanyagokból. Nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható. Adj mindig MÁS variációt, ha újra kérnek."
+    + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi kérés alapján (ez lehet alapanyag-lista vagy szabad kívánság). Alapanyagoknál nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható. Adj mindig MÁS variációt, ha újra kérnek."
     + (kategoria ? " Az étkezés típusa: " + kategoria + "." : "")
     + (kerulendo ? " SOHA ne használd ezeket: " + kerulendo + "." : "")
-    + "\n\nAlapanyagok: " + alapanyagok.join(", ");
+    + "\n\nKérés: " + alapanyagok.join(", ");
   const nyers = await geminiHivas([{ text: keres }]);
   const recept = receptbolBejegyzes(nyers, null);
   if (!recept) throw new Error("nincs recept");
