@@ -95,6 +95,8 @@ button.veszelyes { color: var(--veszely); border-color: transparent; background:
 .teszt-eredmeny.ok { background: var(--kiemelo-halvany); color: var(--kiemelo); }
 .teszt-eredmeny.hiba { background: rgba(192, 57, 43, 0.12); color: var(--veszely); }
 
+.elonezet-gombok { border-top: 1px dashed var(--kiemelo); padding-top: 14px; margin-top: 16px; }
+
 .ures { text-align: center; color: var(--halvany); margin-top: 40px; font-size: 1.1rem; }
 .tipp { color: var(--halvany); font-size: 0.85rem; text-align: center; }
 

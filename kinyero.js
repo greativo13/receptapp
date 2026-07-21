@@ -113,11 +113,10 @@ function receptbolBejegyzes(nyers, forras) {
   };
 }
 
+// generált recept: NEM mentjük azonnal, hanem előnézetben megmutatjuk,
+// és a felhasználó dönt (mentés / elvetés). A logika az app.js-ben van.
 function mentesEsMutatas(recept) {
-  sajatReceptek.push(recept);
-  store.set("custom", sajatReceptek);
-  rajzolReceptek();
-  toast(`🎉 Új recept: ${recept.nev}`);
+  receptElonezet(recept);
 }
 
 // űrlap előtöltése, ha nincs kulcs (vagy a Gemini nem boldogult vele)

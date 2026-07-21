@@ -593,6 +593,41 @@ Fehérje: ${sz(t.feherje)} g`;
   }
 });
 
+// ---------- generált recept előnézete (mentés/elvetés) ----------
+let elonezetId = null;
+
+function receptElonezet(recept) {
+  sajatReceptek.push(recept); // egyelőre csak memóriában, store.set nélkül
+  elonezetId = recept.id;
+  nyitReszletek(recept.id);
+  $("#modal-normal-gombok").classList.add("hidden");
+  $("#elonezet-gombok").classList.remove("hidden");
+  toast("✨ Kész a recept — nézd meg, és döntsd el, mented-e!");
+}
+
+function elonezetVege(megtart) {
+  if (!elonezetId) return;
+  const id = elonezetId;
+  elonezetId = null; // előbb nullázzuk, hogy a close-esemény ne fusson újra
+  if (megtart) {
+    store.set("custom", sajatReceptek);
+    toast("💾 Recept elmentve a gyűjteménybe");
+  } else {
+    sajatReceptek = sajatReceptek.filter((r) => r.id !== id);
+    store.set("custom", sajatReceptek, false);
+    toast("🗑️ Recept elvetve");
+  }
+  $("#elonezet-gombok").classList.add("hidden");
+  $("#modal-normal-gombok").classList.remove("hidden");
+  if ($("#recept-modal").open) $("#recept-modal").close();
+  rajzolReceptek();
+}
+
+$("#elonezet-ment").addEventListener("click", () => elonezetVege(true));
+$("#elonezet-eldob").addEventListener("click", () => elonezetVege(false));
+// bezárás (X/háttér) mentés nélkül = elvetés
+$("#recept-modal").addEventListener("close", () => { if (elonezetId) elonezetVege(false); });
+
 $("#adag-minusz").addEventListener("click", () => {
   const r = receptById(nyitottReceptId);
   if (r && modalAdag > 1) { modalAdag--; rajzolModalHozzavalok(r); }

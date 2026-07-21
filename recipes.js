@@ -1512,5 +1512,37 @@ window.RECIPES = [
     megjegyzes: "Claude receptje a kért alapanyagokból: csirkemell, rizs, tejföl. Klasszikus magyaros íz, hétköznap-barát kivitelben.",
     tapertek: { kcal: 660, feherje: 53, zsir: 23, szenhidrat: 62, cukor: 4 },
     hozzaadva: "2026-07-20"
+  },
+  {
+    id: "kokusztekercs-2026-07-20",
+    nev: "Fitt kókusztekercs",
+    forras: "https://vm.tiktok.com/ZN81QpDLV/",
+    kategoria: "desszert",
+    adag: 10,
+    ido_perc: 30,
+    darab: 10, darab_nev: "szelet",
+    hozzavalok: [
+      { nev: "darált keksz (hozzáadott cukor nélküli)", mennyiseg: 350, egyseg: "g" },
+      { nev: "vaníliás fehérjepor (a tésztához)", mennyiseg: 60, egyseg: "g" },
+      { nev: "20-22%-os kakaópor", mennyiseg: 30, egyseg: "g" },
+      { nev: "kávé", mennyiseg: 50, egyseg: "ml" },
+      { nev: "növényi tej", mennyiseg: 300, egyseg: "ml" },
+      { nev: "rumaroma és édesítő", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "mascarpone (a krémhez)", mennyiseg: 250, egyseg: "g" },
+      { nev: "vaníliás fehérjepor (a krémhez)", mennyiseg: 2, egyseg: "adag" },
+      { nev: "kókuszreszelék (a krémhez)", mennyiseg: 2, egyseg: "ek" },
+      { nev: "vanília aroma", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "kókuszreszelék (a külsejére)", mennyiseg: 3, egyseg: "ek" }
+    ],
+    lepesek: [
+      "A darált kekszet keverd össze a fehérjeporral és a kakaóporral.",
+      "Add hozzá a kávét és a növényi tejet (rumaromával, édesítővel), és gyúrd formázható tésztává.",
+      "A krémhez keverd simára a mascarponét a fehérjeporral, a kókuszreszelékkel és a vanília aromával.",
+      "Nyújtsd/lapítsd ki a kekszes tésztát folpackon téglalappá, kend rá a krémet, és a folpack segítségével tekerd fel rúddá.",
+      "Forgasd meg a külsejét kókuszreszelékben, és hűtsd be pár órára, mielőtt felszeleteled."
+    ],
+    megjegyzes: "fittfrufood videójából. Sütés nélküli, magas fehérjéjű bejgli-szerű desszert. 1 adag = 1 szelet.",
+    tapertek: { kcal: 195, feherje: 11, zsir: 9, szenhidrat: 18, cukor: 4 },
+    hozzaadva: "2026-07-20"
   }
 ];
