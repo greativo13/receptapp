@@ -286,6 +286,22 @@ $("#kivansag-gomb").addEventListener("click", () => {
   $("#kivansag-modal").showModal();
 });
 
+// Gemini-hívás alapanyagokból + előnézet; a paramétereket megjegyezzük,
+// hogy az előnézet „Újragenerálás" gombja ugyanezzel újra tudja futtatni
+async function generalKivansagbol(alapanyagok, kategoria, kerulendo) {
+  toast("🪄 Recept készítése…");
+  const keres = GEMINI_RECEPT_UTASITAS
+    + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi alapanyagokból. Nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható. Adj mindig MÁS variációt, ha újra kérnek."
+    + (kategoria ? " Az étkezés típusa: " + kategoria + "." : "")
+    + (kerulendo ? " SOHA ne használd ezeket: " + kerulendo + "." : "")
+    + "\n\nAlapanyagok: " + alapanyagok.join(", ");
+  const nyers = await geminiHivas([{ text: keres }]);
+  const recept = receptbolBejegyzes(nyers, null);
+  if (!recept) throw new Error("nincs recept");
+  recept.megjegyzes = (recept.megjegyzes ? recept.megjegyzes + " " : "") + "A kért alapanyagokból: " + alapanyagok.join(", ") + ".";
+  receptElonezet(recept, () => generalKivansagbol(alapanyagok, kategoria, kerulendo));
+}
+
 $("#kivansag-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const alapanyagok = $("#kivansag-alapanyagok").value.split(/[\n,]/).map((s) => s.trim()).filter(Boolean);
@@ -297,18 +313,8 @@ $("#kivansag-form").addEventListener("submit", async (e) => {
   // ha van Gemini-kulcs: azonnali generálás helyben; különben várólistára megy
   if (geminiKulcs()) {
     $("#kivansag-modal").close();
-    toast("🪄 Recept készítése…");
     try {
-      const keres = GEMINI_RECEPT_UTASITAS
-        + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi alapanyagokból. Nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható."
-        + (kategoria ? " Az étkezés típusa: " + kategoria + "." : "")
-        + (kerulendo ? " SOHA ne használd ezeket: " + kerulendo + "." : "")
-        + "\n\nAlapanyagok: " + alapanyagok.join(", ");
-      const nyers = await geminiHivas([{ text: keres }]);
-      const recept = receptbolBejegyzes(nyers, null);
-      if (!recept) throw new Error("nincs recept");
-      recept.megjegyzes = (recept.megjegyzes ? recept.megjegyzes + " " : "") + "A kért alapanyagokból: " + alapanyagok.join(", ") + ".";
-      mentesEsMutatas(recept);
+      await generalKivansagbol(alapanyagok, kategoria, kerulendo);
     } catch {
       const ok = window.geminiUtolsoHiba ? " (" + window.geminiUtolsoHiba + ")" : "";
       toast("⚠️ A generálás nem sikerült" + ok + " — a kérést a várólistára tettem");
@@ -568,7 +574,7 @@ function nyitReszletek(id) {
   forras.innerHTML = r.forras
     ? `🎬 <a href="${esc(r.forras)}" target="_blank" rel="noopener">Eredeti videó megnyitása</a>` : "";
 
-  $("#recept-modal").showModal();
+  if (!$("#recept-modal").open) $("#recept-modal").showModal();
 }
 
 // a kiválasztott adagszámra számolt makrók vágólapra — pl. YAZIO-ba beíráshoz
@@ -593,17 +599,36 @@ Fehérje: ${sz(t.feherje)} g`;
   }
 });
 
-// ---------- generált recept előnézete (mentés/elvetés) ----------
+// ---------- generált recept előnézete (mentés/elvetés/újragenerálás) ----------
 let elonezetId = null;
+let ujrageneralasFn = null; // ha van, az előnézetben megjelenik az Újragenerálás gomb
 
-function receptElonezet(recept) {
+function receptElonezet(recept, ujraFn = null) {
   sajatReceptek.push(recept); // egyelőre csak memóriában, store.set nélkül
   elonezetId = recept.id;
+  ujrageneralasFn = ujraFn;
   nyitReszletek(recept.id);
   $("#modal-normal-gombok").classList.add("hidden");
   $("#elonezet-gombok").classList.remove("hidden");
+  $("#elonezet-ujra").classList.toggle("hidden", !ujrageneralasFn);
   toast("✨ Kész a recept — nézd meg, és döntsd el, mented-e!");
 }
+
+$("#elonezet-ujra").addEventListener("click", async () => {
+  if (!ujrageneralasFn || !elonezetId) return;
+  // a mostani előnézeti receptet eldobjuk (csak memóriából), a modal NYITVA marad
+  // (a bezárás-újranyitás versenyfutása miatt csak a tartalmat cseréljük)
+  const regiFn = ujrageneralasFn;
+  sajatReceptek = sajatReceptek.filter((r) => r.id !== elonezetId);
+  elonezetId = null;
+  try {
+    await regiFn();
+  } catch {
+    const ok = window.geminiUtolsoHiba ? " (" + window.geminiUtolsoHiba + ")" : "";
+    toast("⚠️ Az újragenerálás nem sikerült" + ok);
+    if ($("#recept-modal").open) $("#recept-modal").close();
+  }
+});
 
 function elonezetVege(megtart) {
   if (!elonezetId) return;

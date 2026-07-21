@@ -51,21 +51,26 @@ body {
   border-bottom: 1px solid var(--keret);
 }
 .topbar h1 { margin: 0 0 12px; font-size: 1.5rem; }
-.tabs { display: flex; gap: 4px; }
+.tabs { display: flex; gap: 4px; align-items: center; margin-bottom: 10px; }
 .tab {
   border: none;
   background: transparent;
-  padding: 8px 14px;
-  font-size: 0.95rem;
+  padding: 9px 10px;
+  font-size: 0.9rem;
   cursor: pointer;
   color: var(--halvany);
   border-radius: 999px;
-  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   transition: background 0.15s ease, color 0.15s ease;
 }
+/* a nézet-fülek egyenlő arányban kitöltik a sort; a 🔄/⚙️ ikonok fix szélesek */
+.tab[data-view] { flex: 1; min-width: 0; }
 .tab:hover { background: var(--kiemelo-halvany); }
 .tab.active { color: var(--kiemelo); background: var(--kiemelo-halvany); font-weight: 600; }
-.beallitas-tab { margin-left: auto; }
+.tab-szoveg { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .utmutato li { margin-bottom: 8px; }
 .utmutato a { color: var(--kiemelo); }
@@ -487,9 +492,8 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
 
 @media (max-width: 600px) {
   .topbar h1 { font-size: 1.2rem; }
-  .tabs { overflow-x: auto; }
-  .tab { padding: 8px 9px; font-size: 1.1rem; }
-  .tab-szoveg { display: none; } /* mobilon csak az ikonok — így minden kifér */
+  .tab { padding: 9px 4px; font-size: 1.15rem; }
+  .tab-szoveg { display: none; } /* mobilon csak az ikonok — egyenlő arányban töltik a sort */
   .form-sor { flex-direction: column; gap: 0; }
   .link-sav { padding: 8px; gap: 6px; }
   .kep-gomb { padding: 8px 10px; }
