@@ -234,6 +234,23 @@ function toast(uzenet) {
   setTimeout(() => t.remove(), 4000);
 }
 
+// állandó folyamat-jelző (a receptkészítés alatt látszik, pörgő ikonnal)
+function folyamatMutat(szoveg) {
+  let el = $("#folyamat-sav");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "folyamat-sav";
+    el.className = "folyamat-sav";
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `<span class="folyamat-porge"></span><span>${esc(szoveg)}</span>`;
+  el.classList.remove("hidden");
+}
+function folyamatRejt() {
+  const el = $("#folyamat-sav");
+  if (el) el.classList.add("hidden");
+}
+
 let helyiVarolista = [];  // a gépen futó szerver várólistája
 let kulsoVarolista = [];  // a Google-hídon lévő várólista (weboldalról küldött linkek, képek)
 
@@ -302,8 +319,9 @@ async function linkBekuldes() {
   // receptet készíteni (böngészőből). Ha nem jön össze, a videó a
   // feldolgozó (Claude) várólistájára kerül.
   if (geminiKulcs() && /tiktok\.com/i.test(url)) {
-    toast("🔍 Videó beolvasása…");
+    folyamatMutat("🔍 Videó beolvasása…");
     if (await kliensVideoRecept(url)) return;
+    folyamatRejt();
     toast("A leírásból nem jött ki recept — a videót a feldolgozóra bízom");
   }
 
@@ -323,16 +341,16 @@ async function kliensVideoRecept(url) {
   // ha a leírás gyakorlatilag csak hashtagekből áll, nincs mit strukturálni
   if (leiras.replace(/#\S+/g, "").trim().length < 50) return false;
   try {
-    toast("🤖 Recept készítése…");
+    folyamatMutat("🤖 Recept készítése a videó leírásából…");
     const nyers = await geminiHivas([{
       text: GEMINI_RECEPT_UTASITAS
         + "\n\nA következő videó-leírásból készíts receptet. Ha nincs benne elég információ egy teljes recepthez, adj vissza {\"hiba\":\"nincs recept\"}.\n\nLeírás:\n" + leiras
     }]);
     const recept = receptbolBejegyzes(nyers, url);
-    if (!recept) return false;
+    if (!recept) { folyamatRejt(); return false; }
     receptElonezet(recept);
     return true;
-  } catch { return false; }
+  } catch { folyamatRejt(); return false; }
 }
 
 // közös várólistára-tevő: helyi szerverre vagy a Google hídra
@@ -370,7 +388,7 @@ $("#generalj-gomb").addEventListener("click", () => nyitKivansag(false));
 // Gemini-hívás alapanyagokból + előnézet; a paramétereket megjegyezzük,
 // hogy az előnézet „Újragenerálás" gombja ugyanezzel újra tudja futtatni
 async function generalKivansagbol(alapanyagok, kategoria, kerulendo) {
-  toast("🪄 Recept készítése…");
+  folyamatMutat("🪄 Recept készítése…");
   const keres = GEMINI_RECEPT_UTASITAS
     + "\n\nÍrj egy ízletes, egészséges, magas fehérjetartalmú receptet az alábbi kérés alapján (ez lehet alapanyag-lista vagy szabad kívánság). Alapanyagoknál nem kötelező mindet felhasználni; alap fűszerek, olaj, víz hozzáadható. Adj mindig MÁS variációt, ha újra kérnek."
     + (kategoria ? " Az étkezés típusa: " + kategoria + "." : "")
@@ -397,6 +415,7 @@ $("#kivansag-form").addEventListener("submit", async (e) => {
     try {
       await generalKivansagbol(alapanyagok, kategoria, kerulendo);
     } catch {
+      folyamatRejt();
       const ok = window.geminiUtolsoHiba ? " (" + window.geminiUtolsoHiba + ")" : "";
       toast("⚠️ A generálás nem sikerült" + ok + " — a kérést a várólistára tettem");
       const url = "https://kivansag.recept/?alapanyagok=" + encodeURIComponent(alapanyagok.join(", "))
@@ -586,12 +605,34 @@ async function frissitesFigyelo() {
   try {
     const szoveg = await (await fetch("recipes.js?t=" + Date.now())).text();
     if (utolsoReceptekSzoveg !== null && szoveg !== utolsoReceptekSzoveg) {
+      const elozoIdk = new Set((window.RECIPES || []).map((r) => r.id));
       new Function(szoveg)(); // window.RECIPES frissítése
       rajzolReceptek();
-      toast("🎉 Új recept érkezett a gyűjteménybe!");
+      // mely receptek érkeztek (a feldolgozó a várólistából csinálta)
+      const ujak = (window.RECIPES || []).filter((r) => !elozoIdk.has(r.id));
+      if (ujak.length) mutatUjReceptSav(ujak);
     }
     utolsoReceptekSzoveg = szoveg;
   } catch { /* offline vagy nem elérhető — csendben kihagyjuk */ }
+}
+
+// a feldolgozóból érkezett új recept(ek): jól látható, rákattintható sáv
+function mutatUjReceptSav(ujak) {
+  let sav = $("#uj-recept-sav");
+  if (!sav) {
+    sav = document.createElement("div");
+    sav.id = "uj-recept-sav";
+    sav.className = "frissito-sav uj-recept-sav";
+    document.body.appendChild(sav);
+  }
+  const cimke = ujak.length === 1 ? `🎉 Új recept: ${ujak[0].nev}` : `🎉 ${ujak.length} új recept érkezett`;
+  sav.innerHTML = `<span>${esc(cimke)}</span><button class="primary" id="uj-recept-megnez">Megnézem</button>`;
+  $("#uj-recept-megnez").addEventListener("click", () => {
+    sav.remove();
+    // a Receptek fülre váltunk és megnyitjuk az elsőt
+    document.querySelector('.tab[data-view="receptek"]').click();
+    if (ujak.length === 1) nyitReszletek(ujak[0].id);
+  });
 }
 
 frissitesFigyelo();
@@ -689,6 +730,7 @@ let elonezetId = null;
 let ujrageneralasFn = null; // ha van, az előnézetben megjelenik az Újragenerálás gomb
 
 function receptElonezet(recept, ujraFn = null) {
+  folyamatRejt(); // kész — a folyamat-jelző eltűnik, jön az előnézet
   sajatReceptek.push(recept); // egyelőre csak memóriában, store.set nélkül
   elonezetId = recept.id;
   ujrageneralasFn = ujraFn;

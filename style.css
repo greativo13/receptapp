@@ -205,6 +205,38 @@ button.veszelyes { color: var(--veszely); border-color: transparent; background:
   animation: toast-be 0.25s ease;
 }
 
+/* állandó folyamat-jelző a receptkészítés alatt */
+.folyamat-sav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--kiemelo);
+  color: #fff;
+  font-weight: 600;
+  z-index: 70;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  animation: toast-be 0.2s ease;
+}
+.folyamat-sav.hidden { display: none; }
+.folyamat-porge {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: porge 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes porge { to { transform: rotate(360deg); } }
+
+.uj-recept-sav { border-top-color: var(--kiemelo); }
+
 /* ---------- receptkártyák ---------- */
 .recept-csoport { margin-bottom: 14px; }
 .csoport-fejlec {

@@ -134,28 +134,31 @@ async function publikusLinkFeldolgozas(url) {
     toast("ℹ️ Automatikusan egyelőre TikTok-linkek mennek — más forrást fotóval vagy kézzel vehetsz fel.");
     return;
   }
-  toast("🔍 Videó beolvasása…");
+  folyamatMutat("🔍 Videó beolvasása…");
   let cim = "", szerzo = "";
   try {
     const oe = await oembedLekeres(url);
     cim = oe.cim; szerzo = oe.szerzo;
   } catch {
+    folyamatRejt();
     toast("⚠️ Nem sikerült elérni a videót — ellenőrizd a linket");
     return;
   }
 
   if (!geminiKulcs()) {
+    folyamatRejt();
     elotoltottUrlap(cim.split("#")[0].trim(), cim, url);
     return;
   }
 
-  toast("🤖 Recept készítése…");
+  folyamatMutat("🤖 Recept készítése…");
   try {
     const nyers = await geminiHivas([{ text: GEMINI_RECEPT_UTASITAS + "\n\nA videó szövege (készítő: " + szerzo + "):\n" + cim }]);
     const recept = receptbolBejegyzes(nyers, url);
-    if (!recept) { elotoltottUrlap(cim.split("#")[0].trim(), cim, url); return; }
+    if (!recept) { folyamatRejt(); elotoltottUrlap(cim.split("#")[0].trim(), cim, url); return; }
     mentesEsMutatas(recept);
   } catch {
+    folyamatRejt();
     toast("⚠️ A Gemini-hívás nem sikerült — ellenőrizd a kulcsot a ⚙️ Beállításokban");
     elotoltottUrlap(cim.split("#")[0].trim(), cim, url);
   }
@@ -163,7 +166,7 @@ async function publikusLinkFeldolgozas(url) {
 
 async function publikusKepFeldolgozas(fajl) {
   if (!geminiKulcs()) { toast("⚠️ A fotó-felismeréshez Gemini-kulcs kell (⚙️ Beállítások)"); return; }
-  toast("🤖 Kép elemzése…");
+  folyamatMutat("🤖 Kép elemzése…");
   try {
     const adat = await kepBase64(fajl);
     const nyers = await geminiHivas([
@@ -171,10 +174,11 @@ async function publikusKepFeldolgozas(fajl) {
       { inline_data: { mime_type: "image/jpeg", data: adat } }
     ]);
     const recept = receptbolBejegyzes(nyers, null);
-    if (!recept) { toast("⚠️ Nem találtam receptet a képen"); return; }
+    if (!recept) { folyamatRejt(); toast("⚠️ Nem találtam receptet a képen"); return; }
     recept.megjegyzes = (recept.megjegyzes ? recept.megjegyzes + " " : "") + "Fotóból mentett recept.";
     mentesEsMutatas(recept);
   } catch {
+    folyamatRejt();
     toast("⚠️ A kép elemzése nem sikerült — ellenőrizd a kulcsot a ⚙️ Beállításokban");
   }
 }
