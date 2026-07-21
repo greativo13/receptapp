@@ -9,5 +9,6 @@
 // ============================================================
 window.KONFIG = {
   hidUrl: "https://script.google.com/macros/s/AKfycbyFCPuEMVSOJlYwdecTIHVT9_Xs6M7AyXBP-RFJ9uhnfA-58AnauG-2RZvzEGMkD1i9/exec",
+  hidTitok: "o4fju5l61stdx2iqkghbapn8", // a hídon várakozó linkek törléséhez
   publikusMod: false
 };

@@ -221,24 +221,42 @@ function rajzolVarolista() {
   const elemek = helyiVarolista.map((t) => ({ ...t, kulso: false }))
     .concat(kulsoVarolista.map((t) => ({ ...t, kulso: true })));
 
+  // a hídon (kulso) várakozó linkeket csak akkor lehet törölni, ha van hozzá titok
+  const kulsoTorolheto = !!(KULSO_VAROLISTA_URL && KONFIG.hidTitok);
   $("#varolista").innerHTML = elemek.map((t) => `
     <div class="varo-tetel">
       <span>⏳ Feldolgozásra vár:</span>
       <span class="url">${esc(varoCimke(t.url))}</span>
-      ${t.kulso ? "" : `<button class="megsem" data-url="${esc(t.url)}" title="Mégse">✕</button>`}
+      ${(!t.kulso || kulsoTorolheto) ? `<button class="megsem" data-url="${esc(t.url)}" data-kulso="${t.kulso ? 1 : 0}" title="Törlés">✕</button>` : ""}
     </div>`).join("");
 
   document.querySelectorAll(".varo-tetel .megsem").forEach((g) => {
-    g.addEventListener("click", async () => {
+    g.addEventListener("click", () => varolistaTorles(g.dataset.url, g.dataset.kulso === "1"));
+  });
+}
+
+async function varolistaTorles(url, kulso) {
+  try {
+    if (kulso) {
+      const cel = KULSO_VAROLISTA_URL + "?torol=" + encodeURIComponent(url)
+        + (KONFIG.hidTitok ? "&titok=" + encodeURIComponent(KONFIG.hidTitok) : "");
+      const valasz = await fetch(cel);
+      if (!valasz.ok) throw new Error();
+      const lista = await valasz.json();
+      if (Array.isArray(lista)) kulsoVarolista = lista;
+    } else {
       const valasz = await fetch("api/link-torles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: g.dataset.url })
+        body: JSON.stringify({ url })
       });
       helyiVarolista = await valasz.json();
-      rajzolVarolista();
-    });
-  });
+    }
+    rajzolVarolista();
+    toast("🗑️ Link törölve a várólistáról");
+  } catch {
+    toast("⚠️ Nem sikerült törölni a linket");
+  }
 }
 
 async function linkBekuldes() {
