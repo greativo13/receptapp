@@ -310,7 +310,8 @@ $("#kivansag-form").addEventListener("submit", async (e) => {
       recept.megjegyzes = (recept.megjegyzes ? recept.megjegyzes + " " : "") + "A kért alapanyagokból: " + alapanyagok.join(", ") + ".";
       mentesEsMutatas(recept);
     } catch {
-      toast("⚠️ Az azonnali generálás nem sikerült — a kérést a várólistára tettem");
+      const ok = window.geminiUtolsoHiba ? " (" + window.geminiUtolsoHiba + ")" : "";
+      toast("⚠️ A generálás nem sikerült" + ok + " — a kérést a várólistára tettem");
       const url = "https://kivansag.recept/?alapanyagok=" + encodeURIComponent(alapanyagok.join(", "))
         + (kategoria ? "&kategoria=" + encodeURIComponent(kategoria) : "");
       try { await varolistaraTesz(url); } catch { /* offline */ }
@@ -1296,6 +1297,22 @@ $("#gemini-kulcs-torles").addEventListener("click", () => {
   $("#gemini-kulcs-input").value = "";
   $("#beallitas-modal").close();
   toast("🗑️ Kulcs törölve");
+});
+$("#gemini-kulcs-teszt").addEventListener("click", async () => {
+  const kulcs = $("#gemini-kulcs-input").value.trim();
+  if (!kulcs) { toast("⚠️ Előbb illeszd be a kulcsot"); return; }
+  localStorage.setItem("receptapp.gemini_kulcs", kulcs); // a teszthez elmentjük
+  const ered = $("#gemini-teszt-eredmeny");
+  ered.className = "teszt-eredmeny";
+  ered.textContent = "⏳ Tesztelés…";
+  try {
+    await geminiHivas([{ text: 'Adj vissza pontosan ennyit JSON-ként: {"nev":"teszt","kategoria":"egyéb","adag":1,"ido_perc":1,"hozzavalok":[],"lepesek":[],"tapertek":{"kcal":1,"feherje":1,"zsir":1,"szenhidrat":1,"cukor":1}}' }]);
+    ered.textContent = "✅ Működik! A kulcs jó, a receptkérés mostantól azonnali.";
+    ered.classList.add("ok");
+  } catch {
+    ered.textContent = "❌ Hiba: " + (window.geminiUtolsoHiba || "ismeretlen");
+    ered.classList.add("hiba");
+  }
 });
 
 // ---------- publikus mód: üdvözlő ----------

@@ -32,24 +32,53 @@ const GEMINI_RECEPT_UTASITAS = `Magyar receptes alkalmazás asszisztense vagy. A
 }
 Szabályok: minden szöveg magyarul; nem mérhető hozzávalónál mennyiseg: null és egyseg: "ízlés szerint"; a tapertek MINDIG 1 adagra vonatkozik, egészre kerekítve — ha a forrás megadja, azt használd, különben becsüld a hozzávalókból; ha a szövegben nincs értelmezhető recept, adj vissza {"hiba": "nincs recept"} objektumot.`;
 
+// az utolsó Gemini-hiba részletei (a Beállításokban megjeleníthető)
+window.geminiUtolsoHiba = "";
+
 async function geminiHivas(reszek) {
   const kulcs = geminiKulcs();
-  const valasz = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(kulcs),
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: reszek }],
-        generationConfig: { response_mime_type: "application/json", temperature: 0.2 }
-      })
-    }
-  );
-  if (!valasz.ok) throw new Error("gemini-" + valasz.status);
+  if (!kulcs) { window.geminiUtolsoHiba = "Nincs API-kulcs megadva."; throw new Error("nincs-kulcs"); }
+
+  let valasz;
+  try {
+    valasz = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(kulcs),
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: reszek }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.3 }
+        })
+      }
+    );
+  } catch (halozat) {
+    window.geminiUtolsoHiba = "Hálózati hiba a Gemini elérésekor.";
+    throw halozat;
+  }
+
+  if (!valasz.ok) {
+    let reszlet = "";
+    try { reszlet = (await valasz.json())?.error?.message || ""; } catch { /* nincs json */ }
+    window.geminiUtolsoHiba = `HTTP ${valasz.status}: ${reszlet || "ismeretlen hiba"}`;
+    throw new Error("gemini-" + valasz.status);
+  }
+
   const adat = await valasz.json();
-  const szoveg = adat?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!szoveg) throw new Error("gemini-ures");
-  return JSON.parse(szoveg);
+  let szoveg = adat?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!szoveg) {
+    window.geminiUtolsoHiba = "A Gemini üres választ adott (lehet, hogy a tartalom-szűrő blokkolta).";
+    throw new Error("gemini-ures");
+  }
+  // ha markdown-kerettel jönne (```json ... ```), levágjuk
+  szoveg = szoveg.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  try {
+    window.geminiUtolsoHiba = "";
+    return JSON.parse(szoveg);
+  } catch {
+    window.geminiUtolsoHiba = "A válasz nem volt értelmezhető JSON.";
+    throw new Error("gemini-json");
+  }
 }
 
 function receptbolBejegyzes(nyers, forras) {

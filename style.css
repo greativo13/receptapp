@@ -55,15 +55,16 @@ body {
 .tab {
   border: none;
   background: transparent;
-  padding: 10px 16px;
-  font-size: 1rem;
+  padding: 8px 14px;
+  font-size: 0.95rem;
   cursor: pointer;
   color: var(--halvany);
-  border-bottom: 3px solid transparent;
-  border-radius: 8px 8px 0 0;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 .tab:hover { background: var(--kiemelo-halvany); }
-.tab.active { color: var(--kiemelo); border-bottom-color: var(--kiemelo); font-weight: 600; }
+.tab.active { color: var(--kiemelo); background: var(--kiemelo-halvany); font-weight: 600; }
 .beallitas-tab { margin-left: auto; }
 
 .utmutato li { margin-bottom: 8px; }
@@ -80,14 +81,19 @@ input, select, textarea, button {
   color: inherit;
   background: var(--felulet);
   border: 1px solid var(--keret);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: 10px;
+  padding: 9px 14px;
 }
-button { cursor: pointer; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--kiemelo); }
+button { cursor: pointer; border-radius: 999px; transition: filter 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
 button:hover { border-color: var(--kiemelo); }
 button.primary { background: var(--kiemelo); color: #fff; border-color: var(--kiemelo); font-weight: 600; }
-button.primary:hover { filter: brightness(1.1); }
-button.veszelyes { color: var(--veszely); border-color: var(--veszely); background: transparent; }
+button.primary:hover { filter: brightness(1.08); }
+button.veszelyes { color: var(--veszely); border-color: transparent; background: transparent; }
+
+.teszt-eredmeny { font-size: 0.88rem; padding: 8px 12px; border-radius: 8px; background: var(--bg); }
+.teszt-eredmeny.ok { background: var(--kiemelo-halvany); color: var(--kiemelo); }
+.teszt-eredmeny.hiba { background: rgba(192, 57, 43, 0.12); color: var(--veszely); }
 
 .ures { text-align: center; color: var(--halvany); margin-top: 40px; font-size: 1.1rem; }
 .tipp { color: var(--halvany); font-size: 0.85rem; text-align: center; }
@@ -95,13 +101,16 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 /* ---------- link beillesztő sáv ---------- */
 .link-sav {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 12px;
   background: var(--felulet);
-  border: 2px dashed var(--kiemelo);
-  border-radius: 12px;
-  padding: 12px;
+  border: 1.5px dashed var(--keret);
+  border-radius: 14px;
+  padding: 8px 8px 8px 14px;
+  align-items: center;
+  transition: border-color 0.15s ease;
 }
+.link-sav:focus-within { border-color: var(--kiemelo); }
 .link-sav input[type="url"] { flex: 1; min-width: 0; border: none; background: transparent; font-size: 1rem; }
 .link-sav input[type="url"]:focus { outline: none; }
 .kep-gomb {
@@ -184,16 +193,17 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   gap: 10px;
   width: 100%;
   text-align: left;
-  background: var(--felulet);
-  border: 1px solid var(--keret);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 1.05rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--keret);
+  border-radius: 0;
+  padding: 8px 4px;
+  font-size: 1.1rem;
   font-weight: 700;
   text-transform: capitalize;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-.csoport-fejlec:hover { border-color: var(--kiemelo); }
+.csoport-fejlec:hover { border-color: var(--keret); color: var(--kiemelo); }
 .csoport-fejlec .darab {
   background: var(--kiemelo-halvany);
   color: var(--kiemelo);
@@ -209,20 +219,20 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 }
 .kartya {
   background: var(--felulet);
-  border: 1px solid var(--keret);
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   padding: 14px 16px;
   cursor: pointer;
   box-shadow: var(--arnyek);
-  transition: transform 0.1s ease;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
 }
-.kartya:hover { transform: translateY(-2px); border-color: var(--kiemelo); }
+.kartya:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
 .kartya-kep {
   width: calc(100% + 32px);
-  margin: -14px -16px 10px;
-  height: 120px;
+  margin: -14px -16px 12px;
+  height: 130px;
   object-fit: cover;
-  border-radius: 12px 12px 0 0;
+  border-radius: 16px 16px 0 0;
   display: block;
 }
 .modal-kep {
@@ -255,10 +265,12 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   display: inline-block;
   background: var(--kiemelo-halvany);
   color: var(--kiemelo);
-  border-radius: 20px;
-  padding: 2px 10px;
-  font-size: 0.78rem;
+  border-radius: 999px;
+  padding: 3px 11px;
+  font-size: 0.72rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   margin-bottom: 8px;
 }
 .kartya .tiktok-jel { font-size: 0.78rem; color: var(--halvany); margin-top: 8px; }
@@ -341,9 +353,9 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 /* ---------- bevásárlólista szűrő-panel ---------- */
 .szuro-panel {
   background: var(--felulet);
-  border: 1px solid var(--keret);
-  border-radius: 12px;
-  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 6px 14px;
   margin: 0 auto 16px;
   max-width: 720px;
   display: flex;
@@ -393,10 +405,11 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
   align-items: center;
   gap: 10px;
   background: var(--felulet);
-  border: 1px solid var(--keret);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 14px;
   margin-bottom: 6px;
+  box-shadow: var(--arnyek);
 }
 .bev-tetel input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--kiemelo); flex-shrink: 0; }
 .bev-tetel.kipipalva { opacity: 0.5; text-decoration: line-through; }
@@ -426,17 +439,17 @@ button.veszelyes { color: var(--veszely); border-color: var(--veszely); backgrou
 
 /* ---------- modalok ---------- */
 dialog {
-  border: 1px solid var(--keret);
-  border-radius: 14px;
+  border: none;
+  border-radius: 20px;
   background: var(--felulet);
   color: var(--szoveg);
   max-width: 560px;
   width: calc(100vw - 40px);
   max-height: 85vh;
-  padding: 20px 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  padding: 22px 26px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
 .modal-fej { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .modal-fej h2 { margin: 0; }
 .bezaro { border: none; background: transparent; font-size: 1.2rem; color: var(--halvany); }
