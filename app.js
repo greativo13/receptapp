@@ -66,6 +66,26 @@ function etelTapertek(e) {
   return kamraTetelE(e) ? (e.tapertek100g || null) : (e.tapertek || null);
 }
 
+// egy étrend-cella értéke lehet recept-id (string) vagy { id, gramm } (kamra-tétel)
+function cellaBejegyzes(ertek) {
+  if (!ertek) return null;
+  if (typeof ertek === "string") return { id: ertek, gramm: null };
+  return { id: ertek.id, gramm: ertek.gramm || null };
+}
+
+// egy étrend-cella tápértéke: recepteknél 1 adag, kamra-tételnél a megadott grammra
+function cellaTapertek(bej) {
+  if (!bej) return null;
+  const e = etelById(bej.id);
+  const tap = etelTapertek(e);
+  if (!tap) return null;
+  if (kamraTetelE(e) && bej.gramm) {
+    const f = bej.gramm / 100;
+    return { kcal: tap.kcal * f, feherje: tap.feherje * f, zsir: tap.zsir * f, szenhidrat: tap.szenhidrat * f, cukor: tap.cukor * f };
+  }
+  return tap;
+}
+
 function mennyisegSzoveg(h) {
   if (h.mennyiseg == null) return h.egyseg || "";
   return `${h.mennyiseg} ${h.egyseg || ""}`.trim();
@@ -883,12 +903,12 @@ function rajzolEtrend() {
   const tbody = $("#etrend-tabla tbody");
   tbody.innerHTML = ETKEZESEK.map((etkezes) => {
     const cellak = NAPOK.map((_, i) => {
-      const id = hetiTerv[i]?.[etkezes];
-      const r = id ? etelById(id) : null;
+      const bej = cellaBejegyzes(hetiTerv[i]?.[etkezes]);
+      const r = bej ? etelById(bej.id) : null;
       const kamrai = kamraTetelE(r);
       return `<td class="etkezes-cella ${r ? "toltott" : "ures-cella"} ${maNapok[i] ? "ma" : ""}"
                   data-nap="${i}" data-etkezes="${etkezes}" ${r ? `data-recept="${esc(r.id)}"` : ""}>
-                ${r ? `${kamrai ? "🥫 " : ""}${esc(r.nev)}<button class="cella-szerk" data-nap="${i}" data-etkezes="${etkezes}" title="Csere / törlés">✎</button>` : "+"}
+                ${r ? `${kamrai ? "🥫 " : ""}${esc(r.nev)}${kamrai && bej.gramm ? ` <small>${bej.gramm} g</small>` : ""}<button class="cella-szerk" data-nap="${i}" data-etkezes="${etkezes}" title="Csere / törlés">✎</button>` : "+"}
               </td>`;
     }).join("");
     return `<tr><td class="nap-nev">${ETKEZES_IKON[etkezes]} ${etkezes}</td>${cellak}</tr>`;
@@ -899,8 +919,7 @@ function rajzolEtrend() {
     const o = { kcal: 0, feherje: 0, zsir: 0, szenhidrat: 0, cukor: 0 };
     let van = false;
     ETKEZESEK.forEach((etkezes) => {
-      const id = hetiTerv[i]?.[etkezes];
-      const tap = id ? etelTapertek(etelById(id)) : null;
+      const tap = cellaTapertek(cellaBejegyzes(hetiTerv[i]?.[etkezes]));
       if (tap) {
         van = true;
         Object.keys(o).forEach((k) => { o[k] += tap[k] || 0; });
@@ -916,14 +935,14 @@ function rajzolEtrend() {
   // kitöltött cella: a recept nyílik meg; üres cella vagy a ✎ ikon: a választó
   tbody.querySelectorAll(".etkezes-cella").forEach((cella) => {
     cella.addEventListener("click", () => {
-      const id = cella.dataset.recept;
-      if (!id) { nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes); return; }
-      const e = etelById(id);
+      if (!cella.dataset.recept) { nyitValaszto(hetKulcs, +cella.dataset.nap, cella.dataset.etkezes); return; }
+      const bej = cellaBejegyzes(hetiTerv[+cella.dataset.nap]?.[cella.dataset.etkezes]);
+      const e = etelById(bej.id);
       if (kamraTetelE(e)) {
-        const t = e.tapertek100g;
-        toast(t ? `🥫 ${e.nev}: 🔥 ${t.kcal} kcal · F ${t.feherje} · Zs ${t.zsir} · CH ${t.szenhidrat} g /100 g` : `🥫 ${e.nev}`);
+        const t = cellaTapertek(bej);
+        toast(t ? `🥫 ${e.nev} (${bej.gramm || 100} g): 🔥 ${Math.round(t.kcal)} kcal · F ${Math.round(t.feherje)} · Zs ${Math.round(t.zsir)} · CH ${Math.round(t.szenhidrat)} g` : `🥫 ${e.nev}`);
       } else {
-        nyitReszletek(id);
+        nyitReszletek(bej.id);
       }
     });
   });
@@ -1163,7 +1182,10 @@ function rajzolBevasarlas() {
   const darabszam = {};
   Object.entries(hetiTerv).forEach(([napIndex, napTerv]) => {
     if (bevNapSzuro !== null && +napIndex !== bevNapSzuro) return;
-    Object.values(napTerv).forEach((id) => { darabszam[id] = (darabszam[id] || 0) + 1; });
+    Object.values(napTerv).forEach((ertek) => {
+      const bej = cellaBejegyzes(ertek);
+      if (bej) darabszam[bej.id] = (darabszam[bej.id] || 0) + 1;
+    });
   });
 
   // étel-szűrő gombok az időszakban szereplő receptekből
@@ -1295,14 +1317,16 @@ function nyitEtrendCelvalaszto(etelId) {
       <strong>${nap}</strong>
       ${ETKEZESEK.map((etk) => `<button class="cel-cella" data-nap="${i}" data-etkezes="${etk}">${ETKEZES_IKON[etk]}</button>`).join("")}
     </div>`).join("");
+  $("#celvalaszto-gramm").value = 100;
   $("#celvalaszto-racs").querySelectorAll(".cel-cella").forEach((g) => {
     g.addEventListener("click", () => {
+      const gramm = parseInt($("#celvalaszto-gramm").value, 10) || 100;
       etrend[hetKulcs] = etrend[hetKulcs] || {};
       etrend[hetKulcs][+g.dataset.nap] = etrend[hetKulcs][+g.dataset.nap] || {};
-      etrend[hetKulcs][+g.dataset.nap][g.dataset.etkezes] = etrendCelEtelId;
+      etrend[hetKulcs][+g.dataset.nap][g.dataset.etkezes] = { id: etrendCelEtelId, gramm };
       store.set("plan", etrend);
       $("#celvalaszto-modal").close();
-      toast("✅ Hozzáadva az étrendhez");
+      toast(`✅ Hozzáadva az étrendhez (${gramm} g)`);
     });
   });
   $("#celvalaszto-modal").showModal();

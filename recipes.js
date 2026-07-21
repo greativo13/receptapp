@@ -5,6 +5,34 @@
 // ============================================================
 window.RECIPES = [
   {
+    id: "cukkinis-tortilla-2026-07-21",
+    nev: "Cukkinis tojástortilla",
+    forras: "https://www.tiktok.com/@stayfitbynori/photo/7663172328007666966",
+    kategoria: "reggeli",
+    adag: 1,
+    ido_perc: 20,
+    hozzavalok: [
+      { nev: "cukkini (lereszelve)", mennyiseg: 1, egyseg: "db" },
+      { nev: "tojás", mennyiseg: 1, egyseg: "db" },
+      { nev: "görög joghurt", mennyiseg: 3, egyseg: "tk" },
+      { nev: "barna rizsliszt", mennyiseg: 3, egyseg: "tk" },
+      { nev: "olívaolaj", mennyiseg: 1, egyseg: "ek" },
+      { nev: "mozzarella sajt", mennyiseg: 30, egyseg: "g" },
+      { nev: "saláta (a töltelékhez)", mennyiseg: null, egyseg: "ízlés szerint" },
+      { nev: "só", mennyiseg: null, egyseg: "ízlés szerint" }
+    ],
+    lepesek: [
+      "A cukkinit reszeld le, sózd meg, és olívaolajon párold meg.",
+      "Egy tálban keverj össze 1 tojást a görög joghurttal és a barna rizsliszttel.",
+      "Keverd hozzá a párolt cukkinit.",
+      "Olívaolajon süsd ki, mint egy palacsintát.",
+      "A végén hajtsd félbe, és töltsd meg salátával és mozzarellával."
+    ],
+    megjegyzes: "stayfitbynori receptje. Tökéletes reggelire vagy vacsorára — gluténmentes a barna rizsliszttel.",
+    tapertek: { kcal: 290, feherje: 19, zsir: 16, szenhidrat: 18, cukor: 5 },
+    hozzaadva: "2026-07-21"
+  },
+  {
     id: "banan-zabkasa-minta",
     nev: "Banános-fahéjas zabkása",
     forras: null, // minta recept, nincs videó
